@@ -24,13 +24,14 @@ import {
 
 interface AISuggestion {
   id: string;
-  type: "rebalance" | "addition" | "risk" | "opportunity" | "optimization";
+  type: "rebalance" | "addition" | "risk" | "opportunity" | "optimization" | "bitcoin";
   title: string;
   description: string;
   impact: string;
   confidence: number;
   priority: "low" | "medium" | "high";
   data?: any;
+  note?: string;
 }
 
 interface AISuggestionPanelProps {
@@ -54,6 +55,17 @@ const defaultSuggestions: AISuggestion[] = [
   },
   {
     id: "2",
+    type: "bitcoin",
+    title: "Consider Bitcoin Allocation",
+    description: "Based on your risk profile, adding 3-7% Bitcoin allocation could provide diversification benefits and potential inflation hedge.",
+    impact: "Enhanced diversification, potential long-term growth",
+    confidence: 72,
+    priority: "medium",
+    data: { recommendedAllocation: "3-7%", assetClass: "Digital Asset" },
+    note: "⚠️ Bitcoin is highly volatile. Only invest what you're prepared to hold long-term. PortfoliX provides AI-generated insights, not financial advice."
+  },
+  {
+    id: "3",
     type: "addition",
     title: "Add Emerging Markets Exposure",
     description: "Consider adding VWO (Vanguard Emerging Markets ETF) at 5% allocation for geographic diversification and growth potential.",
@@ -63,7 +75,7 @@ const defaultSuggestions: AISuggestion[] = [
     data: { recommendedSymbol: "VWO", allocation: 5, region: "Emerging Markets" }
   },
   {
-    id: "3",
+    id: "4",
     type: "risk",
     title: "Portfolio Risk Assessment",
     description: "Current portfolio volatility is 14.2%, which aligns well with your moderate risk profile. No immediate action needed.",
@@ -73,7 +85,7 @@ const defaultSuggestions: AISuggestion[] = [
     data: { currentVolatility: 14.2, targetRange: [12, 18] }
   },
   {
-    id: "4",
+    id: "5",
     type: "opportunity",
     title: "Nigeria Banking Sector Opportunity",
     description: "Nigeria's banking sector showing strong Q3 fundamentals. Consider 3-5% allocation to FBNH or GTCO for local market exposure.",
@@ -83,7 +95,7 @@ const defaultSuggestions: AISuggestion[] = [
     data: { sector: "Banking", region: "Nigeria", recommendedAllocation: "3-5%" }
   },
   {
-    id: "5",
+    id: "6",
     type: "optimization",
     title: "Bond Duration Optimization",
     description: "With current interest rate environment, consider shifting from long-term to intermediate-term bonds (5-7 year duration).",
@@ -101,6 +113,7 @@ const getSuggestionIcon = (type: AISuggestion["type"]) => {
     case "risk": return <Shield className="h-4 w-4" />;
     case "opportunity": return <Lightbulb className="h-4 w-4" />;
     case "optimization": return <Target className="h-4 w-4" />;
+    case "bitcoin": return <Zap className="h-4 w-4" />;
     default: return <Brain className="h-4 w-4" />;
   }
 };
@@ -246,6 +259,12 @@ export const AISuggestionPanel = ({
                   <p className="text-sm text-muted-foreground leading-relaxed">
                     {suggestion.description}
                   </p>
+                  
+                  {suggestion.note && (
+                    <div className="p-2 bg-destructive/10 border border-destructive/20 rounded text-xs text-destructive font-medium">
+                      {suggestion.note}
+                    </div>
+                  )}
                   
                   <div className="flex items-center justify-between">
                     <div className="text-xs text-primary font-medium">

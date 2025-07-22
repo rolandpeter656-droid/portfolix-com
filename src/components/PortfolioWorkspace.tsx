@@ -24,6 +24,7 @@ interface Asset {
   allocation: number;
   color: string;
   risk: "Low" | "Medium" | "High";
+  rationale?: string;
 }
 
 interface PortfolioWorkspaceProps {
@@ -32,13 +33,32 @@ interface PortfolioWorkspaceProps {
 
 export const PortfolioWorkspace = ({ riskScore }: PortfolioWorkspaceProps) => {
   const [portfolioName, setPortfolioName] = useState("Global Growth Portfolio");
+  
+  // Calculate Bitcoin allocation based on risk score
+  const getBitcoinAllocation = (riskScore: number) => {
+    if (riskScore <= 3) return 2; // Beginner (Low Risk): 1–3%
+    if (riskScore <= 6) return 5; // Intermediate (Medium Risk): 3–7%
+    return 10; // Advanced (High Risk): 7–15%
+  };
+
+  const bitcoinAllocation = getBitcoinAllocation(riskScore);
+  
   const [assets, setAssets] = useState<Asset[]>([
-    { id: "1", symbol: "AAPL", name: "Apple Inc.", allocation: 15, color: "#3b82f6", risk: "Medium" },
-    { id: "2", symbol: "MSFT", name: "Microsoft Corp.", allocation: 12, color: "#ef4444", risk: "Medium" },
-    { id: "3", symbol: "GOOGL", name: "Alphabet Inc.", allocation: 10, color: "#22c55e", risk: "Medium" },
-    { id: "4", symbol: "VTI", name: "Vanguard Total Stock Market ETF", allocation: 20, color: "#f59e0b", risk: "Low" },
-    { id: "5", symbol: "BND", name: "Vanguard Total Bond Market ETF", allocation: 25, color: "#8b5cf6", risk: "Low" },
-    { id: "6", symbol: "VEA", name: "Vanguard FTSE Europe ETF", allocation: 18, color: "#06b6d4", risk: "Medium" },
+    { id: "1", symbol: "AAPL", name: "Apple Inc.", allocation: 13, color: "#3b82f6", risk: "Medium" },
+    { id: "2", symbol: "MSFT", name: "Microsoft Corp.", allocation: 10, color: "#ef4444", risk: "Medium" },
+    { id: "3", symbol: "GOOGL", name: "Alphabet Inc.", allocation: 8, color: "#22c55e", risk: "Medium" },
+    { id: "4", symbol: "VTI", name: "Vanguard Total Stock Market ETF", allocation: 18, color: "#f59e0b", risk: "Low" },
+    { id: "5", symbol: "BND", name: "Vanguard Total Bond Market ETF", allocation: 23, color: "#8b5cf6", risk: "Low" },
+    { id: "6", symbol: "VEA", name: "Vanguard FTSE Europe ETF", allocation: 16, color: "#06b6d4", risk: "Medium" },
+    { 
+      id: "7", 
+      symbol: "BTC", 
+      name: "Bitcoin", 
+      allocation: bitcoinAllocation, 
+      color: "#f97316", 
+      risk: "High",
+      rationale: "Bitcoin is a decentralized digital asset with high long-term growth potential. Its inclusion improves diversification and provides hedge against fiat currency depreciation."
+    },
   ]);
 
   const [collaborators] = useState([

@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, Legend } from "recharts";
 import { 
   PieChart as PieChartIcon, 
   Sliders, 
@@ -14,8 +14,10 @@ import {
   Trash2, 
   AlertTriangle,
   TrendingUp,
-  RotateCcw
+  RotateCcw,
+  Info
 } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface Asset {
   id: string;
@@ -24,6 +26,7 @@ interface Asset {
   allocation: number;
   color: string;
   risk: "Low" | "Medium" | "High";
+  rationale?: string;
 }
 
 interface AssetAllocationEditorProps {
@@ -159,7 +162,7 @@ export const AssetAllocationEditor = ({ assets, onAssetsChange }: AssetAllocatio
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
-                  <Tooltip content={<CustomTooltip />} />
+                  <RechartsTooltip content={<CustomTooltip />} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
@@ -171,7 +174,25 @@ export const AssetAllocationEditor = ({ assets, onAssetsChange }: AssetAllocatio
                     className="w-3 h-3 rounded-full"
                     style={{ backgroundColor: asset.color }}
                   />
-                  <span className="text-sm font-medium">{asset.symbol}</span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-sm font-medium">{asset.symbol}</span>
+                    {asset.symbol === "BTC" && asset.rationale && (
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <Info className="h-3 w-3 text-muted-foreground hover:text-foreground" />
+                          </TooltipTrigger>
+                          <TooltipContent className="max-w-sm">
+                            <p className="text-sm font-medium">Why Bitcoin?</p>
+                            <p className="text-xs text-muted-foreground mt-1">{asset.rationale}</p>
+                            <p className="text-xs text-destructive mt-2 font-medium">
+                              ⚠️ Bitcoin is highly volatile. Only invest what you're prepared to hold long-term.
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    )}
+                  </div>
                   <span className="text-sm text-muted-foreground ml-auto">
                     {asset.allocation.toFixed(1)}%
                   </span>
@@ -192,7 +213,25 @@ export const AssetAllocationEditor = ({ assets, onAssetsChange }: AssetAllocatio
                       className="w-3 h-3 rounded-full"
                       style={{ backgroundColor: asset.color }}
                     />
-                    <Label className="font-medium">{asset.symbol}</Label>
+                    <div className="flex items-center gap-1">
+                      <Label className="font-medium">{asset.symbol}</Label>
+                      {asset.symbol === "BTC" && asset.rationale && (
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <Info className="h-3 w-3 text-muted-foreground hover:text-foreground" />
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-sm">
+                              <p className="text-sm font-medium">Why Bitcoin?</p>
+                              <p className="text-xs text-muted-foreground mt-1">{asset.rationale}</p>
+                              <p className="text-xs text-destructive mt-2 font-medium">
+                                ⚠️ Bitcoin is highly volatile. Only invest what you're prepared to hold long-term.
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      )}
+                    </div>
                     <Badge 
                       variant="outline" 
                       style={{ 
