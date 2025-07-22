@@ -225,6 +225,14 @@ export const AISuggestionPanel = ({
           >
             Opportunities
           </Button>
+          <Button
+            size="sm"
+            variant={filter === "bitcoin" ? "default" : "outline"}
+            onClick={() => setFilter("bitcoin")}
+            className="text-xs"
+          >
+            Bitcoin
+          </Button>
         </div>
       </CardHeader>
       
