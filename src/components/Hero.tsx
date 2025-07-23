@@ -1,10 +1,21 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Brain, TrendingUp } from "lucide-react";
+import { ArrowRight, Brain, TrendingUp, CreditCard } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export const Hero = ({ onGetStarted }: { onGetStarted: () => void }) => {
   return (
     <section className="relative min-h-screen flex items-center justify-center bg-gradient-hero overflow-hidden">
       <div className="absolute inset-0 bg-background/5"></div>
+      
+      {/* Navigation */}
+      <div className="absolute top-6 right-6 z-20">
+        <Link to="/pricing">
+          <Button variant="outline" className="bg-white/10 backdrop-blur-sm border-white/20 text-white hover:bg-white/20">
+            <CreditCard className="h-4 w-4 mr-2" />
+            View Pricing
+          </Button>
+        </Link>
+      </div>
       
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-4xl mx-auto text-center animate-fade-in">
