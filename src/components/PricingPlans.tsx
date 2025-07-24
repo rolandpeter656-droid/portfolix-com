@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Check, Crown, Building2 } from "lucide-react";
 import { PaystackPayment } from "./PaystackPayment";
+import { useNavigate } from "react-router-dom";
 
 export type PlanType = "free" | "pro" | "institutional";
 export type Currency = "NGN" | "USD";
@@ -81,6 +82,7 @@ export const PricingPlans = ({ currentPlan = "free", onPlanSelect }: PricingPlan
   const [currency, setCurrency] = useState<Currency>("USD");
   const [selectedPlan, setSelectedPlan] = useState<PlanType | null>(null);
   const [showPayment, setShowPayment] = useState(false);
+  const navigate = useNavigate();
 
   const handlePlanSelect = (planId: PlanType) => {
     if (planId === "free") {
@@ -91,6 +93,12 @@ export const PricingPlans = ({ currentPlan = "free", onPlanSelect }: PricingPlan
     if (planId === "institutional") {
       // Handle institutional plan contact
       window.open("mailto:sales@portfolix.com?subject=Institutional Plan Inquiry", "_blank");
+      return;
+    }
+
+    if (planId === "pro") {
+      // Navigate to dedicated payment page
+      navigate(`/payment?plan=${planId}&currency=${currency}`);
       return;
     }
 
@@ -106,8 +114,9 @@ export const PricingPlans = ({ currentPlan = "free", onPlanSelect }: PricingPlan
     }
   };
 
-  const formatPrice = (price: number, curr: Currency) => {
-    if (price === 0) return "Free";
+  const formatPrice = (price: number, curr: Currency, planId: PlanType) => {
+    if (price === 0 && planId === "free") return "Free";
+    if (price === 0 && planId === "institutional") return "Custom";
     const symbol = curr === "NGN" ? "₦" : "$";
     return `${symbol}${price.toLocaleString()}`;
   };
@@ -179,7 +188,7 @@ export const PricingPlans = ({ currentPlan = "free", onPlanSelect }: PricingPlan
               </div>
               <CardTitle className="text-2xl">{plan.name}</CardTitle>
               <div className="text-3xl font-bold">
-                {formatPrice(plan.price[currency], currency)}
+                {formatPrice(plan.price[currency], currency, plan.id)}
                 {plan.price[currency] > 0 && (
                   <span className="text-sm font-normal text-muted-foreground">/month</span>
                 )}
