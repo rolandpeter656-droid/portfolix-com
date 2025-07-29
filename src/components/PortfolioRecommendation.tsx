@@ -195,13 +195,13 @@ export const PortfolioRecommendation = ({ riskScore, onStartWorkspace }: Portfol
                   ))}
                 </div>
 
-                <div className="mt-8 p-4 bg-gradient-primary rounded-lg text-white">
+                <div className="mt-8 p-4 bg-gradient-primary rounded-lg text-black">
                   <div className="flex items-center gap-3 mb-2">
                     <DollarSign className="h-5 w-5" />
                     <span className="font-semibold">Minimum Investment</span>
                   </div>
                   <p className="text-2xl font-bold">$1,000</p>
-                  <p className="text-white/80 text-sm">Start building wealth today</p>
+                  <p className="text-black/80 text-sm">Start building wealth today</p>
                 </div>
               </CardContent>
             </Card>

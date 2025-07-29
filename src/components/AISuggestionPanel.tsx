@@ -320,12 +320,12 @@ export const AISuggestionPanel = ({
         <Separator />
 
         {/* AI Analysis Summary */}
-        <div className="p-4 bg-gradient-primary rounded-lg text-white">
+        <div className="p-4 bg-gradient-primary rounded-lg text-black">
           <h4 className="font-medium mb-2 flex items-center gap-2">
             <Brain className="h-4 w-4" />
             AI Portfolio Analysis
           </h4>
-          <p className="text-sm text-white/90 mb-3">
+          <p className="text-sm text-black/90 mb-3">
             Your portfolio shows good diversification with room for optimization. 
             Focus on reducing tech concentration and adding international exposure.
           </p>
