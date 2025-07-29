@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X, ArrowRight } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 
 export const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border">
@@ -36,13 +39,37 @@ export const Navigation = () => {
 
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center space-x-4">
-            <Button variant="ghost" className="text-muted-foreground hover:text-foreground">
-              Sign In
-            </Button>
-            <Button className="bg-primary hover:bg-primary-glow text-primary-foreground">
-              Get Started
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
+            {user ? (
+              <div className="flex items-center space-x-4">
+                <span className="text-muted-foreground text-sm">
+                  Welcome, {user.email?.split('@')[0]}
+                </span>
+                <Button 
+                  variant="ghost" 
+                  className="text-muted-foreground hover:text-foreground"
+                  onClick={() => signOut()}
+                >
+                  Sign Out
+                </Button>
+              </div>
+            ) : (
+              <>
+                <Button 
+                  variant="ghost" 
+                  className="text-muted-foreground hover:text-foreground"
+                  onClick={() => navigate('/signin')}
+                >
+                  Sign In
+                </Button>
+                <Button 
+                  className="bg-primary hover:bg-primary-glow text-primary-foreground"
+                  onClick={() => navigate('/signup')}
+                >
+                  Get Started
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -77,13 +104,37 @@ export const Navigation = () => {
                 Team
               </a>
               <div className="flex flex-col space-y-2 pt-4">
-                <Button variant="ghost" className="text-muted-foreground hover:text-foreground">
-                  Sign In
-                </Button>
-                <Button className="bg-primary hover:bg-primary-glow text-primary-foreground">
-                  Get Started
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
+                {user ? (
+                  <div className="flex flex-col space-y-2">
+                    <span className="text-muted-foreground text-sm px-3 py-2">
+                      Welcome, {user.email?.split('@')[0]}
+                    </span>
+                    <Button 
+                      variant="ghost" 
+                      className="text-muted-foreground hover:text-foreground"
+                      onClick={() => signOut()}
+                    >
+                      Sign Out
+                    </Button>
+                  </div>
+                ) : (
+                  <>
+                    <Button 
+                      variant="ghost" 
+                      className="text-muted-foreground hover:text-foreground"
+                      onClick={() => navigate('/signin')}
+                    >
+                      Sign In
+                    </Button>
+                    <Button 
+                      className="bg-primary hover:bg-primary-glow text-primary-foreground"
+                      onClick={() => navigate('/signup')}
+                    >
+                      Get Started
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
           </div>

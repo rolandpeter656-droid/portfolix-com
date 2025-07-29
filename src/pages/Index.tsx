@@ -10,14 +10,21 @@ import { PricingPlans } from "@/components/PricingPlans";
 import { RiskAssessment } from "@/components/RiskAssessment";
 import { PortfolioRecommendation } from "@/components/PortfolioRecommendation";
 import { PortfolioWorkspace } from "@/components/PortfolioWorkspace";
+import { AuthGuard } from "@/components/AuthGuard";
+import { useAuth } from "@/hooks/useAuth";
 
 type Step = "landing" | "assessment" | "recommendation" | "workspace";
 
 const Index = () => {
   const [currentStep, setCurrentStep] = useState<Step>("landing");
   const [riskScore, setRiskScore] = useState<number>(0);
+  const { user } = useAuth();
 
   const handleGetStarted = () => {
+    if (!user) {
+      window.location.href = '/signup';
+      return;
+    }
     setCurrentStep("assessment");
   };
 
@@ -32,15 +39,27 @@ const Index = () => {
 
   // Show the portfolio builder flow when user clicks get started
   if (currentStep === "assessment") {
-    return <RiskAssessment onComplete={handleAssessmentComplete} />;
+    return (
+      <AuthGuard>
+        <RiskAssessment onComplete={handleAssessmentComplete} />
+      </AuthGuard>
+    );
   }
 
   if (currentStep === "recommendation") {
-    return <PortfolioRecommendation riskScore={riskScore} onStartWorkspace={handleStartWorkspace} />;
+    return (
+      <AuthGuard>
+        <PortfolioRecommendation riskScore={riskScore} onStartWorkspace={handleStartWorkspace} />
+      </AuthGuard>
+    );
   }
 
   if (currentStep === "workspace") {
-    return <PortfolioWorkspace riskScore={riskScore} />;
+    return (
+      <AuthGuard>
+        <PortfolioWorkspace riskScore={riskScore} />
+      </AuthGuard>
+    );
   }
 
   // Main landing page
