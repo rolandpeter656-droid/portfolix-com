@@ -14,6 +14,7 @@ import {
 
 interface PortfolioRecommendationProps {
   riskScore: number;
+  onStartInvesting?: () => void;
   onStartWorkspace?: () => void;
 }
 
@@ -108,7 +109,7 @@ const getPortfolioData = (riskScore: number) => {
   return portfolios[type as keyof typeof portfolios];
 };
 
-export const PortfolioRecommendation = ({ riskScore, onStartWorkspace }: PortfolioRecommendationProps) => {
+export const PortfolioRecommendation = ({ riskScore, onStartInvesting, onStartWorkspace }: PortfolioRecommendationProps) => {
   const portfolioType = getPortfolioType(riskScore);
   const portfolio = getPortfolioData(riskScore);
 
@@ -209,7 +210,11 @@ export const PortfolioRecommendation = ({ riskScore, onStartWorkspace }: Portfol
 
           <div className="text-center mt-12 space-y-4">
             <div className="flex justify-center gap-4">
-              <Button size="lg" className="bg-gradient-primary text-white hover:opacity-90 px-8 py-4 text-lg group">
+              <Button 
+                size="lg" 
+                onClick={onStartInvesting}
+                className="bg-gradient-primary text-white hover:opacity-90 px-8 py-4 text-lg group"
+              >
                 Start Investing Now
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>

@@ -8,6 +8,7 @@ import Pricing from "./pages/Pricing";
 import Payment from "./pages/Payment";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
+import PortfolioSummary from "./pages/PortfolioSummary";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,6 +25,7 @@ const App = () => (
           <Route path="/payment" element={<Payment />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/portfolio-summary" element={<PortfolioSummary riskScore={50} experienceLevel="intermediate" onBack={() => window.history.back()} onCustomize={() => {}} />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

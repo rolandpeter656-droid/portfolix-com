@@ -10,14 +10,16 @@ import { PricingPlans } from "@/components/PricingPlans";
 import { RiskAssessment } from "@/components/RiskAssessment";
 import { PortfolioRecommendation } from "@/components/PortfolioRecommendation";
 import { PortfolioWorkspace } from "@/components/PortfolioWorkspace";
+import PortfolioSummary from "@/pages/PortfolioSummary";
 import { AuthGuard } from "@/components/AuthGuard";
 import { useAuth } from "@/hooks/useAuth";
 
-type Step = "landing" | "assessment" | "recommendation" | "workspace";
+type Step = "landing" | "assessment" | "recommendation" | "summary" | "workspace";
 
 const Index = () => {
   const [currentStep, setCurrentStep] = useState<Step>("landing");
   const [riskScore, setRiskScore] = useState<number>(0);
+  const [experienceLevel, setExperienceLevel] = useState<"beginner" | "intermediate" | "advanced">("intermediate");
   const { user } = useAuth();
 
   const handleGetStarted = () => {
@@ -28,13 +30,22 @@ const Index = () => {
     setCurrentStep("assessment");
   };
 
-  const handleAssessmentComplete = (score: number) => {
+  const handleAssessmentComplete = (score: number, experience?: "beginner" | "intermediate" | "advanced") => {
     setRiskScore(score);
+    if (experience) setExperienceLevel(experience);
     setCurrentStep("recommendation");
+  };
+
+  const handleStartInvesting = () => {
+    setCurrentStep("summary");
   };
 
   const handleStartWorkspace = () => {
     setCurrentStep("workspace");
+  };
+
+  const handleBackToRecommendation = () => {
+    setCurrentStep("recommendation");
   };
 
   // Show the portfolio builder flow when user clicks get started
@@ -49,7 +60,24 @@ const Index = () => {
   if (currentStep === "recommendation") {
     return (
       <AuthGuard>
-        <PortfolioRecommendation riskScore={riskScore} onStartWorkspace={handleStartWorkspace} />
+        <PortfolioRecommendation 
+          riskScore={riskScore} 
+          onStartInvesting={handleStartInvesting}
+          onStartWorkspace={handleStartWorkspace} 
+        />
+      </AuthGuard>
+    );
+  }
+
+  if (currentStep === "summary") {
+    return (
+      <AuthGuard>
+        <PortfolioSummary 
+          riskScore={riskScore} 
+          experienceLevel={experienceLevel}
+          onBack={handleBackToRecommendation}
+          onCustomize={handleStartWorkspace}
+        />
       </AuthGuard>
     );
   }
