@@ -334,18 +334,18 @@ export const AssetAllocationEditor = ({ assets, onAssetsChange }: AssetAllocatio
         {/* Portfolio Metrics */}
         <div className="grid grid-cols-3 gap-4 p-3 bg-accent rounded-lg">
           <div className="text-center">
-            <div className="text-sm text-muted-foreground">Assets</div>
+            <div className="text-sm font-bold text-black">Assets</div>
             <div className="font-medium">{assets.length}</div>
           </div>
           <div className="text-center">
-            <div className="text-sm text-muted-foreground">Diversification</div>
+            <div className="text-sm font-bold text-black">Diversification</div>
             <div className="font-medium flex items-center justify-center gap-1">
               <TrendingUp className="h-3 w-3 text-success" />
               Good
             </div>
           </div>
           <div className="text-center">
-            <div className="text-sm text-muted-foreground">Risk Level</div>
+            <div className="text-sm font-bold text-black">Risk Level</div>
             <div className="font-medium">Moderate</div>
           </div>
         </div>

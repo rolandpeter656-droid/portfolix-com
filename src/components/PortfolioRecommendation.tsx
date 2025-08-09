@@ -148,12 +148,12 @@ export const PortfolioRecommendation = ({ riskScore, onStartInvesting, onStartWo
                 <div className="grid grid-cols-2 gap-6 mb-6">
                   <div className="text-center p-4 bg-accent rounded-lg">
                     <TrendingUp className="h-8 w-8 text-success mx-auto mb-2" />
-                    <p className="text-sm text-muted-foreground">Expected Return</p>
+                    <p className="text-sm font-bold text-black">Expected Return</p>
                     <p className="text-2xl font-bold text-foreground">{portfolio.expectedReturn}</p>
                   </div>
                   <div className="text-center p-4 bg-accent rounded-lg">
                     <BarChart3 className="h-8 w-8 text-primary mx-auto mb-2" />
-                    <p className="text-sm text-muted-foreground">Volatility</p>
+                    <p className="text-sm font-bold text-black">Volatility</p>
                     <p className="text-2xl font-bold text-foreground">{portfolio.volatility}</p>
                   </div>
                 </div>

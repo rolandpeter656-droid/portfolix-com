@@ -179,15 +179,15 @@ export const AISuggestionPanel = ({
         <div className="grid grid-cols-3 gap-3 text-center">
           <div className="p-2 bg-accent rounded-lg">
             <div className="text-lg font-bold text-foreground">{suggestions.length}</div>
-            <div className="text-xs text-muted-foreground">Total</div>
+            <div className="text-xs font-bold text-black">Total</div>
           </div>
           <div className="p-2 bg-accent rounded-lg">
             <div className="text-lg font-bold text-destructive">{highPrioritySuggestions}</div>
-            <div className="text-xs text-muted-foreground">High Priority</div>
+            <div className="text-xs font-bold text-black">High Priority</div>
           </div>
           <div className="p-2 bg-accent rounded-lg">
             <div className="text-lg font-bold text-success">{averageConfidence.toFixed(0)}%</div>
-            <div className="text-xs text-muted-foreground">Confidence</div>
+            <div className="text-xs font-bold text-black">Confidence</div>
           </div>
         </div>
 
