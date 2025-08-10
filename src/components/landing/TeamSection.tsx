@@ -26,7 +26,7 @@ const teamMember = {
     "Educating millions about investing and wealth on social media"
   ],
   socials: {
-    linkedin: "https://www.linkedin.com/in/peter-roland",
+    linkedin: "http://linkedin.com/in/peter-roland-289684344",
     x: "https://x.com/petr_roland"
   }
 };
@@ -56,7 +56,7 @@ export const TeamSection = () => {
               {/* Profile Image */}
               <div className="relative overflow-hidden">
                 <img
-                  src="/placeholder.svg?height=256&width=400"
+                  src="/lovable-uploads/7695f634-65fb-45d3-801d-359be5d4a29b.png"
                   alt="Roland Peter — CEO & Founder, PortfoliX"
                   className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
                 />
