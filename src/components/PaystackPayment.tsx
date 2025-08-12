@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { ArrowLeft, CreditCard, Globe, Shield } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { ArrowLeft, CreditCard, Globe, Shield, Smartphone } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface PricingPlan {
@@ -249,21 +250,60 @@ export const PaystackPayment = ({ plan, currency, onSuccess, onCancel }: Paystac
           </div>
 
           {/* Payment Methods */}
-          <div className="space-y-3">
-            <Label>Supported Payment Methods</Label>
-            <div className="flex items-center gap-4 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <CreditCard className="h-4 w-4" />
-                <span>Credit/Debit Cards</span>
+          <div className="space-y-4">
+            <Label>Payment Methods</Label>
+            
+            {/* Primary Payment Method - Paystack */}
+            <div className="border rounded-lg p-4 bg-muted/30">
+              <div className="flex items-center justify-between mb-3">
+                <h4 className="font-medium">Paystack Payment</h4>
+                <Badge variant="default">Recommended</Badge>
               </div>
-              <div className="flex items-center gap-2">
-                <Globe className="h-4 w-4" />
-                <span>International Cards</span>
+              <div className="grid grid-cols-2 gap-3 text-sm">
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <CreditCard className="h-4 w-4" />
+                  <span>Visa/Mastercard</span>
+                </div>
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Globe className="h-4 w-4" />
+                  <span>International Cards</span>
+                </div>
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Shield className="h-4 w-4" />
+                  <span>Bank Transfer</span>
+                </div>
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <CreditCard className="h-4 w-4" />
+                  <span>Mobile Money</span>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <Shield className="h-4 w-4" />
-                <span>Bank Transfer</span>
+            </div>
+
+            {/* Additional Payment Methods */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="border rounded-lg p-4 bg-background">
+                <div className="flex items-center gap-2 mb-2">
+                  <CreditCard className="h-4 w-4 text-primary" />
+                  <span className="font-medium">Credit/Debit Cards</span>
+                </div>
+                <p className="text-xs text-muted-foreground">Direct card processing</p>
+                <p className="text-xs text-muted-foreground mt-1">Visa, Mastercard, Amex</p>
               </div>
+              
+              <div className="border rounded-lg p-4 bg-background">
+                <div className="flex items-center gap-2 mb-2">
+                  <Smartphone className="h-4 w-4 text-primary" />
+                  <span className="font-medium">Apple Pay</span>
+                </div>
+                <p className="text-xs text-muted-foreground">Quick and secure payments</p>
+                <p className="text-xs text-muted-foreground mt-1">iOS and Safari only</p>
+              </div>
+            </div>
+            
+            <div className="text-xs text-muted-foreground">
+              <p>• All payment methods are secured with industry-standard encryption</p>
+              <p>• International cards accepted worldwide</p>
+              <p>• Additional payment options available at checkout</p>
             </div>
           </div>
 
