@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Check, CreditCard, Building, Shield } from "lucide-react";
 import { usePaystackPayment } from "react-paystack";
 import { useToast } from "@/hooks/use-toast";
+import { StripePayment } from "@/components/StripePayment";
 
 interface PaymentConfig {
   reference: string;
@@ -30,6 +31,7 @@ const Payment = () => {
   
   const plan = searchParams.get("plan") || "pro";
   const currency = (searchParams.get("currency") || "USD") as "NGN" | "USD";
+  const method = searchParams.get("method") || "paystack";
   
   const [customerData, setCustomerData] = useState({
     firstName: "",
@@ -44,6 +46,7 @@ const Payment = () => {
   const planDetails = {
     name: "Pro Plan",
     price: { NGN: 12000, USD: 25 },
+    description: "Advanced features for serious investors",
     features: [
       "Unlimited AI-generated portfolios",
       "Real-time portfolio improvement suggestions", 
@@ -114,6 +117,29 @@ const Payment = () => {
     return `${symbol}${price.toLocaleString()}`;
   };
 
+  // If method is stripe, render Stripe component
+  if (method === "stripe") {
+    return (
+      <StripePayment
+        plan={{
+          id: plan,
+          name: planDetails.name,
+          price: planDetails.price,
+          description: planDetails.description
+        }}
+        currency={currency}
+        onSuccess={() => {
+          toast({
+            title: "Payment Successful!",
+            description: "Welcome to Pro Plan! Your subscription is now active.",
+          });
+          navigate("/", { state: { plan: "pro" } });
+        }}
+        onCancel={() => navigate("/payment-method")}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -121,16 +147,16 @@ const Payment = () => {
         <div className="container mx-auto px-4 py-4">
           <Button
             variant="ghost"
-            onClick={() => navigate("/pricing")}
+            onClick={() => navigate(method === "stripe" ? "/payment-method" : "/pricing")}
             className="mb-4"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Pricing
+            {method === "stripe" ? "Back to Payment Methods" : "Back to Pricing"}
           </Button>
           <div className="text-center">
             <h1 className="text-3xl font-bold">Complete Your Purchase</h1>
             <p className="text-muted-foreground mt-2">
-              Upgrade to Pro Plan and unlock advanced portfolio management
+              Upgrade to Pro Plan with {method === "stripe" ? "Stripe" : "Paystack"} secure payment
             </p>
           </div>
         </div>

@@ -97,8 +97,8 @@ export const PricingPlans = ({ currentPlan = "free", onPlanSelect }: PricingPlan
     }
 
     if (planId === "pro") {
-      // Open Paystack payment link in new tab
-      window.open("https://paystack.shop/pay/mkxrul537n", "_blank");
+      // Navigate to payment method selection page
+      navigate(`/payment-method?plan=${planId}&currency=${currency}`);
       return;
     }
 

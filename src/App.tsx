@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Pricing from "./pages/Pricing";
 import Payment from "./pages/Payment";
+import PaymentMethod from "./pages/PaymentMethod";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import PortfolioSummary from "./pages/PortfolioSummary";
@@ -23,6 +24,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/payment" element={<Payment />} />
+          <Route path="/payment-method" element={<PaymentMethod />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/portfolio-summary" element={<PortfolioSummary riskScore={50} experienceLevel="intermediate" onBack={() => window.history.back()} onCustomize={() => {}} />} />
