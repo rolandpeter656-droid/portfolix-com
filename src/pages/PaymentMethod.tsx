@@ -1,16 +1,12 @@
-import { useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, CreditCard, Shield, Smartphone, Globe, Building, Check } from "lucide-react";
 
-type PaymentMethod = "paystack" | "stripe";
-
 const PaymentMethod = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const [selectedMethod, setSelectedMethod] = useState<PaymentMethod | null>(null);
   
   const plan = searchParams.get("plan") || "pro";
   const currency = (searchParams.get("currency") || "USD") as "NGN" | "USD";
@@ -26,14 +22,9 @@ const PaymentMethod = () => {
     return `${symbol}${price.toLocaleString()}`;
   };
 
-  const handleMethodSelect = (method: PaymentMethod) => {
-    if (method === "paystack") {
-      // Redirect to existing Paystack payment link
-      window.open("https://paystack.shop/pay/mkxrul537n", "_blank");
-    } else if (method === "stripe") {
-      // Navigate to Stripe payment page
-      navigate(`/payment?plan=${plan}&currency=${currency}&method=stripe`);
-    }
+  const handlePaystackPayment = () => {
+    // Redirect to existing Paystack payment link
+    window.open("https://paystack.shop/pay/mkxrul537n", "_blank");
   };
 
   return (
@@ -50,9 +41,9 @@ const PaymentMethod = () => {
             Back to Pricing
           </Button>
           <div className="text-center">
-            <h1 className="text-3xl font-bold">Choose Payment Method</h1>
+            <h1 className="text-3xl font-bold">Complete Your Purchase</h1>
             <p className="text-muted-foreground mt-2">
-              Select your preferred payment gateway for {planDetails.name}
+              Secure payment processing for {planDetails.name}
             </p>
           </div>
         </div>
@@ -82,23 +73,16 @@ const PaymentMethod = () => {
             </CardContent>
           </Card>
 
-          {/* Payment Method Selection */}
-          <div className="grid md:grid-cols-2 gap-6">
-            
-            {/* Paystack Option */}
-            <Card 
-              className={`cursor-pointer transition-all duration-200 hover:shadow-lg border-2 ${
-                selectedMethod === "paystack" ? "border-primary" : "border-border"
-              }`}
-              onClick={() => setSelectedMethod("paystack")}
-            >
+          {/* Paystack Payment Section */}
+          <div className="max-w-2xl mx-auto">
+            <Card className="transition-all duration-200 hover:shadow-lg border-2 border-primary">
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Shield className="h-6 w-6 text-primary" />
                     Paystack
                   </div>
-                  <Badge variant="default">Recommended</Badge>
+                  <Badge variant="default">Secure Payment</Badge>
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -141,81 +125,17 @@ const PaymentMethod = () => {
                     <Check className="h-3 w-3 text-green-600" />
                     <span>Multi-currency support</span>
                   </div>
+                  <div className="flex items-center gap-1">
+                    <Check className="h-3 w-3 text-green-600" />
+                    <span>Apple Pay & Google Pay</span>
+                  </div>
                 </div>
 
                 <Button
                   className="w-full"
-                  onClick={() => handleMethodSelect("paystack")}
+                  onClick={handlePaystackPayment}
                 >
                   Pay with Paystack
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Stripe Option */}
-            <Card 
-              className={`cursor-pointer transition-all duration-200 hover:shadow-lg border-2 ${
-                selectedMethod === "stripe" ? "border-primary" : "border-border"
-              }`}
-              onClick={() => setSelectedMethod("stripe")}
-            >
-              <CardHeader>
-                <CardTitle className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <CreditCard className="h-6 w-6 text-primary" />
-                    Stripe
-                  </div>
-                  <Badge variant="outline">Global</Badge>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-sm text-muted-foreground">
-                  Global payment platform trusted by millions worldwide
-                </p>
-                
-                <div className="space-y-2">
-                  <h4 className="font-medium text-sm">Supported Methods:</h4>
-                  <div className="grid grid-cols-2 gap-2 text-xs">
-                    <div className="flex items-center gap-1">
-                      <CreditCard className="h-3 w-3" />
-                      <span>Credit Cards</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <CreditCard className="h-3 w-3" />
-                      <span>Debit Cards</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Smartphone className="h-3 w-3" />
-                      <span>Apple Pay</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Smartphone className="h-3 w-3" />
-                      <span>Google Pay</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-1 text-xs text-muted-foreground">
-                  <div className="flex items-center gap-1">
-                    <Check className="h-3 w-3 text-green-600" />
-                    <span>One-click payments</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Check className="h-3 w-3 text-green-600" />
-                    <span>Advanced security</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Check className="h-3 w-3 text-green-600" />
-                    <span>Instant processing</span>
-                  </div>
-                </div>
-
-                <Button
-                  className="w-full"
-                  variant="outline"
-                  onClick={() => handleMethodSelect("stripe")}
-                >
-                  Pay with Stripe
                 </Button>
               </CardContent>
             </Card>
@@ -230,7 +150,7 @@ const PaymentMethod = () => {
                   Bank-level Security & Encryption
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  All payment methods use industry-standard encryption and are PCI DSS compliant.
+                  Paystack uses industry-standard encryption and is PCI DSS compliant.
                   Your payment information is never stored on our servers.
                 </p>
               </div>
