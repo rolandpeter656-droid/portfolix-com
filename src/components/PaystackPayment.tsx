@@ -12,13 +12,13 @@ import { useToast } from "@/hooks/use-toast";
 interface PricingPlan {
   id: string;
   name: string;
-  price: { NGN: number; USD: number };
+  price: number;
   description: string;
 }
 
 interface PaystackPaymentProps {
   plan: PricingPlan;
-  currency: "NGN" | "USD";
+  currency: "USD";
   onSuccess: () => void;
   onCancel: () => void;
 }
@@ -36,8 +36,8 @@ export const PaystackPayment = ({ plan, currency, onSuccess, onCancel }: Paystac
   const [discount, setDiscount] = useState(0);
   const { toast } = useToast();
 
-  // Get price based on currency
-  const basePrice = plan.price[currency];
+  // Get price
+  const basePrice = plan.price;
   const discountAmount = (basePrice * discount) / 100;
   const finalPrice = basePrice - discountAmount;
 
@@ -129,8 +129,7 @@ export const PaystackPayment = ({ plan, currency, onSuccess, onCancel }: Paystac
   };
 
   const formatPrice = (price: number) => {
-    const symbol = currency === "NGN" ? "₦" : "$";
-    return `${symbol}${price.toLocaleString()}`;
+    return `$${price}`;
   };
 
   return (
@@ -158,7 +157,7 @@ export const PaystackPayment = ({ plan, currency, onSuccess, onCancel }: Paystac
             <h3 className="font-semibold mb-2">{plan.name}</h3>
             <p className="text-sm text-muted-foreground mb-3">{plan.description}</p>
             <div className="flex justify-between items-center">
-              <span>Subscription ({currency})</span>
+              <span>Subscription (USD)</span>
               <span className="font-semibold">{formatPrice(basePrice)}/month</span>
             </div>
             {discount > 0 && (

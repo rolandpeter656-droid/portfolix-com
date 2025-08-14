@@ -7,12 +7,12 @@ import { PaystackPayment } from "./PaystackPayment";
 import { useNavigate } from "react-router-dom";
 
 export type PlanType = "free" | "pro" | "institutional";
-export type Currency = "NGN" | "USD";
+export type Currency = "USD";
 
 interface PricingPlan {
   id: PlanType;
   name: string;
-  price: { NGN: number; USD: number };
+  price: number;
   description: string;
   features: string[];
   buttonText: string;
@@ -24,7 +24,7 @@ const plans: PricingPlan[] = [
   {
     id: "free",
     name: "Free Plan",
-    price: { NGN: 0, USD: 0 },
+    price: 0,
     description: "Perfect for beginners getting started with AI-powered investing",
     features: [
       "5 AI-generated investment portfolios",
@@ -39,7 +39,7 @@ const plans: PricingPlan[] = [
   {
     id: "pro",
     name: "Pro Plan",
-    price: { NGN: 12000, USD: 25 },
+    price: 25,
     description: "Advanced features for serious investors",
     features: [
       "Unlimited AI-generated portfolios",
@@ -56,7 +56,7 @@ const plans: PricingPlan[] = [
   {
     id: "institutional",
     name: "Institutional Plan",
-    price: { NGN: 0, USD: 0 },
+    price: 0,
     description: "Custom solutions for institutions and large teams",
     features: [
       "Custom AI-generated model portfolios",
@@ -79,7 +79,7 @@ interface PricingPlansProps {
 }
 
 export const PricingPlans = ({ currentPlan = "free", onPlanSelect }: PricingPlansProps) => {
-  const [currency, setCurrency] = useState<Currency>("USD");
+  const currency: Currency = "USD";
   const [selectedPlan, setSelectedPlan] = useState<PlanType | null>(null);
   const [showPayment, setShowPayment] = useState(false);
   const navigate = useNavigate();
@@ -114,11 +114,10 @@ export const PricingPlans = ({ currentPlan = "free", onPlanSelect }: PricingPlan
     }
   };
 
-  const formatPrice = (price: number, curr: Currency, planId: PlanType) => {
+  const formatPrice = (price: number, planId: PlanType) => {
     if (price === 0 && planId === "free") return "Free";
     if (price === 0 && planId === "institutional") return "Custom";
-    const symbol = curr === "NGN" ? "₦" : "$";
-    return `${symbol}${price.toLocaleString()}`;
+    return `$${price}`;
   };
 
   if (showPayment && selectedPlan) {
@@ -142,30 +141,6 @@ export const PricingPlans = ({ currentPlan = "free", onPlanSelect }: PricingPlan
         <p className="text-lg text-muted-foreground mb-8">
           Scale your portfolio management with AI-powered insights
         </p>
-        
-        {/* Currency Toggle */}
-        <div className="inline-flex rounded-lg border p-1 mb-8">
-          <button
-            onClick={() => setCurrency("USD")}
-            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-              currency === "USD"
-                ? "bg-primary text-primary-foreground"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            USD ($)
-          </button>
-          <button
-            onClick={() => setCurrency("NGN")}
-            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-              currency === "NGN"
-                ? "bg-primary text-primary-foreground"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            NGN (₦)
-          </button>
-        </div>
       </div>
 
       <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
@@ -188,8 +163,8 @@ export const PricingPlans = ({ currentPlan = "free", onPlanSelect }: PricingPlan
               </div>
               <CardTitle className="text-2xl">{plan.name}</CardTitle>
               <div className="text-3xl font-bold">
-                {formatPrice(plan.price[currency], currency, plan.id)}
-                {plan.price[currency] > 0 && (
+                {formatPrice(plan.price, plan.id)}
+                {plan.price > 0 && (
                   <span className="text-sm font-normal text-muted-foreground">/month</span>
                 )}
               </div>
