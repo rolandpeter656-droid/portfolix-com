@@ -11,6 +11,7 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import PortfolioSummary from "./pages/PortfolioSummary";
 import Api from "./pages/Api";
+import Integrations from "./pages/Integrations";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const App = () => (
           <Route path="/signup" element={<SignUp />} />
           <Route path="/portfolio-summary" element={<PortfolioSummary riskScore={50} experienceLevel="intermediate" onBack={() => window.history.back()} onCustomize={() => {}} />} />
           <Route path="/api" element={<Api />} />
+          <Route path="/integrations" element={<Integrations />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
