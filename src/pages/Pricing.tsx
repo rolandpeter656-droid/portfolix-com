@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { PricingPlans, PlanType } from "@/components/PricingPlans";
+import PortfolioBuilder from "@/components/PortfolioBuilder";
 import { useToast } from "@/hooks/use-toast";
 
 const Pricing = () => {
@@ -16,6 +17,7 @@ const Pricing = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <PortfolioBuilder />
       <PricingPlans 
         currentPlan={currentPlan}
         onPlanSelect={handlePlanSelect}
