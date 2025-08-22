@@ -15,6 +15,7 @@ import Integrations from "./pages/Integrations";
 import MobileApp from "./pages/MobileApp";
 import Careers from "./pages/Careers";
 import Blog from "./pages/Blog";
+import Documentation from "./pages/Documentation";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,6 +39,7 @@ const App = () => (
           <Route path="/mobile-app" element={<MobileApp />} />
           <Route path="/careers" element={<Careers />} />
           <Route path="/blog" element={<Blog />} />
+          <Route path="/documentation" element={<Documentation />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
