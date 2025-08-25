@@ -18,8 +18,18 @@ export const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
         <div className="max-w-5xl mx-auto">
           {/* Main Headline */}
           <h1 className="font-serif-display text-5xl md:text-7xl lg:text-8xl font-bold text-foreground mb-8 leading-tight">
-            Build Smarter Investment
-            <span className="text-gradient block mt-2">Portfolios</span>
+            {/* Mobile: Stack each word */}
+            <span className="block md:hidden">
+              <span className="block">Build</span>
+              <span className="block">Smarter</span>
+              <span className="block">Investment</span>
+              <span className="text-gradient block">Portfolios</span>
+            </span>
+            {/* Desktop: Two lines */}
+            <span className="hidden md:block">
+              Build Smarter
+              <span className="text-gradient block mt-2">Investment Portfolios</span>
+            </span>
           </h1>
 
           {/* Subheading */}
