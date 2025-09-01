@@ -107,17 +107,32 @@ export const TestimonialsSection = () => {
           ))}
         </div>
 
-        {/* Trust Indicators */}
+        {/* Wall Street-Level Strategies */}
         <div className="mt-20 text-center">
-          <p className="text-muted-foreground mb-8">
-            Trusted by professionals at leading financial institutions
+          <h3 className="text-3xl md:text-4xl font-sans-bold text-foreground mb-4">
+            Backed by Wall Street-Level Strategies
+          </h3>
+          <p className="text-xl text-muted-foreground mb-6 max-w-3xl mx-auto">
+            PortfoliX is built on the same principles and portfolio construction methods used by leading investment managers worldwide.
           </p>
-          <div className="flex flex-wrap justify-center items-center gap-8 opacity-60">
-            <div className="text-2xl font-sans-bold text-foreground">Goldman Sachs</div>
-            <div className="text-2xl font-sans-bold text-foreground">JP Morgan</div>
-            <div className="text-2xl font-sans-bold text-foreground">Fidelity</div>
-            <div className="text-2xl font-sans-bold text-foreground">BlackRock</div>
-            <div className="text-2xl font-sans-bold text-foreground">Vanguard</div>
+          <p className="text-lg text-muted-foreground mb-8 max-w-4xl mx-auto leading-relaxed">
+            We draw inspiration from the strategies pioneered by global firms like Goldman Sachs, JP Morgan, and BlackRock — but designed for everyday investors. Our portfolios follow time-tested frameworks trusted by institutional investors, adapted for accessibility and simplicity. PortfoliX bridges the gap between Wall Street and Main Street, bringing proven asset allocation methods to your fingertips.
+          </p>
+          
+          {/* Credibility Markers */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+            <div className="flex items-center justify-center space-x-3">
+              <div className="w-2 h-2 bg-primary rounded-full"></div>
+              <span className="text-foreground font-medium">Inspired by leading institutional frameworks</span>
+            </div>
+            <div className="flex items-center justify-center space-x-3">
+              <div className="w-2 h-2 bg-primary rounded-full"></div>
+              <span className="text-foreground font-medium">Built on rigorous investment research</span>
+            </div>
+            <div className="flex items-center justify-center space-x-3">
+              <div className="w-2 h-2 bg-primary rounded-full"></div>
+              <span className="text-foreground font-medium">Designed for real investors — not just Wall Street insiders</span>
+            </div>
           </div>
         </div>
       </div>
