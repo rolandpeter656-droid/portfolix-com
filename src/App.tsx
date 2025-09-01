@@ -9,6 +9,7 @@ import Payment from "./pages/Payment";
 import PaymentMethod from "./pages/PaymentMethod";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
+import AuthCallback from "./pages/AuthCallback";
 import PortfolioSummary from "./pages/PortfolioSummary";
 import Api from "./pages/Api";
 import Integrations from "./pages/Integrations";
@@ -33,6 +34,7 @@ const App = () => (
           <Route path="/payment-method" element={<PaymentMethod />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/auth/callback" element={<AuthCallback />} />
           <Route path="/portfolio-summary" element={<PortfolioSummary riskScore={50} experienceLevel="intermediate" onBack={() => window.history.back()} onCustomize={() => {}} />} />
           <Route path="/api" element={<Api />} />
           <Route path="/integrations" element={<Integrations />} />
