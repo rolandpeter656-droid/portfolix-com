@@ -1,11 +1,14 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Play, TrendingUp, Users, Zap } from "lucide-react";
+import { DemoModal } from "@/components/DemoModal";
 
 interface HeroSectionProps {
   onGetStarted: () => void;
 }
 
 export const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
+  const [isDemoOpen, setIsDemoOpen] = useState(false);
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-hero">
       {/* Background Glow Effects */}
@@ -56,6 +59,7 @@ export const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
             <Button 
               variant="outline" 
               size="lg"
+              onClick={() => setIsDemoOpen(true)}
               className="border-primary text-primary hover:bg-primary hover:text-primary-foreground px-8 py-4 text-lg"
             >
               <Play className="mr-2 h-5 w-5" />
@@ -89,6 +93,9 @@ export const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
           </div>
         </div>
       </div>
+
+      {/* Demo Modal */}
+      <DemoModal isOpen={isDemoOpen} onClose={() => setIsDemoOpen(false)} />
 
       {/* Scroll Indicator */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
