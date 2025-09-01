@@ -23,11 +23,11 @@ export const Footer = () => {
                 </div>
                 <div className="flex items-center gap-3 text-muted-foreground">
                   <Phone className="h-4 w-4 text-primary" />
-                  +1 (555) 123-4567
+                  +2349053462215
                 </div>
                 <div className="flex items-center gap-3 text-muted-foreground">
                   <MapPin className="h-4 w-4 text-primary" />
-                  San Francisco, CA
+                  Lagos, Nigeria
                 </div>
               </div>
             </div>
