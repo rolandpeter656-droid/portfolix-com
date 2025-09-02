@@ -10,6 +10,41 @@ export default function AuthCallback() {
   useEffect(() => {
     const handleAuthCallback = async () => {
       try {
+        // Check URL parameters for email confirmation
+        const urlParams = new URLSearchParams(window.location.search);
+        const accessToken = urlParams.get('access_token');
+        const refreshToken = urlParams.get('refresh_token');
+        const type = urlParams.get('type');
+
+        // Handle email confirmation
+        if (accessToken && refreshToken && type === 'signup') {
+          const { data, error } = await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken,
+          });
+
+          if (error) {
+            console.error("Email confirmation error:", error);
+            toast({
+              title: "Email Confirmation Failed",
+              description: error.message,
+              variant: "destructive",
+            });
+            navigate("/signin");
+            return;
+          }
+
+          if (data.session) {
+            toast({
+              title: "Email Confirmed!",
+              description: "Welcome to PortfoliX. Your account is now active.",
+            });
+            navigate("/");
+            return;
+          }
+        }
+
+        // Handle regular auth callback (OAuth, etc.)
         const { data, error } = await supabase.auth.getSession();
         
         if (error) {
