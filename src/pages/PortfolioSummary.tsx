@@ -398,7 +398,7 @@ const PortfolioSummary = ({ riskScore, experienceLevel, onBack, onCustomize }: P
             <DialogTrigger asChild>
               <Button size="lg" className="flex items-center gap-2">
                 <ExternalLink className="h-4 w-4" />
-                Place Trades on My Broker
+                Place Trades on Your Broker
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-md">
