@@ -47,10 +47,10 @@ const PortfolioSummary = ({ riskScore, experienceLevel, onBack, onCustomize }: P
 
   const getAmountLimits = () => {
     switch (experienceLevel) {
-      case "beginner": return { min: 25, max: 1000 };
-      case "intermediate": return { min: 1000, max: 50000 };
-      case "advanced": return { min: 50000, max: 1000000 };
-      default: return { min: 25, max: 1000 };
+      case "beginner": return { min: 10, max: 1000 };
+      case "intermediate": return { min: 25, max: 50000 };
+      case "advanced": return { min: 50, max: 1000000 };
+      default: return { min: 10, max: 1000 };
     }
   };
 
