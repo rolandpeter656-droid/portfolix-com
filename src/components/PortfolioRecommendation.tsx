@@ -200,7 +200,7 @@ export const PortfolioRecommendation = ({ riskScore, onStartInvesting, onStartWo
                   <div className="flex items-center gap-3 mb-2">
                     <span className="font-semibold">Minimum Investment</span>
                   </div>
-                  <p className="text-2xl font-bold">25</p>
+                  <p className="text-2xl font-bold">$25</p>
                   <div className="text-black/80 text-sm italic space-y-1">
                     <p>Start building wealth today</p>
                     <p>Minimum investments are set to investors' experience.</p>
