@@ -114,7 +114,7 @@ export const PortfolioRecommendation = ({ riskScore, onStartInvesting, onStartWo
   const portfolio = getPortfolioData(riskScore);
 
   return (
-    <section className="min-h-screen bg-background py-20">
+    <section className="min-h-screen bg-background py-8 sm:py-20">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto animate-fade-in">
           <div className="text-center mb-12">
@@ -130,7 +130,7 @@ export const PortfolioRecommendation = ({ riskScore, onStartInvesting, onStartWo
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-8">
+          <div className="grid lg:grid-cols-2 gap-6 lg:gap-8">
             {/* Portfolio Overview */}
             <Card className="shadow-soft border-0">
               <CardHeader>
@@ -145,7 +145,7 @@ export const PortfolioRecommendation = ({ riskScore, onStartInvesting, onStartWo
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-2 gap-6 mb-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-6">
                   <div className="text-center p-4 bg-accent rounded-lg">
                     <TrendingUp className="h-8 w-8 text-success mx-auto mb-2" />
                     <p className="text-sm font-bold text-black">Expected Return</p>
@@ -198,22 +198,24 @@ export const PortfolioRecommendation = ({ riskScore, onStartInvesting, onStartWo
 
                 <div className="mt-8 p-4 bg-gradient-primary rounded-lg text-black">
                   <div className="flex items-center gap-3 mb-2">
-                    <DollarSign className="h-5 w-5" />
                     <span className="font-semibold">Minimum Investment</span>
                   </div>
-                  <p className="text-2xl font-bold">$1,000</p>
-                  <p className="text-black/80 text-sm">Start building wealth today</p>
+                  <p className="text-2xl font-bold">25</p>
+                  <div className="text-black/80 text-sm italic space-y-1">
+                    <p>Start building wealth today</p>
+                    <p>Minimum investments are set to investors' experience.</p>
+                  </div>
                 </div>
               </CardContent>
             </Card>
           </div>
 
           <div className="text-center mt-12 space-y-4">
-            <div className="flex justify-center gap-4">
+            <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Button 
                 size="lg" 
                 onClick={onStartInvesting}
-                className="bg-gradient-primary text-white hover:opacity-90 px-8 py-4 text-lg group"
+                className="bg-gradient-primary text-white hover:opacity-90 px-8 py-4 text-lg group w-full sm:w-auto"
               >
                 Start Investing Now
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
@@ -223,7 +225,7 @@ export const PortfolioRecommendation = ({ riskScore, onStartInvesting, onStartWo
                   size="lg" 
                   variant="outline" 
                   onClick={onStartWorkspace}
-                  className="px-8 py-4 text-lg group"
+                  className="px-8 py-4 text-lg group w-full sm:w-auto"
                 >
                   Customize Portfolio
                   <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
