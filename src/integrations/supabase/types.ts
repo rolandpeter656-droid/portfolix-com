@@ -35,6 +35,30 @@ export type Database = {
         }
         Relationships: []
       }
+      auth_config: {
+        Row: {
+          created_at: string | null
+          id: number
+          setting_name: string
+          setting_value: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: number
+          setting_name: string
+          setting_value: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: number
+          setting_name?: string
+          setting_value?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       mobile_waitlist: {
         Row: {
           created_at: string
@@ -85,7 +109,18 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      cleanup_expired_email_tokens: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      get_auth_config: {
+        Args: { config_name: string }
+        Returns: string
+      }
+      is_email_verification_expired: {
+        Args: { token_created_at: string; user_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never
