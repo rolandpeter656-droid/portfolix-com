@@ -8,8 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from "recharts";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { Portfolio3DPieChart } from "@/components/Portfolio3DPieChart";
 import { useToast } from "@/hooks/use-toast";
 import jsPDF from 'jspdf';
 
@@ -207,12 +206,6 @@ const PortfolioSummary = ({ riskScore, experienceLevel, onBack, onCustomize }: P
     });
   };
 
-  const chartConfig = {
-    allocation: {
-      label: "Allocation %",
-    },
-  };
-
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -329,26 +322,9 @@ const PortfolioSummary = ({ riskScore, experienceLevel, onBack, onCustomize }: P
               <CardTitle>Asset Allocation</CardTitle>
             </CardHeader>
             <CardContent>
-              <ChartContainer config={chartConfig} className="h-[300px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={portfolio}
-                      cx="50%"
-                      cy="50%"
-                      outerRadius={100}
-                      fill="#8884d8"
-                      dataKey="allocation"
-                      label={({ symbol, allocation }) => `${symbol} ${allocation}%`}
-                    >
-                      {portfolio.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <ChartTooltip content={<ChartTooltipContent />} />
-                  </PieChart>
-                </ResponsiveContainer>
-              </ChartContainer>
+              <div className="h-[300px] w-full">
+                <Portfolio3DPieChart data={portfolio} />
+              </div>
             </CardContent>
           </Card>
         </div>
