@@ -20,6 +20,7 @@ const Index = () => {
   const [currentStep, setCurrentStep] = useState<Step>("landing");
   const [riskScore, setRiskScore] = useState<number>(0);
   const [experienceLevel, setExperienceLevel] = useState<"beginner" | "intermediate" | "advanced">("intermediate");
+  const [timeline, setTimeline] = useState<string>("");
   const { user } = useAuth();
 
   const handleGetStarted = () => {
@@ -30,9 +31,10 @@ const Index = () => {
     setCurrentStep("assessment");
   };
 
-  const handleAssessmentComplete = (score: number, experience?: "beginner" | "intermediate" | "advanced") => {
+  const handleAssessmentComplete = (score: number, experience: "beginner" | "intermediate" | "advanced", timelineValue: string) => {
     setRiskScore(score);
-    if (experience) setExperienceLevel(experience);
+    setExperienceLevel(experience);
+    setTimeline(timelineValue);
     setCurrentStep("recommendation");
   };
 
@@ -73,8 +75,9 @@ const Index = () => {
     return (
       <AuthGuard>
         <PortfolioSummary 
-          riskScore={riskScore} 
+          riskScore={riskScore}
           experienceLevel={experienceLevel}
+          timeline={timeline}
           onBack={handleBackToRecommendation}
           onCustomize={handleStartWorkspace}
         />

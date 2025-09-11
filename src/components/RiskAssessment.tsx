@@ -44,7 +44,7 @@ const questions: Question[] = [
 ];
 
 interface RiskAssessmentProps {
-  onComplete: (riskScore: number) => void;
+  onComplete: (riskScore: number, experienceLevel: string, timeline: string) => void;
 }
 
 export const RiskAssessment = ({ onComplete }: RiskAssessmentProps) => {
@@ -61,7 +61,27 @@ export const RiskAssessment = ({ onComplete }: RiskAssessmentProps) => {
       // Calculate risk score
       const totalScore = Object.values(newAnswers).reduce((sum, score) => sum + score, 0);
       const riskScore = (totalScore / (questions.length * 4)) * 100;
-      onComplete(riskScore);
+      
+      // Map experience level
+      const experienceMapping = {
+        1: "beginner",
+        2: "intermediate", 
+        3: "advanced",
+        4: "advanced"
+      };
+      
+      // Map timeline
+      const timelineMapping = {
+        1: "1-2 years",
+        2: "3-5 years", 
+        3: "6-10 years",
+        4: "10+ years"
+      };
+      
+      const experienceLevel = experienceMapping[newAnswers.experience as keyof typeof experienceMapping];
+      const timeline = timelineMapping[newAnswers.timeline as keyof typeof timelineMapping];
+      
+      onComplete(riskScore, experienceLevel, timeline);
     }
   };
 

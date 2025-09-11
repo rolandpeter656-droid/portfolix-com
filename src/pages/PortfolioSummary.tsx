@@ -24,11 +24,12 @@ interface Asset {
 interface PortfolioSummaryProps {
   riskScore: number;
   experienceLevel: "beginner" | "intermediate" | "advanced";
+  timeline: string;
   onBack: () => void;
   onCustomize: () => void;
 }
 
-const PortfolioSummary = ({ riskScore, experienceLevel, onBack, onCustomize }: PortfolioSummaryProps) => {
+const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onBack, onCustomize }: PortfolioSummaryProps) => {
   const [investmentAmount, setInvestmentAmount] = useState<number>(1000);
   const [isInputMode, setIsInputMode] = useState(false);
   const [isBrokerModalOpen, setIsBrokerModalOpen] = useState(false);
@@ -59,27 +60,29 @@ const PortfolioSummary = ({ riskScore, experienceLevel, onBack, onCustomize }: P
 
   // Generate AI portfolio based on risk score
   const generatePortfolio = (): Asset[] => {
+    let basePortfolio: Asset[] = [];
+    
     if (riskScore <= 25) {
-      return [
+      basePortfolio = [
         { symbol: "BND", name: "Vanguard Total Bond Market", allocation: 60, rationale: "Low-risk bond exposure for stability", assetClass: "Bonds", color: "#8B5CF6" },
         { symbol: "VTI", name: "Vanguard Total Stock Market", allocation: 30, rationale: "Broad US equity exposure", assetClass: "US Stocks", color: "#10B981" },
         { symbol: "VTEB", name: "Vanguard Tax-Exempt Bond", allocation: 10, rationale: "Tax-efficient income generation", assetClass: "Municipal Bonds", color: "#F59E0B" }
       ];
     } else if (riskScore <= 50) {
-      return [
+      basePortfolio = [
         { symbol: "VTI", name: "Vanguard Total Stock Market", allocation: 50, rationale: "Core US equity holding", assetClass: "US Stocks", color: "#10B981" },
         { symbol: "BND", name: "Vanguard Total Bond Market", allocation: 30, rationale: "Stability and income", assetClass: "Bonds", color: "#8B5CF6" },
         { symbol: "VTIAX", name: "Vanguard Total International", allocation: 20, rationale: "International diversification", assetClass: "International", color: "#EF4444" }
       ];
     } else if (riskScore <= 75) {
-      return [
+      basePortfolio = [
         { symbol: "VTI", name: "Vanguard Total Stock Market", allocation: 60, rationale: "Primary growth engine", assetClass: "US Stocks", color: "#10B981" },
         { symbol: "VTIAX", name: "Vanguard Total International", allocation: 25, rationale: "Global diversification", assetClass: "International", color: "#EF4444" },
         { symbol: "VNQ", name: "Vanguard Real Estate", allocation: 10, rationale: "Real estate exposure", assetClass: "REITs", color: "#F59E0B" },
         { symbol: "BND", name: "Vanguard Total Bond Market", allocation: 5, rationale: "Minimal bond allocation", assetClass: "Bonds", color: "#8B5CF6" }
       ];
     } else {
-      return [
+      basePortfolio = [
         { symbol: "VTI", name: "Vanguard Total Stock Market", allocation: 50, rationale: "Core equity position", assetClass: "US Stocks", color: "#10B981" },
         { symbol: "VGT", name: "Vanguard Technology", allocation: 20, rationale: "Growth-focused tech exposure", assetClass: "Technology", color: "#06B6D4" },
         { symbol: "VTIAX", name: "Vanguard Total International", allocation: 15, rationale: "International growth", assetClass: "International", color: "#EF4444" },
@@ -87,6 +90,30 @@ const PortfolioSummary = ({ riskScore, experienceLevel, onBack, onCustomize }: P
         { symbol: "ARKK", name: "ARK Innovation ETF", allocation: 5, rationale: "High-growth innovation", assetClass: "Growth", color: "#8B5CF6" }
       ];
     }
+
+    // Add Tesla for experienced/expert investors with 6-10 year timeline
+    const shouldAddTesla = (experienceLevel === "advanced") && timeline === "6-10 years";
+    
+    if (shouldAddTesla) {
+      // Reduce all allocations proportionally to make room for 8% Tesla allocation
+      const reductionFactor = 0.92; // Reduce by 8% total
+      basePortfolio = basePortfolio.map(asset => ({
+        ...asset,
+        allocation: Math.round(asset.allocation * reductionFactor * 10) / 10
+      }));
+      
+      // Add Tesla with robotaxi rationale
+      basePortfolio.push({
+        symbol: "TSLA",
+        name: "Tesla Inc",
+        allocation: 8.0,
+        rationale: "Tesla has begun rolling out its Robotaxi service, opening a new market in autonomous transportation that could rival Uber and redefine personal mobility. This development also positions Tesla at the forefront of robotics innovation within the automobile industry, making it a strong long-term growth opportunity.",
+        assetClass: "Growth Stocks",
+        color: "#DC2626"
+      });
+    }
+
+    return basePortfolio;
   };
 
   const portfolio = generatePortfolio();
