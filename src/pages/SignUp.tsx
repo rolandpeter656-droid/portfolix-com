@@ -21,12 +21,23 @@ const SignUp = () => {
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [token, setToken] = useState(null);
+  const [extraInfo, setExtraInfo] = useState("");
   const { signUp } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Honeypot check - if filled, it's likely a bot
+    if (extraInfo.trim() !== "") {
+      toast({
+        title: "Something went wrong. Please try again.",
+        description: "",
+        variant: "destructive",
+      });
+      return;
+    }
     
     if (!agreeToTerms) {
       toast({
@@ -117,6 +128,17 @@ const SignUp = () => {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Honeypot field - hidden from users to catch bots */}
+              <input
+                type="text"
+                name="extra_info"
+                value={extraInfo}
+                onChange={(e) => setExtraInfo(e.target.value)}
+                style={{ display: 'none' }}
+                tabIndex={-1}
+                autoComplete="off"
+              />
+              
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="firstName">First Name</Label>
