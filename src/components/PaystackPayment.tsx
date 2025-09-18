@@ -36,6 +36,13 @@ export const PaystackPayment = ({ plan, currency, onSuccess, onCancel }: Paystac
   const [discount, setDiscount] = useState(0);
   const { toast } = useToast();
 
+  // Environment variable validation
+  const paystackPublicKey = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY;
+  
+  if (!paystackPublicKey) {
+    console.error('VITE_PAYSTACK_PUBLIC_KEY environment variable is not configured');
+  }
+
   // Get price
   const basePrice = plan.price;
   const discountAmount = (basePrice * discount) / 100;
@@ -47,7 +54,7 @@ export const PaystackPayment = ({ plan, currency, onSuccess, onCancel }: Paystac
     email: customerData.email,
     amount: finalPrice * 100, // Paystack expects amount in kobo/cents
     currency,
-    publicKey: process.env.VITE_PAYSTACK_PUBLIC_KEY || "pk_test_your_public_key_here",
+    publicKey: paystackPublicKey || "",
     metadata: {
       custom_fields: [
         {
@@ -100,6 +107,15 @@ export const PaystackPayment = ({ plan, currency, onSuccess, onCancel }: Paystac
       toast({
         title: "Missing Information",
         description: "Please fill in all required fields.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!paystackPublicKey) {
+      toast({
+        title: "Payment Configuration Error",
+        description: "Payment system is currently unavailable. Please try again later.",
         variant: "destructive"
       });
       return;
