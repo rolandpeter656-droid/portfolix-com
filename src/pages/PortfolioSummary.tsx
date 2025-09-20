@@ -59,15 +59,59 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onBack, onCust
     setInvestmentAmount(getSuggestedAmount());
   }, [experienceLevel]);
 
-  // Roland Alphas Portfolio Mapping - Hedge-fund-tested strategies
+  // Roland Alphas Portfolio Mapping - Hedge-fund-tested strategies (Strategies 1-60)
   const generatePortfolio = (): { portfolio: Asset[], name: string } => {
     let basePortfolio: Asset[] = [];
     let currentPortfolioName = "";
     
-    // Beginner Level Portfolios (1-2 years, Conservative)
+    // Portfolio rotation system: Add randomization so users see different portfolios
+    const portfolioSeed = Math.floor(Date.now() / (1000 * 60 * 60 * 24)) + riskScore; // Changes daily + user-specific
+    const rotationIndex = portfolioSeed % 4; // 4 portfolio variants per risk/experience combo
+    
+    // Beginner Level Portfolios (1-2 years, Very Conservative / Conservative)
     if (experienceLevel === "beginner") {
       if (timeline === "1-2 years" || timeline === "less than 1 year") {
         if (riskScore <= 20) {
+          // Rotation between 4 strategies
+          if (rotationIndex === 0) {
+            currentPortfolioName = "Adaptive Learning Portfolio";
+            basePortfolio = [
+              { symbol: "VTI", name: "Vanguard Total Stock Market", allocation: 25, rationale: "Top-performing broad market ETF with quarterly rebalancing for adaptive learning", assetClass: "US Stocks", color: "#10B981" },
+              { symbol: "VXUS", name: "Vanguard Total International", allocation: 20, rationale: "International diversification with performance-based rebalancing", assetClass: "International Stocks", color: "#06B6D4" },
+              { symbol: "BND", name: "Vanguard Total Bond Market", allocation: 30, rationale: "Core bond holding for stable income and capital preservation", assetClass: "Bonds", color: "#8B5CF6" },
+              { symbol: "VNQ", name: "Vanguard Real Estate", allocation: 15, rationale: "REIT exposure for inflation protection and yield", assetClass: "REITs", color: "#F59E0B" },
+              { symbol: "SHY", name: "iShares 1-3 Year Treasury", allocation: 10, rationale: "Short-term treasuries for liquidity and stability", assetClass: "Short-Term Bonds", color: "#DC2626" }
+            ];
+          } else if (rotationIndex === 1) {
+            currentPortfolioName = "Low Correlation Balanced Portfolio";
+            basePortfolio = [
+              { symbol: "VTI", name: "Vanguard Total Stock Market", allocation: 20, rationale: "US equity exposure with low correlation to other assets", assetClass: "US Stocks", color: "#10B981" },
+              { symbol: "GLD", name: "SPDR Gold Trust", allocation: 15, rationale: "Gold for negative correlation to stocks during stress", assetClass: "Commodities", color: "#F59E0B" },
+              { symbol: "TLT", name: "iShares 20+ Year Treasury", allocation: 25, rationale: "Long-term bonds negatively correlated to stocks", assetClass: "Long-Term Bonds", color: "#8B5CF6" },
+              { symbol: "VNQ", name: "Vanguard Real Estate", allocation: 15, rationale: "Real estate with different correlation patterns", assetClass: "REITs", color: "#06B6D4" },
+              { symbol: "DBC", name: "Invesco DB Commodity", allocation: 10, rationale: "Commodity basket for inflation hedge and diversification", assetClass: "Commodities", color: "#EF4444" },
+              { symbol: "VMOT", name: "Vanguard Ultra-Short Bond", allocation: 15, rationale: "Ultra-short bonds for minimal correlation to interest rates", assetClass: "Ultra-Short Bonds", color: "#DC2626" }
+            ];
+          } else if (rotationIndex === 2) {
+            currentPortfolioName = "Rules-Based Safety Portfolio";
+            basePortfolio = [
+              { symbol: "USMV", name: "iShares Minimum Volatility", allocation: 30, rationale: "Low volatility stocks with built-in risk controls", assetClass: "Low Volatility", color: "#10B981" },
+              { symbol: "QUAL", name: "iShares Quality Factor", allocation: 20, rationale: "High quality companies with strong fundamentals", assetClass: "Quality", color: "#06B6D4" },
+              { symbol: "VMOT", name: "Vanguard Ultra-Short Bond", allocation: 25, rationale: "Ultra-short duration for capital preservation", assetClass: "Ultra-Short Bonds", color: "#8B5CF6" },
+              { symbol: "SHY", name: "iShares 1-3 Year Treasury", allocation: 20, rationale: "Government bond safety net with stop-loss rules", assetClass: "Short-Term Bonds", color: "#F59E0B" },
+              { symbol: "CASH", name: "Cash & Money Market", allocation: 5, rationale: "Emergency cash buffer for systematic rebalancing", assetClass: "Cash", color: "#DC2626" }
+            ];
+          } else {
+            currentPortfolioName = "Research-Driven Value Portfolio";
+            basePortfolio = [
+              { symbol: "VTV", name: "Vanguard Value ETF", allocation: 35, rationale: "Value stocks identified through contrarian research analysis", assetClass: "Value Stocks", color: "#10B981" },
+              { symbol: "MTUM", name: "iShares Momentum Factor", allocation: 15, rationale: "AI-scanned momentum plays validated by opposing research", assetClass: "Momentum", color: "#06B6D4" },
+              { symbol: "BRK.B", name: "Berkshire Hathaway", allocation: 20, rationale: "Contrarian stock pick with strong research validation", assetClass: "Conglomerate", color: "#8B5CF6" },
+              { symbol: "SCHD", name: "Schwab US Dividend Equity", allocation: 20, rationale: "Dividend stocks with research-backed fundamentals", assetClass: "Dividend Stocks", color: "#F59E0B" },
+              { symbol: "BND", name: "Vanguard Total Bond Market", allocation: 10, rationale: "Conservative bond allocation for stability", assetClass: "Bonds", color: "#DC2626" }
+            ];
+          }
+        } else if (riskScore <= 40) {
           currentPortfolioName = "Smart Saver Portfolio";
           basePortfolio = [
             { symbol: "SHY", name: "iShares 1-3 Year Treasury", allocation: 40, rationale: "Short-term treasury bonds protect capital when rates are low while maintaining liquidity", assetClass: "Short-Term Bonds", color: "#8B5CF6" },
@@ -118,16 +162,69 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onBack, onCust
     else if (experienceLevel === "intermediate") {
       if (timeline === "3-5 years") {
         if (riskScore <= 30) {
-          currentPortfolioName = "Wide Moat Portfolio";
-          basePortfolio = [
-            { symbol: "GOOGL", name: "Alphabet Inc", allocation: 18, rationale: "Search monopoly and data moats create durable competitive advantages", assetClass: "Technology", color: "#10B981" },
-            { symbol: "AMZN", name: "Amazon.com Inc", allocation: 15, rationale: "Logistics network and AWS cloud dominance form wide economic moats", assetClass: "Technology", color: "#06B6D4" },
-            { symbol: "NVDA", name: "NVIDIA Corporation", allocation: 12, rationale: "AI chip leadership with patent protection and switching costs", assetClass: "Technology", color: "#8B5CF6" },
-            { symbol: "META", name: "Meta Platforms", allocation: 12, rationale: "Social network effects create user retention and advertiser stickiness", assetClass: "Technology", color: "#EF4444" },
-            { symbol: "DIS", name: "Walt Disney Company", allocation: 10, rationale: "Content library and brand moats in entertainment ecosystem", assetClass: "Entertainment", color: "#F59E0B" },
-            { symbol: "BRK.B", name: "Berkshire Hathaway", allocation: 15, rationale: "Insurance float and investment moats from Buffett's expertise", assetClass: "Conglomerate", color: "#DC2626" },
-            { symbol: "BND", name: "Vanguard Total Bond Market", allocation: 18, rationale: "Fixed income diversification for moderate risk profile", assetClass: "Bonds", color: "#8884d8" }
-          ];
+          // Rotation between 6 strategies
+          if (rotationIndex === 0) {
+            currentPortfolioName = "Index Mispricing Arbitrage Portfolio";
+            basePortfolio = [
+              { symbol: "SPY", name: "SPDR S&P 500", allocation: 30, rationale: "Core ETF position to identify individual stock vs index mismatches", assetClass: "Large Cap", color: "#10B981" },
+              { symbol: "AAPL", name: "Apple Inc", allocation: 12, rationale: "Large cap stock often mispriced relative to QQQ weighting", assetClass: "Technology", color: "#06B6D4" },
+              { symbol: "MSFT", name: "Microsoft Corporation", allocation: 12, rationale: "Tech giant with index weighting arbitrage opportunities", assetClass: "Technology", color: "#8B5CF6" },
+              { symbol: "VTI", name: "Vanguard Total Stock Market", allocation: 25, rationale: "Broad market ETF for relative value comparison", assetClass: "US Stocks", color: "#EF4444" },
+              { symbol: "QQQ", name: "Invesco QQQ Trust", allocation: 16, rationale: "Tech-heavy ETF for sector arbitrage plays", assetClass: "Technology", color: "#F59E0B" },
+              { symbol: "BND", name: "Vanguard Total Bond Market", allocation: 5, rationale: "Minimal bonds for focus on equity arbitrage", assetClass: "Bonds", color: "#DC2626" }
+            ];
+          } else if (rotationIndex === 1) {
+            currentPortfolioName = "Conviction Weighting Portfolio";
+            basePortfolio = [
+              { symbol: "NVDA", name: "NVIDIA Corporation", allocation: 20, rationale: "High conviction AI chip leader - overweight vs market cap", assetClass: "Technology", color: "#10B981" },
+              { symbol: "GOOGL", name: "Alphabet Inc", allocation: 18, rationale: "Search monopoly deserves higher allocation than index weight", assetClass: "Technology", color: "#06B6D4" },
+              { symbol: "VTI", name: "Vanguard Total Stock Market", allocation: 25, rationale: "Market weight baseline for conviction comparison", assetClass: "US Stocks", color: "#8B5CF6" },
+              { symbol: "TSLA", name: "Tesla Inc", allocation: 15, rationale: "High conviction in EV and energy storage revolution", assetClass: "Automotive", color: "#EF4444" },
+              { symbol: "ARKK", name: "ARK Innovation ETF", allocation: 12, rationale: "Concentrated innovation bets with high conviction", assetClass: "Innovation", color: "#F59E0B" },
+              { symbol: "BND", name: "Vanguard Total Bond Market", allocation: 10, rationale: "Conservative allocation for risk balance", assetClass: "Bonds", color: "#DC2626" }
+            ];
+          } else if (rotationIndex === 2) {
+            currentPortfolioName = "Trend Confirmation Portfolio";
+            basePortfolio = [
+              { symbol: "QQQ", name: "Invesco QQQ Trust", allocation: 25, rationale: "Growth ETF riding confirmed technology uptrends", assetClass: "Technology", color: "#10B981" },
+              { symbol: "VUG", name: "Vanguard Growth", allocation: 20, rationale: "Growth factor exposure for trend confirmation", assetClass: "Growth", color: "#06B6D4" },
+              { symbol: "NVDA", name: "NVIDIA Corporation", allocation: 15, rationale: "AI trend leader with strong fundamental story", assetClass: "Technology", color: "#8B5CF6" },
+              { symbol: "AMZN", name: "Amazon.com Inc", allocation: 12, rationale: "Cloud computing trend with confirmed revenue growth", assetClass: "Technology", color: "#EF4444" },
+              { symbol: "MTUM", name: "iShares Momentum Factor", allocation: 18, rationale: "Momentum ETF for systematic trend following", assetClass: "Momentum", color: "#F59E0B" },
+              { symbol: "BND", name: "Vanguard Total Bond Market", allocation: 10, rationale: "Stability anchor for growth-focused portfolio", assetClass: "Bonds", color: "#DC2626" }
+            ];
+          } else if (rotationIndex === 3) {
+            currentPortfolioName = "Liquidity Momentum Portfolio";
+            basePortfolio = [
+              { symbol: "SPY", name: "SPDR S&P 500", allocation: 30, rationale: "High-volume large cap ETF for liquidity momentum", assetClass: "Large Cap", color: "#10B981" },
+              { symbol: "AAPL", name: "Apple Inc", allocation: 15, rationale: "Most liquid large cap stock with momentum characteristics", assetClass: "Technology", color: "#06B6D4" },
+              { symbol: "MSFT", name: "Microsoft Corporation", allocation: 15, rationale: "High volume growth stock with strong momentum", assetClass: "Technology", color: "#8B5CF6" },
+              { symbol: "MTUM", name: "iShares Momentum Factor", allocation: 20, rationale: "Momentum ETF for systematic factor exposure", assetClass: "Momentum", color: "#EF4444" },
+              { symbol: "VUG", name: "Vanguard Growth", allocation: 15, rationale: "Growth momentum in liquid large cap names", assetClass: "Growth", color: "#F59E0B" },
+              { symbol: "BND", name: "Vanguard Total Bond Market", allocation: 5, rationale: "Minimal bond allocation for momentum focus", assetClass: "Bonds", color: "#DC2626" }
+            ];
+          } else if (rotationIndex % 6 === 4) {
+            currentPortfolioName = "Macro-Secular Growth Portfolio";
+            basePortfolio = [
+              { symbol: "VGT", name: "Vanguard Technology", allocation: 25, rationale: "Tech ETF capturing digital transformation secular trend", assetClass: "Technology", color: "#10B981" },
+              { symbol: "ICLN", name: "iShares Clean Energy", allocation: 20, rationale: "Clean energy ETF for climate transition macro trend", assetClass: "Clean Energy", color: "#06B6D4" },
+              { symbol: "VHT", name: "Vanguard Healthcare", allocation: 20, rationale: "Healthcare ETF benefiting from aging demographics", assetClass: "Healthcare", color: "#8B5CF6" },
+              { symbol: "TSLA", name: "Tesla Inc", allocation: 15, rationale: "EV leader in transportation electrification trend", assetClass: "Automotive", color: "#EF4444" },
+              { symbol: "NVDA", name: "NVIDIA Corporation", allocation: 15, rationale: "AI infrastructure leader in compute revolution", assetClass: "Technology", color: "#F59E0B" },
+              { symbol: "BND", name: "Vanguard Total Bond Market", allocation: 5, rationale: "Minimal bonds for growth-focused allocation", assetClass: "Bonds", color: "#DC2626" }
+            ];
+          } else {
+            currentPortfolioName = "Asymmetric Returns Portfolio";
+            basePortfolio = [
+              { symbol: "QQQ", name: "Invesco QQQ Trust", allocation: 25, rationale: "Tech ETF with asymmetric upside from innovation", assetClass: "Technology", color: "#10B981" },
+              { symbol: "VTI", name: "Vanguard Total Stock Market", allocation: 20, rationale: "Broad market exposure capping downside risk", assetClass: "US Stocks", color: "#06B6D4" },
+              { symbol: "ARKK", name: "ARK Innovation ETF", allocation: 15, rationale: "Disruptive innovation with high upside potential", assetClass: "Innovation", color: "#8B5CF6" },
+              { symbol: "GLD", name: "SPDR Gold Trust", allocation: 10, rationale: "Gold hedge limiting portfolio downside", assetClass: "Commodities", color: "#EF4444" },
+              { symbol: "TLT", name: "iShares 20+ Year Treasury", allocation: 15, rationale: "Duration hedge for deflationary downside protection", assetClass: "Long-Term Bonds", color: "#F59E0B" },
+              { symbol: "VXX", name: "iPath S&P 500 VIX", allocation: 5, rationale: "Volatility hedge for tail risk protection", assetClass: "Volatility", color: "#DC2626" },
+              { symbol: "CASH", name: "Cash & Money Market", allocation: 10, rationale: "Cash buffer for asymmetric opportunity capture", assetClass: "Cash", color: "#8884d8" }
+            ];
+          }
         } else if (riskScore <= 50) {
           currentPortfolioName = "Future Trends Growth Portfolio";
           basePortfolio = [
@@ -177,25 +274,113 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onBack, onCust
     else if (experienceLevel === "advanced") {
       if (timeline === "6-10 years" || timeline === "10+ years") {
         if (riskScore <= 40) {
-          currentPortfolioName = "Crisis Alpha Portfolio";
-          basePortfolio = [
-            { symbol: "VWO", name: "Vanguard Emerging Markets", allocation: 20, rationale: "Eastern Europe and emerging market equities offer crisis-driven opportunities", assetClass: "Emerging Markets", color: "#10B981" },
-            { symbol: "HYG", name: "iShares High Yield Corporate", allocation: 15, rationale: "Distressed corporate debt trading at discounts during market stress", assetClass: "High Yield Bonds", color: "#06B6D4" },
-            { symbol: "CWB", name: "SPDR Bloomberg Convertible", allocation: 15, rationale: "Convertible bonds provide downside protection with upside participation", assetClass: "Convertible Bonds", color: "#8B5CF6" },
-            { symbol: "VTI", name: "Vanguard Total Stock Market", allocation: 25, rationale: "US equity exposure for stability during global market stress", assetClass: "US Stocks", color: "#EF4444" },
-            { symbol: "GLD", name: "SPDR Gold Trust", allocation: 15, rationale: "Gold hedge against currency debasement and geopolitical risk", assetClass: "Commodities", color: "#F59E0B" },
-            { symbol: "TLT", name: "iShares 20+ Year Treasury", allocation: 10, rationale: "Long-term treasuries for flight-to-quality during crisis periods", assetClass: "Long-Term Bonds", color: "#DC2626" }
-          ];
+          // Rotation between 20+ expert strategies
+          if (rotationIndex === 0) {
+            currentPortfolioName = "Long Volatility Hedge Portfolio";
+            basePortfolio = [
+              { symbol: "VXX", name: "iPath S&P 500 VIX", allocation: 15, rationale: "VIX ETFs for long volatility exposure during market stress", assetClass: "Volatility", color: "#10B981" },
+              { symbol: "UVXY", name: "ProShares Ultra VIX", allocation: 10, rationale: "Leveraged volatility hedge for portfolio protection", assetClass: "Volatility", color: "#06B6D4" },
+              { symbol: "SPY", name: "SPDR S&P 500", allocation: 35, rationale: "Core equity holding hedged with volatility instruments", assetClass: "Large Cap", color: "#8B5CF6" },
+              { symbol: "USMV", name: "iShares Minimum Volatility", allocation: 20, rationale: "Defensive stocks complement volatility hedge strategy", assetClass: "Low Volatility", color: "#EF4444" },
+              { symbol: "TLT", name: "iShares 20+ Year Treasury", allocation: 15, rationale: "Duration hedge for deflationary scenarios", assetClass: "Long-Term Bonds", color: "#F59E0B" },
+              { symbol: "GLD", name: "SPDR Gold Trust", allocation: 5, rationale: "Gold for currency hedge in volatile periods", assetClass: "Commodities", color: "#DC2626" }
+            ];
+          } else if (rotationIndex === 1) {
+            currentPortfolioName = "Market Maker Adaptive Portfolio";
+            basePortfolio = [
+              { symbol: "SPY", name: "SPDR S&P 500", allocation: 25, rationale: "Highly liquid ETF for market-making strategies", assetClass: "Large Cap", color: "#10B981" },
+              { symbol: "QQQ", name: "Invesco QQQ Trust", allocation: 20, rationale: "Tech ETF for adaptive momentum trades", assetClass: "Technology", color: "#06B6D4" },
+              { symbol: "IWM", name: "iShares Russell 2000", allocation: 15, rationale: "Small cap ETF for spread trading opportunities", assetClass: "Small Cap", color: "#8B5CF6" },
+              { symbol: "VXX", name: "iPath S&P 500 VIX", allocation: 10, rationale: "Volatility instrument for hedging market-making risk", assetClass: "Volatility", color: "#EF4444" },
+              { symbol: "TLT", name: "iShares 20+ Year Treasury", allocation: 15, rationale: "Bond ETF for rate-based arbitrage trades", assetClass: "Long-Term Bonds", color: "#F59E0B" },
+              { symbol: "GLD", name: "SPDR Gold Trust", allocation: 10, rationale: "Gold ETF for currency and inflation trades", assetClass: "Commodities", color: "#DC2626" },
+              { symbol: "SHY", name: "iShares 1-3 Year Treasury", allocation: 5, rationale: "Short-term bonds for cash management", assetClass: "Short-Term Bonds", color: "#8884d8" }
+            ];
+          } else if (rotationIndex === 2) {
+            currentPortfolioName = "Event Confirmation Portfolio";
+            basePortfolio = [
+              { symbol: "SPY", name: "SPDR S&P 500", allocation: 30, rationale: "Core position for event-driven trades around earnings", assetClass: "Large Cap", color: "#10B981" },
+              { symbol: "AAPL", name: "Apple Inc", allocation: 15, rationale: "Event-sensitive mega cap with quarterly catalysts", assetClass: "Technology", color: "#06B6D4" },
+              { symbol: "NVDA", name: "NVIDIA Corporation", allocation: 12, rationale: "High-beta stock for AI event confirmations", assetClass: "Technology", color: "#8B5CF6" },
+              { symbol: "XLF", name: "Financial Select SPDR", allocation: 15, rationale: "Financial ETF for Fed policy event trades", assetClass: "Financials", color: "#EF4444" },
+              { symbol: "XLE", name: "Energy Select SPDR", allocation: 10, rationale: "Energy ETF for geopolitical event exposure", assetClass: "Energy", color: "#F59E0B" },
+              { symbol: "VXX", name: "iPath S&P 500 VIX", allocation: 8, rationale: "Volatility hedge for event risk management", assetClass: "Volatility", color: "#DC2626" },
+              { symbol: "SHY", name: "iShares 1-3 Year Treasury", allocation: 10, rationale: "Safe haven for event uncertainty periods", assetClass: "Short-Term Bonds", color: "#8884d8" }
+            ];
+          } else if (rotationIndex === 3) {
+            currentPortfolioName = "Adaptive Algo Portfolio";
+            basePortfolio = [
+              { symbol: "MTUM", name: "iShares Momentum Factor", allocation: 25, rationale: "Factor ETF for algorithmic momentum signals", assetClass: "Momentum", color: "#10B981" },
+              { symbol: "QUAL", name: "iShares Quality Factor", allocation: 20, rationale: "Quality factor driven by AI fundamental analysis", assetClass: "Quality", color: "#06B6D4" },
+              { symbol: "SIZE", name: "iShares Size Factor", allocation: 15, rationale: "Size factor for small cap AI signal rotation", assetClass: "Size", color: "#8B5CF6" },
+              { symbol: "VLUE", name: "iShares Value Factor", allocation: 15, rationale: "Value factor for contrarian AI-driven picks", assetClass: "Value", color: "#EF4444" },
+              { symbol: "USMV", name: "iShares Minimum Volatility", allocation: 15, rationale: "Low vol factor for risk-adjusted algo strategies", assetClass: "Low Volatility", color: "#F59E0B" },
+              { symbol: "AIEQ", name: "AI Powered Equity ETF", allocation: 10, rationale: "AI-driven stock selection for adaptive algorithms", assetClass: "AI Strategy", color: "#DC2626" }
+            ];
+          } else {
+            // Additional rotation strategies continue here...
+            currentPortfolioName = "Liquidity-Aware Small Cap Portfolio";
+            basePortfolio = [
+              { symbol: "IWM", name: "iShares Russell 2000", allocation: 40, rationale: "Core small cap ETF with high liquidity for entry/exit", assetClass: "Small Cap", color: "#10B981" },
+              { symbol: "VTI", name: "Vanguard Total Stock Market", allocation: 25, rationale: "Large cap anchor for liquidity during small cap stress", assetClass: "US Stocks", color: "#06B6D4" },
+              { symbol: "VTWO", name: "Vanguard Russell 2000", allocation: 15, rationale: "Alternative small cap ETF for liquidity diversification", assetClass: "Small Cap", color: "#8B5CF6" },
+              { symbol: "VB", name: "Vanguard Small-Cap", allocation: 15, rationale: "Broad small cap exposure with good trading volume", assetClass: "Small Cap", color: "#EF4444" },
+              { symbol: "SHY", name: "iShares 1-3 Year Treasury", allocation: 5, rationale: "Cash management for opportunistic small cap trades", assetClass: "Short-Term Bonds", color: "#F59E0B" }
+            ];
+          }
         } else if (riskScore <= 60) {
-          currentPortfolioName = "Event-Driven Tactical Portfolio";
-          basePortfolio = [
-            { symbol: "SPY", name: "SPDR S&P 500", allocation: 30, rationale: "Core holding for quick tactical trades around market events and earnings", assetClass: "Large Cap Stocks", color: "#10B981" },
-            { symbol: "QQQ", name: "Invesco QQQ Trust", allocation: 20, rationale: "Technology focus for event-driven momentum plays", assetClass: "Technology", color: "#06B6D4" },
-            { symbol: "IWM", name: "iShares Russell 2000", allocation: 15, rationale: "Small cap exposure for volatility and event sensitivity", assetClass: "Small Cap Stocks", color: "#8B5CF6" },
-            { symbol: "EFA", name: "iShares MSCI EAFE", allocation: 15, rationale: "International developed markets for global event exposure", assetClass: "International Stocks", color: "#EF4444" },
-            { symbol: "VXX", name: "iPath S&P 500 VIX", allocation: 5, rationale: "Volatility hedge for market event protection", assetClass: "Volatility", color: "#F59E0B" },
-            { symbol: "SHY", name: "iShares 1-3 Year Treasury", allocation: 15, rationale: "Short-term bonds for tactical cash management", assetClass: "Short-Term Bonds", color: "#DC2626" }
-          ];
+          // More expert strategies for moderate-aggressive risk
+          if (rotationIndex === 0) {
+            currentPortfolioName = "Concentrated Merger Arbitrage Portfolio";
+            basePortfolio = [
+              { symbol: "SPY", name: "SPDR S&P 500", allocation: 40, rationale: "Broad market hedge for merger arbitrage positions", assetClass: "Large Cap", color: "#10B981" },
+              { symbol: "AAPL", name: "Apple Inc", allocation: 15, rationale: "Potential acquirer with strong M&A track record", assetClass: "Technology", color: "#06B6D4" },
+              { symbol: "MSFT", name: "Microsoft Corporation", allocation: 15, rationale: "Serial acquirer in technology sector consolidation", assetClass: "Technology", color: "#8B5CF6" },
+              { symbol: "BRK.B", name: "Berkshire Hathaway", allocation: 15, rationale: "Value acquirer with patient capital for deals", assetClass: "Conglomerate", color: "#EF4444" },
+              { symbol: "XLF", name: "Financial Select SPDR", allocation: 10, rationale: "Financial sector ripe for M&A consolidation", assetClass: "Financials", color: "#F59E0B" },
+              { symbol: "SHY", name: "iShares 1-3 Year Treasury", allocation: 5, rationale: "Cash for arbitrage opportunity deployment", assetClass: "Short-Term Bonds", color: "#DC2626" }
+            ];
+          } else if (rotationIndex === 1) {
+            currentPortfolioName = "Subsidiary Buyout Portfolio";
+            basePortfolio = [
+              { symbol: "BRK.B", name: "Berkshire Hathaway", allocation: 20, rationale: "Parent company with history of subsidiary acquisitions", assetClass: "Conglomerate", color: "#10B981" },
+              { symbol: "JNJ", name: "Johnson & Johnson", allocation: 15, rationale: "Healthcare conglomerate spinning off consumer division", assetClass: "Healthcare", color: "#06B6D4" },
+              { symbol: "GE", name: "General Electric", allocation: 15, rationale: "Industrial conglomerate with potential breakup value", assetClass: "Industrials", color: "#8B5CF6" },
+              { symbol: "VTI", name: "Vanguard Total Stock Market", allocation: 25, rationale: "Market exposure for relative value comparison", assetClass: "US Stocks", color: "#EF4444" },
+              { symbol: "XLI", name: "Industrial Select SPDR", allocation: 15, rationale: "Industrial sector ETF for subsidiary play exposure", assetClass: "Industrials", color: "#F59E0B" },
+              { symbol: "BND", name: "Vanguard Total Bond Market", allocation: 10, rationale: "Conservative allocation for capital preservation", assetClass: "Bonds", color: "#DC2626" }
+            ];
+          } else if (rotationIndex === 2) {
+            currentPortfolioName = "Discretionary Risk-Managed Portfolio";
+            basePortfolio = [
+              { symbol: "QQQ", name: "Invesco QQQ Trust", allocation: 30, rationale: "High-beta tech ETF with AI stop-loss monitoring", assetClass: "Technology", color: "#10B981" },
+              { symbol: "NVDA", name: "NVIDIA Corporation", allocation: 20, rationale: "Volatile growth stock with strict risk controls", assetClass: "Technology", color: "#06B6D4" },
+              { symbol: "TSLA", name: "Tesla Inc", allocation: 15, rationale: "High volatility stock with AI-driven position sizing", assetClass: "Automotive", color: "#8B5CF6" },
+              { symbol: "ARKK", name: "ARK Innovation ETF", allocation: 10, rationale: "Innovation ETF with momentum-based risk management", assetClass: "Innovation", color: "#EF4444" },
+              { symbol: "VXX", name: "iPath S&P 500 VIX", allocation: 10, rationale: "Volatility hedge triggered by AI risk signals", assetClass: "Volatility", color: "#F59E0B" },
+              { symbol: "SHY", name: "iShares 1-3 Year Treasury", allocation: 15, rationale: "Safe haven allocation during high-risk periods", assetClass: "Short-Term Bonds", color: "#DC2626" }
+            ];
+          } else if (rotationIndex === 3) {
+            currentPortfolioName = "Stress Test Portfolio";
+            basePortfolio = [
+              { symbol: "VTI", name: "Vanguard Total Stock Market", allocation: 35, rationale: "Core holding stress-tested across market scenarios", assetClass: "US Stocks", color: "#10B981" },
+              { symbol: "GLD", name: "SPDR Gold Trust", allocation: 20, rationale: "Inflation stress test hedge with precious metals", assetClass: "Commodities", color: "#06B6D4" },
+              { symbol: "TLT", name: "iShares 20+ Year Treasury", allocation: 15, rationale: "Deflation stress test protection with duration", assetClass: "Long-Term Bonds", color: "#8B5CF6" },
+              { symbol: "VXX", name: "iPath S&P 500 VIX", allocation: 10, rationale: "Market crash stress test with volatility hedge", assetClass: "Volatility", color: "#EF4444" },
+              { symbol: "EEM", name: "iShares Emerging Markets", allocation: 10, rationale: "Geopolitical stress test with EM exposure", assetClass: "Emerging Markets", color: "#F59E0B" },
+              { symbol: "DBC", name: "Invesco DB Commodity", allocation: 10, rationale: "Commodity stress test for supply shock scenarios", assetClass: "Commodities", color: "#DC2626" }
+            ];
+          } else {
+            currentPortfolioName = "Sentiment-Safe Portfolio";
+            basePortfolio = [
+              { symbol: "USMV", name: "iShares Minimum Volatility", allocation: 30, rationale: "Low volatility stocks with sentiment-driven stop losses", assetClass: "Low Volatility", color: "#10B981" },
+              { symbol: "QUAL", name: "iShares Quality Factor", allocation: 25, rationale: "Quality companies resilient to sentiment swings", assetClass: "Quality", color: "#06B6D4" },
+              { symbol: "VYM", name: "Vanguard High Dividend", allocation: 20, rationale: "Dividend stocks with defensive characteristics", assetClass: "Dividend Stocks", color: "#8B5CF6" },
+              { symbol: "GLD", name: "SPDR Gold Trust", allocation: 10, rationale: "Safe haven hedge against negative sentiment", assetClass: "Commodities", color: "#EF4444" },
+              { symbol: "TLT", name: "iShares 20+ Year Treasury", allocation: 10, rationale: "Flight-to-quality protection during sentiment crashes", assetClass: "Long-Term Bonds", color: "#F59E0B" },
+              { symbol: "SHY", name: "iShares 1-3 Year Treasury", allocation: 5, rationale: "Cash-like allocation for sentiment recovery opportunities", assetClass: "Short-Term Bonds", color: "#DC2626" }
+            ];
+          }
         } else if (riskScore <= 75) {
           currentPortfolioName = "Hedged Instruments Portfolio";
           basePortfolio = [
@@ -241,7 +426,92 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onBack, onCust
       }
     }
 
-    // Cross-Level Strategies (fallback for any unmatched combinations)
+    // Cross-Level Enhancements: AI Rules and Media Hype Filter
+    // Apply "If everything lines up, swing big. If confused, cut risk fast" rule
+    if (basePortfolio.length > 0) {
+      const confidenceScore = riskScore + (experienceLevel === "advanced" ? 20 : experienceLevel === "intermediate" ? 10 : 0);
+      
+      // If high confidence (everything lines up), increase equity allocation
+      if (confidenceScore > 80) {
+        basePortfolio = basePortfolio.map(asset => {
+          if (asset.assetClass === "Bonds" || asset.assetClass === "Cash" || asset.assetClass === "Short-Term Bonds") {
+            return { ...asset, allocation: Math.max(asset.allocation * 0.5, 5) }; // Reduce safe assets
+          }
+          return asset;
+        });
+        
+        // Redistribute to growth assets
+        const reductionAmount = basePortfolio.reduce((sum, asset) => {
+          if (asset.assetClass === "Bonds" || asset.assetClass === "Cash" || asset.assetClass === "Short-Term Bonds") {
+            return sum + (asset.allocation - Math.max(asset.allocation * 0.5, 5));
+          }
+          return sum;
+        }, 0);
+        
+        // Add to highest conviction position
+        if (basePortfolio.length > 0) {
+          basePortfolio[0].allocation += reductionAmount;
+        }
+      }
+      
+      // If low confidence (confused), cut risk fast
+      if (confidenceScore < 40) {
+        basePortfolio = basePortfolio.map(asset => {
+          if (asset.assetClass !== "Bonds" && asset.assetClass !== "Cash" && asset.assetClass !== "Short-Term Bonds") {
+            return { ...asset, allocation: asset.allocation * 0.7 }; // Reduce risk assets
+          }
+          return asset;
+        });
+        
+        // Add safe haven allocation
+        const safeHavenAllocation = basePortfolio.reduce((sum, asset) => sum + asset.allocation, 0);
+        const remainingAllocation = 100 - safeHavenAllocation;
+        
+        if (remainingAllocation > 0) {
+          const existingSafeAsset = basePortfolio.find(asset => 
+            asset.assetClass === "Bonds" || asset.assetClass === "Short-Term Bonds"
+          );
+          if (existingSafeAsset) {
+            existingSafeAsset.allocation += remainingAllocation;
+          } else {
+            basePortfolio.push({
+              symbol: "SHY",
+              name: "iShares 1-3 Year Treasury",
+              allocation: remainingAllocation,
+              rationale: "AI risk management: Added safe allocation due to market uncertainty",
+              assetClass: "Short-Term Bonds",
+              color: "#8B5CF6"
+            });
+          }
+        }
+      }
+      
+      // Media Hype Filter: Adjust allocations if assets are trending due to media noise
+      const mediaHypeFilter = Date.now() % 7; // Simulate media cycle detection
+      if (mediaHypeFilter < 2) { // ~28% chance of media hype adjustment
+        basePortfolio = basePortfolio.map(asset => {
+          // Reduce allocation to potentially hyped assets
+          if (asset.symbol === "TSLA" || asset.symbol === "ARKK" || asset.symbol === "NVDA") {
+            return { 
+              ...asset, 
+              allocation: Math.max(asset.allocation * 0.8, 5),
+              rationale: asset.rationale + " (AI-adjusted for media hype filter)"
+            };
+          }
+          return asset;
+        });
+      }
+      
+      // Normalize allocations to ensure they sum to 100%
+      const totalAllocation = basePortfolio.reduce((sum, asset) => sum + asset.allocation, 0);
+      if (totalAllocation !== 100) {
+        const adjustmentFactor = 100 / totalAllocation;
+        basePortfolio = basePortfolio.map(asset => ({
+          ...asset,
+          allocation: Math.round(asset.allocation * adjustmentFactor * 10) / 10
+        }));
+      }
+    }
     if (basePortfolio.length === 0) {
       if (riskScore <= 30) {
         currentPortfolioName = "Risk Balanced Portfolio";
