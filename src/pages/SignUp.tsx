@@ -244,7 +244,7 @@ const SignUp = () => {
 
               <div className="flex justify-center">
                 <HCaptcha
-                  sitekey={import.meta.env.VITE_HCAPTCHA_SITEKEY || "10000000-ffff-ffff-ffff-000000000001"}
+                  sitekey={import.meta.env.VITE_HCAPTCHA_SITEKEY}
                   onVerify={token => setToken(token)}
                 />
               </div>
