@@ -708,8 +708,14 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onBack, onCust
       <div className="border-b border-border bg-card">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" onClick={onBack}>
-              <ArrowLeft className="h-4 w-4" />
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={onBack}
+              className="hover:bg-accent"
+              aria-label="Go back"
+            >
+              <ArrowLeft className="h-5 w-5" />
             </Button>
             <div>
               <h1 className="text-2xl font-bold text-foreground">
