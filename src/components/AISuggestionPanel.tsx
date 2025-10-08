@@ -178,15 +178,15 @@ export const AISuggestionPanel = ({
         {/* Quick Stats */}
         <div className="grid grid-cols-3 gap-3 text-center">
           <div className="p-2 bg-accent rounded-lg">
-            <div className="text-lg font-bold text-foreground">{suggestions.length}</div>
+            <div className="text-lg font-bold text-black">{suggestions.length}</div>
             <div className="text-xs font-bold text-black">Total</div>
           </div>
           <div className="p-2 bg-accent rounded-lg">
-            <div className="text-lg font-bold text-destructive">{highPrioritySuggestions}</div>
+            <div className="text-lg font-bold" style={{ color: '#B22222' }}>{highPrioritySuggestions}</div>
             <div className="text-xs font-bold text-black">High Priority</div>
           </div>
           <div className="p-2 bg-accent rounded-lg">
-            <div className="text-lg font-bold text-success">{averageConfidence.toFixed(0)}%</div>
+            <div className="text-lg font-bold text-black">{averageConfidence.toFixed(0)}%</div>
             <div className="text-xs font-bold text-black">Confidence</div>
           </div>
         </div>
@@ -321,19 +321,19 @@ export const AISuggestionPanel = ({
 
         {/* AI Analysis Summary */}
         <div className="p-4 bg-gradient-primary rounded-lg text-black">
-          <h4 className="font-medium mb-2 flex items-center gap-2">
-            <Brain className="h-4 w-4" />
+          <h4 className="font-medium mb-2 flex items-center gap-2 text-black">
+            <Brain className="h-4 w-4 text-black" />
             AI Portfolio Analysis
           </h4>
-          <p className="text-sm text-black/90 mb-3">
+          <p className="text-sm text-black mb-3">
             Your portfolio shows good diversification with room for optimization. 
             Focus on reducing tech concentration and adding international exposure.
           </p>
-          <div className="flex justify-between items-center text-sm">
+          <div className="flex justify-between items-center text-sm text-black">
             <div className="flex items-center gap-2">
               <span>Overall Score:</span>
               <div className="flex items-center gap-1">
-                <TrendingUp className="h-3 w-3" />
+                <TrendingUp className="h-3 w-3 text-black" />
                 <strong>8.2/10</strong>
               </div>
             </div>

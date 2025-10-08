@@ -335,18 +335,18 @@ export const AssetAllocationEditor = ({ assets, onAssetsChange }: AssetAllocatio
         <div className="grid grid-cols-3 gap-4 p-3 bg-accent rounded-lg">
           <div className="text-center">
             <div className="text-sm font-bold text-black">Assets</div>
-            <div className="font-medium">{assets.length}</div>
+            <div className="font-medium text-black">{assets.length}</div>
           </div>
           <div className="text-center">
             <div className="text-sm font-bold text-black">Diversification</div>
-            <div className="font-medium flex items-center justify-center gap-1">
-              <TrendingUp className="h-3 w-3 text-success" />
+            <div className="font-medium flex items-center justify-center gap-1 text-black">
+              <TrendingUp className="h-3 w-3 text-black" />
               Good
             </div>
           </div>
           <div className="text-center">
             <div className="text-sm font-bold text-black">Risk Level</div>
-            <div className="font-medium">Moderate</div>
+            <div className="font-medium text-black">Moderate</div>
           </div>
         </div>
       </CardContent>
