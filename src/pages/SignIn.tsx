@@ -7,14 +7,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff, ArrowLeft } from "lucide-react";
-import HCaptcha from '@hcaptcha/react-hcaptcha';
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [token, setToken] = useState(null);
+  const [honeypot, setHoneypot] = useState("");
   const { signIn } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -22,10 +21,11 @@ const SignIn = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!token) {
+    // Honeypot check - if filled, it's likely a bot
+    if (honeypot.trim() !== "") {
       toast({
-        title: "Captcha required",
-        description: "Please complete the captcha verification.",
+        title: "Something went wrong. Please try again.",
+        description: "",
         variant: "destructive",
       });
       return;
@@ -84,6 +84,17 @@ const SignIn = () => {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Honeypot field - hidden from users to catch bots */}
+              <input
+                type="text"
+                name="website_url"
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+                style={{ display: 'none' }}
+                tabIndex={-1}
+                autoComplete="off"
+              />
+              
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -123,13 +134,6 @@ const SignIn = () => {
                     )}
                   </Button>
                 </div>
-              </div>
-
-              <div className="flex justify-center">
-                <HCaptcha
-                  sitekey={import.meta.env.VITE_HCAPTCHA_SITEKEY}
-                  onVerify={token => setToken(token)}
-                />
               </div>
 
               <Button

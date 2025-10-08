@@ -9,7 +9,6 @@ import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Eye, EyeOff, ArrowLeft } from "lucide-react";
-import HCaptcha from '@hcaptcha/react-hcaptcha';
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -20,7 +19,6 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [token, setToken] = useState(null);
   const [extraInfo, setExtraInfo] = useState("");
   const { signUp } = useAuth();
   const { toast } = useToast();
@@ -43,15 +41,6 @@ const SignUp = () => {
       toast({
         title: "Terms required",
         description: "Please agree to the terms and conditions to continue.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (!token) {
-      toast({
-        title: "Captcha required",
-        description: "Please complete the captcha verification.",
         variant: "destructive",
       });
       return;
@@ -240,13 +229,6 @@ const SignUp = () => {
                     Privacy Policy
                   </Link>
                 </Label>
-              </div>
-
-              <div className="flex justify-center">
-                <HCaptcha
-                  sitekey={import.meta.env.VITE_HCAPTCHA_SITEKEY}
-                  onVerify={token => setToken(token)}
-                />
               </div>
 
               <Button
