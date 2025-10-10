@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ArrowLeft, Download, ExternalLink, Settings } from "lucide-react";
+import { ArrowLeft, Download, ExternalLink, Settings, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Switch } from "@/components/ui/switch";
 import { Portfolio3DPieChart } from "@/components/Portfolio3DPieChart";
 import { useToast } from "@/hooks/use-toast";
 import jsPDF from 'jspdf';
@@ -35,6 +36,21 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onBack, onCust
   const [isBrokerModalOpen, setIsBrokerModalOpen] = useState(false);
   const [portfolioName, setPortfolioName] = useState<string>("");
   const { toast } = useToast();
+
+  // Short-Term Market Tracker state
+  const isShortTermEligible = () => {
+    // Check if timeline is ≤5 years
+    const isShortTerm = timeline === "1-2 years" || 
+                        timeline === "3-5 years" || 
+                        timeline === "less than 1 year";
+    
+    // Check if risk is Moderate or High (riskScore > 40)
+    const isModerateOrHighRisk = riskScore > 40;
+    
+    return isShortTerm && isModerateOrHighRisk;
+  };
+
+  const [isShortTermTrackerEnabled, setIsShortTermTrackerEnabled] = useState(isShortTermEligible());
 
   // Suggested amounts based on experience level
   const getSuggestedAmount = () => {
@@ -831,6 +847,50 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onBack, onCust
               <div className="h-[300px] w-full">
                 <Portfolio3DPieChart data={portfolio} />
               </div>
+            </CardContent>
+          </Card>
+
+          {/* AI Short-Term Market Tracker Toggle */}
+          <Card className="shadow-card border-2 border-primary/20">
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3 flex-1">
+                  <div className="p-2 bg-primary/10 rounded-lg">
+                    <Zap className="h-5 w-5 text-primary" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="font-semibold text-foreground flex items-center gap-2">
+                      Activate Short-Term Market Tracker (AI)
+                      {isShortTermEligible() && (
+                        <Badge variant="default" className="text-xs">Recommended</Badge>
+                      )}
+                    </div>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Let the AI track live markets and reoptimize your portfolio for faster short-term gains.
+                    </p>
+                  </div>
+                </div>
+                <Switch 
+                  checked={isShortTermTrackerEnabled}
+                  onCheckedChange={(checked) => {
+                    setIsShortTermTrackerEnabled(checked);
+                    toast({
+                      title: checked ? "Short-Term Tracker Activated" : "Short-Term Tracker Deactivated",
+                      description: checked 
+                        ? "Your portfolio will be optimized for short-term market conditions. AI will monitor and update positions weekly."
+                        : "Switched to standard portfolio optimization.",
+                    });
+                  }}
+                  className="data-[state=checked]:bg-primary"
+                />
+              </div>
+              {isShortTermTrackerEnabled && (
+                <div className="mt-4 p-3 bg-primary/5 rounded-lg border border-primary/20">
+                  <p className="text-sm text-foreground font-medium">
+                    ✨ Your portfolio has been optimized for short-term market conditions. AI will monitor and update your positions weekly for better returns.
+                  </p>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
