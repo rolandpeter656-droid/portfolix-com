@@ -108,6 +108,8 @@ export type Database = {
           id: number
           last_name: string | null
           phone_number: string
+          portfolio_count: number | null
+          subscription_plan: string | null
           user_id: string
         }
         Insert: {
@@ -116,6 +118,8 @@ export type Database = {
           id?: number
           last_name?: string | null
           phone_number: string
+          portfolio_count?: number | null
+          subscription_plan?: string | null
           user_id?: string
         }
         Update: {
@@ -124,6 +128,8 @@ export type Database = {
           id?: number
           last_name?: string | null
           phone_number?: string
+          portfolio_count?: number | null
+          subscription_plan?: string | null
           user_id?: string
         }
         Relationships: []
@@ -133,6 +139,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      can_generate_portfolio: {
+        Args: { user_uuid: string }
+        Returns: boolean
+      }
       cleanup_expired_email_tokens: {
         Args: Record<PropertyKey, never>
         Returns: undefined
@@ -147,6 +157,10 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      increment_portfolio_count: {
+        Args: { user_uuid: string }
+        Returns: undefined
       }
       is_admin: {
         Args: Record<PropertyKey, never>

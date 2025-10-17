@@ -13,6 +13,8 @@ import { PortfolioWorkspace } from "@/components/PortfolioWorkspace";
 import PortfolioSummary from "@/pages/PortfolioSummary";
 import { AuthGuard } from "@/components/AuthGuard";
 import { useAuth } from "@/hooks/useAuth";
+import { UpgradeModal } from "@/components/UpgradeModal";
+import { usePortfolioLimit } from "@/hooks/usePortfolioLimit";
 
 type Step = "landing" | "assessment" | "recommendation" | "summary" | "workspace";
 
@@ -21,7 +23,9 @@ const Index = () => {
   const [riskScore, setRiskScore] = useState<number>(0);
   const [experienceLevel, setExperienceLevel] = useState<"beginner" | "intermediate" | "advanced">("intermediate");
   const [timeline, setTimeline] = useState<string>("");
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const { user } = useAuth();
+  const { canGenerate, checkAndIncrementLimit } = usePortfolioLimit();
 
   const handleGetStarted = () => {
     if (!user) {
@@ -38,8 +42,18 @@ const Index = () => {
     setCurrentStep("recommendation");
   };
 
-  const handleStartInvesting = () => {
-    setCurrentStep("summary");
+  const handleStartInvesting = async () => {
+    if (!canGenerate) {
+      setShowUpgradeModal(true);
+      return;
+    }
+    
+    const success = await checkAndIncrementLimit();
+    if (success) {
+      setCurrentStep("summary");
+    } else {
+      setShowUpgradeModal(true);
+    }
   };
 
   const handleStartWorkspace = () => {
@@ -95,18 +109,21 @@ const Index = () => {
 
   // Main landing page
   return (
-    <div className="min-h-screen bg-background">
-      <Navigation />
-      <HeroSection onGetStarted={handleGetStarted} />
-      <FeaturesSection />
-      <ProductShowcase />
-      <div id="pricing">
-        <PricingPlans />
+    <>
+      <div className="min-h-screen bg-background">
+        <Navigation />
+        <HeroSection onGetStarted={handleGetStarted} />
+        <FeaturesSection />
+        <ProductShowcase />
+        <div id="pricing">
+          <PricingPlans />
+        </div>
+        <TestimonialsSection />
+        <TeamSection />
+        <Footer />
       </div>
-      <TestimonialsSection />
-      <TeamSection />
-      <Footer />
-    </div>
+      <UpgradeModal open={showUpgradeModal} onClose={() => setShowUpgradeModal(false)} />
+    </>
   );
 };
 
