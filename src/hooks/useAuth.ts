@@ -50,11 +50,29 @@ export const useAuth = () => {
     return { error }
   }
 
+  const signInWithPhone = async (phone: string) => {
+    const { data, error } = await supabase.auth.signInWithOtp({
+      phone,
+    })
+    return { data, error }
+  }
+
+  const verifyOtp = async (phone: string, token: string) => {
+    const { data, error } = await supabase.auth.verifyOtp({
+      phone,
+      token,
+      type: 'sms',
+    })
+    return { data, error }
+  }
+
   return {
     user,
     loading,
     signIn,
     signUp,
     signOut,
+    signInWithPhone,
+    verifyOtp,
   }
 }
