@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
 import { Portfolio3DPieChart } from "@/components/Portfolio3DPieChart";
+import { PortfolioSuccessAnimation } from "@/components/PortfolioSuccessAnimation";
 import { useToast } from "@/hooks/use-toast";
 import jsPDF from 'jspdf';
 
@@ -35,6 +36,7 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onBack, onCust
   const [isInputMode, setIsInputMode] = useState(false);
   const [isBrokerModalOpen, setIsBrokerModalOpen] = useState(false);
   const [portfolioName, setPortfolioName] = useState<string>("");
+  const [showSuccessAnimation, setShowSuccessAnimation] = useState(true);
   const { toast } = useToast();
 
   // Short-Term Market Tracker state
@@ -631,6 +633,14 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onBack, onCust
     return `${value.toFixed(1)}%`;
   };
 
+  const handleViewPortfolio = () => {
+    setShowSuccessAnimation(false);
+  };
+
+  const handleGenerateAnother = () => {
+    onBack();
+  };
+
   const exportToPDF = () => {
     const doc = new jsPDF();
     const today = new Date().toLocaleDateString();
@@ -720,6 +730,14 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onBack, onCust
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Success Animation */}
+      {showSuccessAnimation && (
+        <PortfolioSuccessAnimation
+          onViewPortfolio={handleViewPortfolio}
+          onGenerateAnother={handleGenerateAnother}
+        />
+      )}
+      
       {/* Header */}
       <div className="border-b border-border bg-card">
         <div className="container mx-auto px-4 py-4">
