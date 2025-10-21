@@ -433,7 +433,7 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onBack, onCust
           basePortfolio = [
             { symbol: "AIEQ", name: "AI Powered Equity ETF", allocation: 25, rationale: "AI-driven stock selection across global markets using machine learning", assetClass: "AI Strategy", color: "#10B981" },
             { symbol: "ROBO", name: "Global Robotics & AI ETF", allocation: 20, rationale: "Robotics and AI companies driving cross-market algorithmic strategies", assetClass: "AI/Robotics", color: "#06B6D4" },
-            { symbol: "BOTZ", name: "Global X Robotics & AI", allocation: 15, rationale: "Automated trading systems and AI-powered investment platforms", assetClass: "AI/Robotics", color: "#8B5CF6" },
+            { symbol: "LIT", name: "Global X Lithium & Battery Tech ETF", allocation: 15, rationale: "Battery and energy infrastructure powering AI, EVs, and renewable transitions", assetClass: "Battery/Energy Tech", color: "#8B5CF6" },
             { symbol: "QTUM", name: "Defiance Quantum ETF", allocation: 15, rationale: "Quantum computing infrastructure for next-generation AI trading", assetClass: "Quantum Computing", color: "#EF4444" },
             { symbol: "VTI", name: "Vanguard Total Stock Market", allocation: 15, rationale: "Broad market exposure enhanced by AI overlay strategies", assetClass: "US Stocks", color: "#F59E0B" },
             { symbol: "VTIAX", name: "Vanguard Total International", allocation: 10, rationale: "International markets accessed through AI-powered cross-market trades", assetClass: "International Stocks", color: "#DC2626" }
