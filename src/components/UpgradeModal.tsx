@@ -17,12 +17,10 @@ export const UpgradeModal = ({ open, onClose }: UpgradeModalProps) => {
   };
 
   const features = [
-    "Unlimited AI-generated portfolios",
-    "Real-time portfolio improvement suggestions",
-    "AI-generated rebalancing alerts",
-    "Portfolio risk scoring",
-    "Exclusive webinars and strategy guides",
-    "Priority access to new investing models"
+    "Unlimited portfolio saves",
+    "Professional, watermark-free exports",
+    "Premium portfolio templates",
+    "Priority AI performance"
   ];
 
   return (
@@ -35,10 +33,11 @@ export const UpgradeModal = ({ open, onClose }: UpgradeModalProps) => {
             </div>
           </div>
           <DialogTitle className="text-3xl font-bold">
-            You've Reached Your Free Portfolio Limit 🚀
+            ✨ Unlock Professional Portfolio Exports
           </DialogTitle>
           <DialogDescription className="text-base">
-            You've used up your 5 free AI portfolio generations. Upgrade now to unlock lifetime access to profitable AI portfolios and exclusive investor tools.
+            You've built a great portfolio — now it's time to make it truly yours.
+            Upgrade to PortfoliX Pro to download clean, watermark-free PDFs designed for clients, presentations, or your personal archive.
           </DialogDescription>
         </DialogHeader>
 
@@ -69,15 +68,15 @@ export const UpgradeModal = ({ open, onClose }: UpgradeModalProps) => {
                 className="w-full bg-gradient-primary text-white hover:opacity-90 py-6 text-lg font-semibold"
                 size="lg"
               >
-                Upgrade for $25/month
+                Upgrade to PortfoliX Pro →
               </Button>
               
               <div className="text-center space-y-2">
                 <p className="text-sm text-muted-foreground">
-                  🔒 Secure payment powered by Paystack
+                  Free users can still preview portfolios with a PortfoliX watermark.
                 </p>
-                <p className="text-sm text-success font-medium">
-                  ✓ Instant access after successful payment
+                <p className="text-xs text-muted-foreground">
+                  🔒 Secure payment powered by Paystack
                 </p>
               </div>
             </div>
