@@ -14,7 +14,8 @@ import {
   GitCompare,
   TrendingUp,
   Edit3,
-  Plus
+  Plus,
+  ArrowLeft
 } from "lucide-react";
 
 interface Asset {
@@ -29,9 +30,10 @@ interface Asset {
 
 interface PortfolioWorkspaceProps {
   riskScore: number;
+  onBack?: () => void;
 }
 
-export const PortfolioWorkspace = ({ riskScore }: PortfolioWorkspaceProps) => {
+export const PortfolioWorkspace = ({ riskScore, onBack }: PortfolioWorkspaceProps) => {
   const [portfolioName, setPortfolioName] = useState("Global Growth Portfolio");
   
   // Calculate Bitcoin allocation based on risk score
@@ -90,6 +92,15 @@ export const PortfolioWorkspace = ({ riskScore }: PortfolioWorkspaceProps) => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
+              {onBack && (
+                <button
+                  onClick={onBack}
+                  className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+                  aria-label="Go back"
+                >
+                  <ArrowLeft className="h-5 w-5" />
+                </button>
+              )}
               <h1 className="text-2xl font-bold text-foreground">Portfolio Workspace</h1>
               <Separator orientation="vertical" className="h-6" />
               <Input 

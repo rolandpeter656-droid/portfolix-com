@@ -9,13 +9,15 @@ import {
   DollarSign, 
   BarChart3,
   CheckCircle,
-  ArrowRight
+  ArrowRight,
+  ArrowLeft
 } from "lucide-react";
 
 interface PortfolioRecommendationProps {
   riskScore: number;
   onStartInvesting?: () => void;
   onStartWorkspace?: () => void;
+  onBack?: () => void;
 }
 
 const getPortfolioType = (riskScore: number) => {
@@ -109,7 +111,7 @@ const getPortfolioData = (riskScore: number) => {
   return portfolios[type as keyof typeof portfolios];
 };
 
-export const PortfolioRecommendation = ({ riskScore, onStartInvesting, onStartWorkspace }: PortfolioRecommendationProps) => {
+export const PortfolioRecommendation = ({ riskScore, onStartInvesting, onStartWorkspace, onBack }: PortfolioRecommendationProps) => {
   const portfolioType = getPortfolioType(riskScore);
   const portfolio = getPortfolioData(riskScore);
 
@@ -117,6 +119,18 @@ export const PortfolioRecommendation = ({ riskScore, onStartInvesting, onStartWo
     <section className="min-h-screen bg-background py-8 sm:py-20">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto animate-fade-in">
+          {/* Back Arrow */}
+          {onBack && (
+            <button
+              onClick={onBack}
+              className="mb-6 flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+              aria-label="Go back"
+            >
+              <ArrowLeft className="h-5 w-5" />
+              <span>Back</span>
+            </button>
+          )}
+          
           <div className="text-center mb-12">
             <Badge variant="secondary" className="mb-4 px-4 py-2">
               <PieChart className="h-4 w-4 mr-2" />

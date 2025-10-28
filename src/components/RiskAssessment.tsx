@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { TrendingUp, Shield, Zap, Target } from "lucide-react";
+import { TrendingUp, Shield, Zap, Target, ArrowLeft } from "lucide-react";
 
 interface Question {
   id: string;
@@ -45,9 +45,10 @@ const questions: Question[] = [
 
 interface RiskAssessmentProps {
   onComplete: (riskScore: number, experienceLevel: string, timeline: string) => void;
+  onBack?: () => void;
 }
 
-export const RiskAssessment = ({ onComplete }: RiskAssessmentProps) => {
+export const RiskAssessment = ({ onComplete, onBack }: RiskAssessmentProps) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number>>({});
 
@@ -91,6 +92,18 @@ export const RiskAssessment = ({ onComplete }: RiskAssessmentProps) => {
     <section className="min-h-screen flex items-center justify-center bg-background py-20">
       <div className="container mx-auto px-4">
         <div className="max-w-2xl mx-auto animate-fade-in">
+          {/* Back Arrow */}
+          {onBack && (
+            <button
+              onClick={onBack}
+              className="mb-6 flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+              aria-label="Go back"
+            >
+              <ArrowLeft className="h-5 w-5" />
+              <span>Back</span>
+            </button>
+          )}
+          
           <div className="text-center mb-8">
             <h2 className="text-4xl font-bold text-foreground mb-4">
               Let's Assess Your Risk Profile

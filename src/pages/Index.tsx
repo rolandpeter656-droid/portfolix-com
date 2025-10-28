@@ -64,11 +64,23 @@ const Index = () => {
     setCurrentStep("recommendation");
   };
 
+  const handleBackToLanding = () => {
+    setCurrentStep("landing");
+  };
+
+  const handleBackToAssessment = () => {
+    setCurrentStep("assessment");
+  };
+
+  const handleBackToSummary = () => {
+    setCurrentStep("summary");
+  };
+
   // Show the portfolio builder flow when user clicks get started
   if (currentStep === "assessment") {
     return (
       <AuthGuard>
-        <RiskAssessment onComplete={handleAssessmentComplete} />
+        <RiskAssessment onComplete={handleAssessmentComplete} onBack={handleBackToLanding} />
       </AuthGuard>
     );
   }
@@ -79,7 +91,8 @@ const Index = () => {
         <PortfolioRecommendation 
           riskScore={riskScore} 
           onStartInvesting={handleStartInvesting}
-          onStartWorkspace={handleStartWorkspace} 
+          onStartWorkspace={handleStartWorkspace}
+          onBack={handleBackToAssessment}
         />
       </AuthGuard>
     );
@@ -102,7 +115,7 @@ const Index = () => {
   if (currentStep === "workspace") {
     return (
       <AuthGuard>
-        <PortfolioWorkspace riskScore={riskScore} />
+        <PortfolioWorkspace riskScore={riskScore} onBack={handleBackToSummary} />
       </AuthGuard>
     );
   }
