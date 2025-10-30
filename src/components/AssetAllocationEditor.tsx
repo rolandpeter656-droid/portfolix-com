@@ -19,13 +19,15 @@ import {
 } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
+import { Portfolio3DPieChart } from "@/components/Portfolio3DPieChart";
+
 interface Asset {
-  id: string;
+  id?: string;
   symbol: string;
   name: string;
   allocation: number;
   color: string;
-  risk: "Low" | "Medium" | "High";
+  risk?: "Low" | "Medium" | "High";
   rationale?: string;
 }
 
@@ -52,7 +54,8 @@ export const AssetAllocationEditor = ({ assets, onAssetsChange }: AssetAllocatio
   const totalAllocation = assets.reduce((sum, asset) => sum + asset.allocation, 0);
   const isBalanced = Math.abs(totalAllocation - 100) < 0.01;
 
-  const updateAllocation = (id: string, newAllocation: number) => {
+  const updateAllocation = (id: string | undefined, newAllocation: number) => {
+    if (!id) return;
     const updatedAssets = assets.map(asset =>
       asset.id === id ? { ...asset, allocation: Math.max(0, Math.min(100, newAllocation)) } : asset
     );
@@ -75,7 +78,8 @@ export const AssetAllocationEditor = ({ assets, onAssetsChange }: AssetAllocatio
     setNewAsset({ symbol: "", name: "", allocation: 0 });
   };
 
-  const removeAsset = (id: string) => {
+  const removeAsset = (id: string | undefined) => {
+    if (!id) return;
     onAssetsChange(assets.filter(asset => asset.id !== id));
   };
 
@@ -147,24 +151,7 @@ export const AssetAllocationEditor = ({ assets, onAssetsChange }: AssetAllocatio
         {viewMode === "chart" && (
           <div className="space-y-4">
             <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={chartData}
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={80}
-                    dataKey="value"
-                    label={({ name, value }) => `${name}: ${value.toFixed(1)}%`}
-                    labelLine={false}
-                  >
-                    {chartData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                  <RechartsTooltip content={<CustomTooltip />} />
-                </PieChart>
-              </ResponsiveContainer>
+              <Portfolio3DPieChart data={assets} className="h-full" />
             </div>
             
             <div className="grid grid-cols-2 gap-2">

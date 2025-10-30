@@ -30,7 +30,7 @@ interface PortfolioSummaryProps {
   experienceLevel: "beginner" | "intermediate" | "advanced";
   timeline: string;
   onBack: () => void;
-  onCustomize: () => void;
+  onCustomize: (portfolio: Asset[], name: string) => void;
 }
 
 const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onBack, onCustomize }: PortfolioSummaryProps) => {
@@ -1003,7 +1003,7 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onBack, onCust
               </div>
             </DialogContent>
           </Dialog>
-          <Button variant="outline" size="lg" onClick={onCustomize} className="flex items-center gap-2">
+          <Button variant="outline" size="lg" onClick={() => onCustomize(portfolio, portfolioName)} className="flex items-center gap-2">
             <Settings className="h-4 w-4" />
             Customize Portfolio Further
           </Button>

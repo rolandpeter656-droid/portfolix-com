@@ -18,11 +18,24 @@ import { usePortfolioLimit } from "@/hooks/usePortfolioLimit";
 
 type Step = "landing" | "assessment" | "recommendation" | "summary" | "workspace";
 
+interface PortfolioAsset {
+  id?: string;
+  symbol: string;
+  name: string;
+  allocation: number;
+  color: string;
+  risk?: "Low" | "Medium" | "High";
+  rationale?: string;
+  assetClass?: string;
+}
+
 const Index = () => {
   const [currentStep, setCurrentStep] = useState<Step>("landing");
   const [riskScore, setRiskScore] = useState<number>(0);
   const [experienceLevel, setExperienceLevel] = useState<"beginner" | "intermediate" | "advanced">("intermediate");
   const [timeline, setTimeline] = useState<string>("");
+  const [generatedPortfolio, setGeneratedPortfolio] = useState<PortfolioAsset[]>([]);
+  const [portfolioName, setPortfolioName] = useState<string>("");
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const { user } = useAuth();
   const { canGenerate, checkAndIncrementLimit } = usePortfolioLimit();
@@ -56,7 +69,9 @@ const Index = () => {
     }
   };
 
-  const handleStartWorkspace = () => {
+  const handleStartWorkspace = (portfolio: PortfolioAsset[], name: string) => {
+    setGeneratedPortfolio(portfolio);
+    setPortfolioName(name);
     setCurrentStep("workspace");
   };
 
@@ -91,7 +106,6 @@ const Index = () => {
         <PortfolioRecommendation 
           riskScore={riskScore} 
           onStartInvesting={handleStartInvesting}
-          onStartWorkspace={handleStartWorkspace}
           onBack={handleBackToAssessment}
         />
       </AuthGuard>
@@ -115,7 +129,14 @@ const Index = () => {
   if (currentStep === "workspace") {
     return (
       <AuthGuard>
-        <PortfolioWorkspace riskScore={riskScore} onBack={handleBackToSummary} />
+        <PortfolioWorkspace 
+          riskScore={riskScore} 
+          portfolio={generatedPortfolio}
+          portfolioName={portfolioName}
+          experienceLevel={experienceLevel}
+          timeline={timeline}
+          onBack={handleBackToSummary} 
+        />
       </AuthGuard>
     );
   }

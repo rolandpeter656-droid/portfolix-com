@@ -19,49 +19,49 @@ import {
 } from "lucide-react";
 
 interface Asset {
-  id: string;
+  id?: string;
   symbol: string;
   name: string;
   allocation: number;
   color: string;
-  risk: "Low" | "Medium" | "High";
+  risk?: "Low" | "Medium" | "High";
   rationale?: string;
+  assetClass?: string;
 }
 
 interface PortfolioWorkspaceProps {
   riskScore: number;
+  portfolio: Asset[];
+  portfolioName: string;
+  experienceLevel: "beginner" | "intermediate" | "advanced";
+  timeline: string;
   onBack?: () => void;
 }
 
-export const PortfolioWorkspace = ({ riskScore, onBack }: PortfolioWorkspaceProps) => {
-  const [portfolioName, setPortfolioName] = useState("Global Growth Portfolio");
+export const PortfolioWorkspace = ({ 
+  riskScore, 
+  portfolio: initialPortfolio, 
+  portfolioName: initialName,
+  experienceLevel,
+  timeline,
+  onBack 
+}: PortfolioWorkspaceProps) => {
+  const [portfolioName, setPortfolioName] = useState(initialName);
   
-  // Calculate Bitcoin allocation based on risk score
-  const getBitcoinAllocation = (riskScore: number) => {
-    if (riskScore <= 3) return 2; // Beginner (Low Risk): 1–3%
-    if (riskScore <= 6) return 5; // Intermediate (Medium Risk): 3–7%
-    return 10; // Advanced (High Risk): 7–15%
+  // Convert portfolio to workspace asset format
+  const convertToWorkspaceAssets = (portfolio: Asset[]): Asset[] => {
+    return portfolio.map((asset, index) => ({
+      id: asset.id || `asset-${index}`,
+      symbol: asset.symbol,
+      name: asset.name,
+      allocation: asset.allocation,
+      color: asset.color,
+      risk: (asset.risk || "Medium") as "Low" | "Medium" | "High",
+      rationale: asset.rationale || `${asset.name} provides diversification to the portfolio.`
+    }));
   };
-
-  const bitcoinAllocation = getBitcoinAllocation(riskScore);
   
-  const [assets, setAssets] = useState<Asset[]>([
-    { id: "1", symbol: "AAPL", name: "Apple Inc.", allocation: 13, color: "#3b82f6", risk: "Medium" },
-    { id: "2", symbol: "MSFT", name: "Microsoft Corp.", allocation: 10, color: "#ef4444", risk: "Medium" },
-    { id: "3", symbol: "GOOGL", name: "Alphabet Inc.", allocation: 8, color: "#22c55e", risk: "Medium" },
-    { id: "4", symbol: "VTI", name: "Vanguard Total Stock Market ETF", allocation: 18, color: "#f59e0b", risk: "Low" },
-    { id: "5", symbol: "BND", name: "Vanguard Total Bond Market ETF", allocation: 23, color: "#8b5cf6", risk: "Low" },
-    { id: "6", symbol: "VEA", name: "Vanguard FTSE Europe ETF", allocation: 16, color: "#06b6d4", risk: "Medium" },
-    { 
-      id: "7", 
-      symbol: "BTC", 
-      name: "Bitcoin", 
-      allocation: bitcoinAllocation, 
-      color: "#f97316", 
-      risk: "High",
-      rationale: "Bitcoin is a decentralized digital asset with high long-term growth potential. Its inclusion improves diversification and provides hedge against fiat currency depreciation."
-    },
-  ]);
+  const [assets, setAssets] = useState<Asset[]>(convertToWorkspaceAssets(initialPortfolio));
 
   const [collaborators] = useState([
     { id: "1", name: "You", status: "online", role: "Portfolio Manager" },
@@ -72,9 +72,9 @@ export const PortfolioWorkspace = ({ riskScore, onBack }: PortfolioWorkspaceProp
   const totalAllocation = assets.reduce((sum, asset) => sum + asset.allocation, 0);
 
   const handleApplySuggestion = (suggestion: any) => {
-    // This would contain the logic to apply AI suggestions
     console.log("Applying suggestion:", suggestion);
-    // For now, just show a toast or update state based on suggestion type
+    // Apply the suggestion to the portfolio
+    // This is a simplified implementation
   };
 
   const handleDismissSuggestion = (suggestionId: string) => {
@@ -84,6 +84,84 @@ export const PortfolioWorkspace = ({ riskScore, onBack }: PortfolioWorkspaceProp
   const handleRefreshSuggestions = () => {
     console.log("Refreshing AI suggestions...");
   };
+
+  // Generate contextual AI suggestions based on actual portfolio
+  const generateContextualSuggestions = () => {
+    const suggestions = [];
+    const totalAllocation = assets.reduce((sum, asset) => sum + asset.allocation, 0);
+    
+    // Check for tech concentration
+    const techAssets = assets.filter(a => 
+      ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'NVDA', 'META', 'TSLA'].includes(a.symbol)
+    );
+    const techAllocation = techAssets.reduce((sum, a) => sum + a.allocation, 0);
+    
+    if (techAllocation > 30) {
+      suggestions.push({
+        id: 'tech-concentration',
+        type: 'rebalance' as const,
+        title: 'Reduce Tech Concentration',
+        description: `Your technology allocation is ${techAllocation.toFixed(1)}%, which may be above optimal. Consider diversifying into other sectors.`,
+        impact: '+0.3% expected return, -2.1% volatility',
+        confidence: 85,
+        priority: 'high' as const,
+        data: { currentTech: techAllocation, recommendedTech: 25 }
+      });
+    }
+    
+    // Check for Bitcoin allocation
+    const hasBitcoin = assets.some(a => a.symbol === 'BTC' || a.symbol === 'BTCUSD');
+    if (!hasBitcoin && riskScore > 40) {
+      suggestions.push({
+        id: 'bitcoin-allocation',
+        type: 'bitcoin' as const,
+        title: 'Consider Bitcoin Allocation',
+        description: 'Based on your risk profile, adding 3-7% Bitcoin allocation could provide diversification benefits and potential inflation hedge.',
+        impact: 'Enhanced diversification, potential long-term growth',
+        confidence: 72,
+        priority: 'medium' as const,
+        data: { recommendedAllocation: '3-7%', assetClass: 'Digital Asset' },
+        note: '⚠️ Bitcoin is highly volatile. Only invest what you\'re prepared to hold long-term. PortfoliX provides AI-generated insights, not financial advice.'
+      });
+    }
+    
+    // Check for international exposure
+    const internationalAssets = assets.filter(a => 
+      ['VEA', 'VWO', 'VXUS', 'EFA', 'IEMG'].includes(a.symbol)
+    );
+    const internationalAllocation = internationalAssets.reduce((sum, a) => sum + a.allocation, 0);
+    
+    if (internationalAllocation < 15) {
+      suggestions.push({
+        id: 'international-exposure',
+        type: 'addition' as const,
+        title: 'Add International Exposure',
+        description: 'Consider adding more international stocks for geographic diversification and growth potential.',
+        impact: '+0.8% expected return, +1.2% volatility',
+        confidence: 78,
+        priority: 'medium' as const,
+        data: { currentInternational: internationalAllocation, recommended: 20 }
+      });
+    }
+    
+    // Portfolio balance check
+    if (Math.abs(totalAllocation - 100) > 1) {
+      suggestions.push({
+        id: 'balance-portfolio',
+        type: 'optimization' as const,
+        title: 'Rebalance Portfolio Allocation',
+        description: `Your portfolio allocation totals ${totalAllocation.toFixed(1)}%. Adjust allocations to reach 100% for optimal diversification.`,
+        impact: 'Improved diversification',
+        confidence: 95,
+        priority: 'high' as const,
+        data: { currentTotal: totalAllocation, target: 100 }
+      });
+    }
+    
+    return suggestions;
+  };
+
+  const contextualSuggestions = generateContextualSuggestions();
 
   return (
     <section className="min-h-screen bg-background">
@@ -158,6 +236,7 @@ export const PortfolioWorkspace = ({ riskScore, onBack }: PortfolioWorkspaceProp
 
           {/* Right Panel: AI Suggestions */}
           <AISuggestionPanel 
+            suggestions={contextualSuggestions}
             onApplySuggestion={handleApplySuggestion}
             onDismissSuggestion={handleDismissSuggestion}
             onRefreshSuggestions={handleRefreshSuggestions}

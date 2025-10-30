@@ -16,7 +16,6 @@ import {
 interface PortfolioRecommendationProps {
   riskScore: number;
   onStartInvesting?: () => void;
-  onStartWorkspace?: () => void;
   onBack?: () => void;
 }
 
@@ -111,7 +110,7 @@ const getPortfolioData = (riskScore: number) => {
   return portfolios[type as keyof typeof portfolios];
 };
 
-export const PortfolioRecommendation = ({ riskScore, onStartInvesting, onStartWorkspace, onBack }: PortfolioRecommendationProps) => {
+export const PortfolioRecommendation = ({ riskScore, onStartInvesting, onBack }: PortfolioRecommendationProps) => {
   const portfolioType = getPortfolioType(riskScore);
   const portfolio = getPortfolioData(riskScore);
 
@@ -231,23 +230,12 @@ export const PortfolioRecommendation = ({ riskScore, onStartInvesting, onStartWo
                 onClick={onStartInvesting}
                 className="bg-gradient-primary text-white hover:opacity-90 px-8 py-4 text-lg group w-full sm:w-auto"
               >
-                Start Investing Now
+                Start Building Portfolio
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
-              {onStartWorkspace && (
-                <Button 
-                  size="lg" 
-                  variant="outline" 
-                  onClick={onStartWorkspace}
-                  className="px-8 py-4 text-lg group w-full sm:w-auto"
-                >
-                  Customize Portfolio
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              )}
             </div>
             <p className="text-sm text-muted-foreground">
-              No fees for the first 3 months • Cancel anytime
+              AI-powered portfolio generation • Risk-adjusted allocation
             </p>
           </div>
         </div>
