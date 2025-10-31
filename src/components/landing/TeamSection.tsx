@@ -44,7 +44,10 @@ export const TeamSection = () => {
             <span className="text-gradient block mt-2">PortfoliX</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Our team combines decades of Wall Street experience with cutting-edge AI expertise to revolutionize portfolio management.
+            PortfoliX was built by Roland Peter, one of the sharpest minds in modern investing. After studying 50+ investment books and mastering the principles that drive real wealth, he merged that knowledge with AI and live market data to create smarter portfolio models for today's investors.
+          </p>
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto mt-4">
+            While currently building solo, Roland is assembling a world-class team of equally sharp minds — professionals who can merge financial intelligence, data science, and innovation to make PortfoliX even more powerful. The vision is simple: combine human expertise with machine intelligence to build portfolios that work in the real world.
           </p>
         </div>
 
