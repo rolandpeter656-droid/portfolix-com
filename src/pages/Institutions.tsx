@@ -3,6 +3,7 @@ import { Navigation } from "@/components/landing/Navigation";
 import { Footer } from "@/components/landing/Footer";
 import { InstitutionalStrategyCard } from "@/components/institutional/InstitutionalStrategyCard";
 import { CustomPortfolioBuilder } from "@/components/institutional/CustomPortfolioBuilder";
+import { InstitutionalPricingPlans } from "@/components/institutional/InstitutionalPricingPlans";
 import { Building2, TrendingUp } from "lucide-react";
 
 export interface InstitutionalStrategy {
@@ -191,6 +192,9 @@ export default function Institutions() {
       {showBuilder && (
         <CustomPortfolioBuilder onClose={() => setShowBuilder(false)} />
       )}
+
+      {/* Institutional Pricing Plans */}
+      {!showBuilder && <InstitutionalPricingPlans />}
 
       {/* Compliance Notice */}
       <section className="py-12 px-4 bg-muted/30 border-t border-border">
