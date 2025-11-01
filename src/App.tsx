@@ -22,6 +22,7 @@ import MobileApp from "./pages/MobileApp";
 import Careers from "./pages/Careers";
 import Blog from "./pages/Blog";
 import Documentation from "./pages/Documentation";
+import AdminInstitutionalModels from "./pages/AdminInstitutionalModels";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -52,6 +53,7 @@ const App = () => (
           <Route path="/careers" element={<Careers />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/documentation" element={<Documentation />} />
+          <Route path="/admin/institutional_models" element={<AdminInstitutionalModels />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
