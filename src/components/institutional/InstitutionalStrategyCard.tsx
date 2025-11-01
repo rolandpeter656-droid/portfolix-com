@@ -1,8 +1,12 @@
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { TrendingUp, Shield, Lightbulb, FileText } from "lucide-react";
+import { TrendingUp, Shield, Lightbulb, FileText, Loader2 } from "lucide-react";
 import { InstitutionalStrategy } from "@/pages/Institutions";
+import { GeneratedPortfolioModal } from "./GeneratedPortfolioModal";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface InstitutionalStrategyCardProps {
   strategy: InstitutionalStrategy;
@@ -11,9 +15,75 @@ interface InstitutionalStrategyCardProps {
 export const InstitutionalStrategyCard = ({
   strategy,
 }: InstitutionalStrategyCardProps) => {
-  const handleGenerate = () => {
-    // TODO: Implement portfolio generation logic
-    console.log("Generate portfolio for:", strategy.name);
+  const [generating, setGenerating] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [generatedPortfolio, setGeneratedPortfolio] = useState<any>(null);
+
+  const handleGenerate = async () => {
+    setGenerating(true);
+    
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        toast.error("Please sign in to generate institutional portfolios");
+        setGenerating(false);
+        return;
+      }
+
+      // Get user's subscription (for demo, we'll use a placeholder)
+      const { data: subscription } = await supabase
+        .from('institutional_subscriptions')
+        .select('id')
+        .eq('user_id', user.id)
+        .single();
+
+      if (!subscription) {
+        toast.error("Active institutional subscription required");
+        setGenerating(false);
+        return;
+      }
+
+      // Call institutional API edge function
+      const { data, error } = await supabase.functions.invoke('institutional-api', {
+        body: {
+          action: 'generate',
+          portfolioName: strategy.name,
+          portfolioType: strategy.id,
+          riskTolerance: strategy.riskProfile.toLowerCase().replace('-', '_'),
+          capitalSize: 10000000, // Default $10M
+          investmentHorizon: '5 years',
+          liquidityNeeds: 'moderate',
+          inspiredBy: strategy.inspiredBy,
+        }
+      });
+
+      if (error) throw error;
+
+      if (data.error) {
+        toast.error(data.error);
+        setGenerating(false);
+        return;
+      }
+
+      setGeneratedPortfolio({
+        name: data.portfolio.portfolio_name,
+        allocation: data.portfolio.allocation,
+        rationale: data.portfolio.rationale,
+        expectedReturn: data.portfolio.expected_return,
+        volatility: data.portfolio.volatility,
+        riskTolerance: data.portfolio.risk_tolerance,
+        aiConfidenceScore: data.portfolio.ai_confidence_score,
+      });
+      
+      setShowModal(true);
+      toast.success("Portfolio generated successfully!");
+    } catch (error) {
+      console.error('Error generating portfolio:', error);
+      toast.error("Failed to generate portfolio. Please try again.");
+    } finally {
+      setGenerating(false);
+    }
   };
 
   return (
@@ -83,11 +153,25 @@ export const InstitutionalStrategyCard = ({
         {/* CTA */}
         <Button
           onClick={handleGenerate}
+          disabled={generating}
           className="w-full bg-primary hover:bg-primary-glow text-primary-foreground"
         >
-          Generate Custom Institutional Portfolio
+          {generating ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Generating...
+            </>
+          ) : (
+            "Generate Custom Institutional Portfolio"
+          )}
         </Button>
       </div>
+      
+      <GeneratedPortfolioModal
+        open={showModal}
+        onOpenChange={setShowModal}
+        portfolio={generatedPortfolio}
+      />
     </Card>
   );
 };
