@@ -25,93 +25,136 @@ export interface InstitutionalStrategy {
 }
 
 const institutionalStrategies: InstitutionalStrategy[] = [
+  // 1. Corporate Treasury Yield Portfolio
   {
-    id: "corporate-treasury",
-    name: "Corporate Treasury Yield Portfolio",
-    allocation: {
-      bonds: 60,
-      cash: 25,
-      equities: 10,
-      commodities: 5,
-    },
-    riskProfile: "Low-Moderate",
-    returnProfile: "4-6% annually",
+    id: "corporate-treasury-conservative",
+    name: "Corporate Treasury Yield — Conservative Cash+",
+    allocation: { cash: 30, bonds: 60, commodities: 10 },
+    riskProfile: "Very Low",
+    returnProfile: "3-5% annually",
     aiReasoning:
-      "Optimized for capital preservation and liquidity while generating steady returns through investment-grade bonds and short-term treasuries. Ideal for corporations managing excess cash reserves.",
-    inspiredBy: "Treasury optimization frameworks from Ray Dalio's Principles",
+      "Maximize yield on operating cash while preserving principal and meeting liquidity needs. Optimal for short-term govt bonds, investment-grade corp bonds, and T-Bills.",
+    inspiredBy: "Treasury cash optimization frameworks from corporate finance literature",
   },
   {
-    id: "pension-fund",
-    name: "Inflation-Adjusted Pension Fund Mix",
-    allocation: {
-      equities: 45,
-      bonds: 30,
-      commodities: 15,
-      etfs: 10,
-    },
-    riskProfile: "Moderate",
-    returnProfile: "6-8% annually",
+    id: "corporate-treasury-income",
+    name: "Corporate Treasury Yield — Income Optimizer",
+    allocation: { bonds: 60, cash: 10, etfs: 20, commodities: 10 },
+    riskProfile: "Low-Medium",
+    returnProfile: "4-6% annually",
     aiReasoning:
-      "Designed to protect against inflation while meeting long-term liability obligations. Balances growth equities with inflation-protected securities and real assets for pension fund stability.",
+      "Boost yield while keeping interest rate sensitivity low via floating rate notes and commercial paper alongside investment-grade bonds.",
+    inspiredBy: "Corporate treasury best practices from Ray Dalio's Principles",
+  },
+  
+  // 2. Inflation-Adjusted Pension Fund Mix
+  {
+    id: "pension-cpi-protector",
+    name: "Pension Mix — Core CPI Protector",
+    allocation: { bonds: 50, equities: 25, commodities: 15, cash: 10 },
+    riskProfile: "Low-Medium",
+    returnProfile: "5-7% annually",
+    aiReasoning:
+      "Preserve purchasing power of liabilities while capturing modest growth through inflation-linked bonds, domestic equities, and real assets (REITs).",
     inspiredBy: "Endowment model principles from The Intelligent Investor",
   },
   {
-    id: "cash-management",
-    name: "Short-Term Cash Management Fund",
-    allocation: {
-      cash: 50,
-      bonds: 40,
-      etfs: 10,
-    },
-    riskProfile: "Very Low",
-    returnProfile: "3-4% annually",
+    id: "pension-growth-cpi",
+    name: "Pension Mix — Growth with CPI Floor",
+    allocation: { equities: 35, bonds: 35, commodities: 20, etfs: 10 },
+    riskProfile: "Medium",
+    returnProfile: "6-9% annually",
     aiReasoning:
-      "Maximum liquidity focus with minimal risk exposure. Perfect for operational cash management, near-term obligations, and treasury departments requiring immediate access to capital.",
-    inspiredBy: "Liquidity management strategies from Corporate Finance textbooks",
+      "Higher long-term growth while maintaining CPI hedge through global equities, real assets, and inflation-linked bonds. Suitable for pension funds with longer horizons.",
+    inspiredBy: "Modern portfolio theory and liability-driven investment frameworks",
+  },
+
+  // 3. Short-Term Cash Management Fund
+  {
+    id: "cash-ultra-liquidity",
+    name: "Short-Term Cash Management — Ultra-Liquidity",
+    allocation: { cash: 45, bonds: 45, etfs: 10 },
+    riskProfile: "Minimal",
+    returnProfile: "2-4% annually",
+    aiReasoning:
+      "Ensure immediate liquidity for operational needs while earning yield through T-Bills, commercial paper, and money market funds. Ideal for daily cash sweep operations.",
+    inspiredBy: "Liquidity management strategies from corporate finance textbooks",
   },
   {
-    id: "equity-rotation",
-    name: "Strategic Equity Rotation Portfolio",
-    allocation: {
-      equities: 70,
-      etfs: 20,
-      cash: 10,
-    },
-    riskProfile: "Moderate-High",
-    returnProfile: "8-12% annually",
+    id: "cash-yield-sweep",
+    name: "Short-Term Cash Management — Yield Sweep",
+    allocation: { cash: 30, bonds: 50, etfs: 20 },
+    riskProfile: "Very Low",
+    returnProfile: "3-5% annually",
     aiReasoning:
-      "Active allocation strategy rotating between growth and value equities based on market cycles. Leverages momentum and fundamental analysis to capture institutional alpha.",
+      "Slightly higher yield by extending duration with short-term floating notes while maintaining high liquidity. Weekly rebalancing to capture best short-term yields.",
+    inspiredBy: "Working capital optimization from financial management best practices",
+  },
+
+  // 4. Strategic Equity Rotation Portfolio
+  {
+    id: "equity-rotation-momentum",
+    name: "Strategic Equity Rotation — Momentum Core",
+    allocation: { equities: 80, cash: 20 },
+    riskProfile: "Medium-High",
+    returnProfile: "8-14% annually",
+    aiReasoning:
+      "Momentum-driven alpha through weekly rotation of top 5 sector ETFs based on relative strength. Buy strength, sell weakness strategy with cash buffer for volatility.",
     inspiredBy: "Tactical asset allocation from Benjamin Graham's Security Analysis",
   },
   {
-    id: "bitcoin-institutional",
-    name: "Institutional Bitcoin Allocation Strategy",
-    allocation: {
-      crypto: 5,
-      equities: 50,
-      bonds: 30,
-      cash: 15,
-    },
-    riskProfile: "Moderate",
-    returnProfile: "7-15% annually",
+    id: "equity-rotation-factor",
+    name: "Strategic Equity Rotation — Factor Blend",
+    allocation: { equities: 70, etfs: 20, cash: 10 },
+    riskProfile: "Medium",
+    returnProfile: "7-12% annually",
     aiReasoning:
-      "Conservative exposure to digital assets within a diversified framework. Provides upside participation in crypto markets while maintaining institutional risk controls and capital preservation.",
+      "Diversified factor exposure combining momentum, value, and quality factors with monthly rebalancing. Risk parity approach to factor allocation.",
+    inspiredBy: "Factor investing research and quantitative equity strategies",
+  },
+
+  // 5. Institutional Bitcoin Allocation Strategy
+  {
+    id: "bitcoin-conservative",
+    name: "Bitcoin Treasury — Conservative Allocation",
+    allocation: { crypto: 5, cash: 70, bonds: 25 },
+    riskProfile: "Low-Medium",
+    returnProfile: "4-8% annually",
+    aiReasoning:
+      "Small strategic allocation to BTC for long-term store of value without impacting liquidity. Monthly rebalancing with volatility caps for risk management.",
     inspiredBy: "Alternative asset allocation frameworks from Modern Portfolio Theory",
   },
   {
-    id: "esg-treasury",
-    name: "ESG Sustainable Treasury Blend",
-    allocation: {
-      bonds: 50,
-      equities: 30,
-      etfs: 15,
-      cash: 5,
-    },
-    riskProfile: "Low-Moderate",
-    returnProfile: "5-7% annually",
+    id: "bitcoin-strategic",
+    name: "Bitcoin Treasury — Strategic Reserve",
+    allocation: { crypto: 10, cash: 50, bonds: 30, commodities: 10 },
+    riskProfile: "Medium",
+    returnProfile: "6-12% annually",
     aiReasoning:
-      "Integrates environmental, social, and governance criteria into fixed-income and equity allocations. Meets stakeholder expectations while delivering competitive risk-adjusted returns.",
+      "Larger BTC reserve for long-term upside with dollar-cost averaging automation and buy-the-dip logic. Quarterly rebalancing to capture crypto market opportunities.",
+    inspiredBy: "Digital asset treasury management and corporate crypto adoption strategies",
+  },
+
+  // 6. ESG Sustainable Treasury Blend
+  {
+    id: "esg-capital-preservation",
+    name: "ESG Blend — Capital Preservation",
+    allocation: { bonds: 60, cash: 20, etfs: 20 },
+    riskProfile: "Low",
+    returnProfile: "3-6% annually",
+    aiReasoning:
+      "ESG-eligible instruments with high liquidity including green T-Bills, ESG short-term bonds, and ESG money market funds. Quarterly ESG screening updates.",
     inspiredBy: "Sustainable investing principles from ESG integration research",
+  },
+  {
+    id: "esg-impact-income",
+    name: "ESG Blend — Social Impact Income",
+    allocation: { bonds: 60, commodities: 20, cash: 20 },
+    riskProfile: "Low-Medium",
+    returnProfile: "5-8% annually",
+    aiReasoning:
+      "Yield with sustainability impact through green bonds, ESG corporate bonds, and ESG-screened REITs. Impact metrics tracked for carbon reduction and social KPIs.",
+    inspiredBy: "Impact investing frameworks and sustainable finance literature",
   },
 ];
 
@@ -146,8 +189,7 @@ export default function Institutions() {
             <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
               <TrendingUp className="h-4 w-4 text-success" />
               <span>
-                6 Core Strategies • AI-Enhanced Allocations • Educational
-                Framework
+                12 Core Strategies • AI-Enhanced Allocations • Multi-Currency Support
               </span>
             </div>
           </div>
@@ -158,6 +200,13 @@ export default function Institutions() {
       {!showBuilder && (
         <section className="py-16 px-4">
           <div className="container mx-auto max-w-7xl">
+            <div className="mb-12 text-center">
+              <h2 className="text-3xl font-bold mb-4">AI Portfolio Library</h2>
+              <p className="text-muted-foreground max-w-2xl mx-auto">
+                12 institutional-grade strategies spanning treasury management, pension funds, 
+                cash operations, equity rotation, digital assets, and ESG compliance.
+              </p>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {institutionalStrategies.map((strategy) => (
                 <InstitutionalStrategyCard
