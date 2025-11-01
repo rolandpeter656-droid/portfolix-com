@@ -1,1 +1,4 @@
 project_id = "oglduptdtrlxqglapjaj"
+
+[functions.institutional-api]
+verify_jwt = false

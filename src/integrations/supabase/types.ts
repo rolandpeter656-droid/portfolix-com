@@ -59,6 +59,182 @@ export type Database = {
         }
         Relationships: []
       }
+      institutional_api_keys: {
+        Row: {
+          api_key: string
+          api_secret: string
+          created_at: string
+          expires_at: string | null
+          id: string
+          is_active: boolean
+          key_name: string
+          last_used_at: string | null
+          partner_id: string | null
+          permissions: Json
+          rate_limit: number
+          subscription_id: string | null
+        }
+        Insert: {
+          api_key: string
+          api_secret: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          key_name: string
+          last_used_at?: string | null
+          partner_id?: string | null
+          permissions?: Json
+          rate_limit?: number
+          subscription_id?: string | null
+        }
+        Update: {
+          api_key?: string
+          api_secret?: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          key_name?: string
+          last_used_at?: string | null
+          partner_id?: string | null
+          permissions?: Json
+          rate_limit?: number
+          subscription_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "institutional_api_keys_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "white_label_partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "institutional_api_keys_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: false
+            referencedRelation: "institutional_subscriptions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      institutional_portfolios: {
+        Row: {
+          ai_confidence_score: number | null
+          allocation: Json
+          capital_size: number | null
+          created_at: string
+          expected_return: string | null
+          id: string
+          inspired_by: string | null
+          investment_horizon: string | null
+          liquidity_needs: string | null
+          portfolio_name: string
+          portfolio_type: string
+          rationale: string | null
+          risk_tolerance: string | null
+          subscription_id: string
+          updated_at: string
+          user_id: string
+          volatility: string | null
+        }
+        Insert: {
+          ai_confidence_score?: number | null
+          allocation: Json
+          capital_size?: number | null
+          created_at?: string
+          expected_return?: string | null
+          id?: string
+          inspired_by?: string | null
+          investment_horizon?: string | null
+          liquidity_needs?: string | null
+          portfolio_name: string
+          portfolio_type: string
+          rationale?: string | null
+          risk_tolerance?: string | null
+          subscription_id: string
+          updated_at?: string
+          user_id: string
+          volatility?: string | null
+        }
+        Update: {
+          ai_confidence_score?: number | null
+          allocation?: Json
+          capital_size?: number | null
+          created_at?: string
+          expected_return?: string | null
+          id?: string
+          inspired_by?: string | null
+          investment_horizon?: string | null
+          liquidity_needs?: string | null
+          portfolio_name?: string
+          portfolio_type?: string
+          rationale?: string | null
+          risk_tolerance?: string | null
+          subscription_id?: string
+          updated_at?: string
+          user_id?: string
+          volatility?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "institutional_portfolios_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: false
+            referencedRelation: "institutional_subscriptions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      institutional_subscriptions: {
+        Row: {
+          created_at: string
+          currency: Database["public"]["Enums"]["currency_type"]
+          id: string
+          monthly_price: number
+          organization_name: string
+          payment_reference: string | null
+          plan_tier: Database["public"]["Enums"]["institutional_plan_tier"]
+          subscription_ends_at: string | null
+          subscription_starts_at: string
+          subscription_status: Database["public"]["Enums"]["subscription_status"]
+          trial_ends_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          currency?: Database["public"]["Enums"]["currency_type"]
+          id?: string
+          monthly_price: number
+          organization_name: string
+          payment_reference?: string | null
+          plan_tier: Database["public"]["Enums"]["institutional_plan_tier"]
+          subscription_ends_at?: string | null
+          subscription_starts_at?: string
+          subscription_status?: Database["public"]["Enums"]["subscription_status"]
+          trial_ends_at?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          currency?: Database["public"]["Enums"]["currency_type"]
+          id?: string
+          monthly_price?: number
+          organization_name?: string
+          payment_reference?: string | null
+          plan_tier?: Database["public"]["Enums"]["institutional_plan_tier"]
+          subscription_ends_at?: string | null
+          subscription_starts_at?: string
+          subscription_status?: Database["public"]["Enums"]["subscription_status"]
+          trial_ends_at?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       mobile_waitlist: {
         Row: {
           created_at: string
@@ -76,6 +252,44 @@ export type Database = {
           id?: string
         }
         Relationships: []
+      }
+      portfolio_performance_history: {
+        Row: {
+          id: string
+          metadata: Json | null
+          portfolio_id: string
+          portfolio_value: number | null
+          recorded_at: string
+          return_percentage: number | null
+          volatility_index: number | null
+        }
+        Insert: {
+          id?: string
+          metadata?: Json | null
+          portfolio_id: string
+          portfolio_value?: number | null
+          recorded_at?: string
+          return_percentage?: number | null
+          volatility_index?: number | null
+        }
+        Update: {
+          id?: string
+          metadata?: Json | null
+          portfolio_id?: string
+          portfolio_value?: number | null
+          recorded_at?: string
+          return_percentage?: number | null
+          volatility_index?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "portfolio_performance_history_portfolio_id_fkey"
+            columns: ["portfolio_id"]
+            isOneToOne: false
+            referencedRelation: "institutional_portfolios"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {
@@ -134,23 +348,70 @@ export type Database = {
         }
         Relationships: []
       }
+      white_label_partners: {
+        Row: {
+          allowed_portfolios: number | null
+          api_enabled: boolean
+          branding_config: Json | null
+          contact_email: string
+          contact_phone: string | null
+          created_at: string
+          currency: Database["public"]["Enums"]["currency_type"]
+          id: string
+          is_active: boolean
+          monthly_fee: number | null
+          partner_domain: string | null
+          partner_name: string
+          partner_tier: Database["public"]["Enums"]["partner_tier"]
+          updated_at: string
+        }
+        Insert: {
+          allowed_portfolios?: number | null
+          api_enabled?: boolean
+          branding_config?: Json | null
+          contact_email: string
+          contact_phone?: string | null
+          created_at?: string
+          currency?: Database["public"]["Enums"]["currency_type"]
+          id?: string
+          is_active?: boolean
+          monthly_fee?: number | null
+          partner_domain?: string | null
+          partner_name: string
+          partner_tier?: Database["public"]["Enums"]["partner_tier"]
+          updated_at?: string
+        }
+        Update: {
+          allowed_portfolios?: number | null
+          api_enabled?: boolean
+          branding_config?: Json | null
+          contact_email?: string
+          contact_phone?: string | null
+          created_at?: string
+          currency?: Database["public"]["Enums"]["currency_type"]
+          id?: string
+          is_active?: boolean
+          monthly_fee?: number | null
+          partner_domain?: string | null
+          partner_name?: string
+          partner_tier?: Database["public"]["Enums"]["partner_tier"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      can_generate_portfolio: {
-        Args: { user_uuid: string }
+      can_generate_institutional_portfolio: {
+        Args: { sub_id: string }
         Returns: boolean
       }
-      cleanup_expired_email_tokens: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
-      get_auth_config: {
-        Args: { config_name: string }
-        Returns: string
-      }
+      can_generate_portfolio: { Args: { user_uuid: string }; Returns: boolean }
+      cleanup_expired_email_tokens: { Args: never; Returns: undefined }
+      generate_api_key: { Args: never; Returns: string }
+      get_auth_config: { Args: { config_name: string }; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -162,10 +423,7 @@ export type Database = {
         Args: { user_uuid: string }
         Returns: undefined
       }
-      is_admin: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
+      is_admin: { Args: never; Returns: boolean }
       is_email_verification_expired: {
         Args: { token_created_at: string; user_id: string }
         Returns: boolean
@@ -173,6 +431,13 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
+      currency_type: "USD" | "NGN" | "EUR" | "GBP"
+      institutional_plan_tier:
+        | "corporate-starter"
+        | "corporate-growth"
+        | "corporate-enterprise"
+      partner_tier: "standard" | "premium" | "enterprise"
+      subscription_status: "active" | "trial" | "cancelled" | "expired"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -301,6 +566,14 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "moderator", "user"],
+      currency_type: ["USD", "NGN", "EUR", "GBP"],
+      institutional_plan_tier: [
+        "corporate-starter",
+        "corporate-growth",
+        "corporate-enterprise",
+      ],
+      partner_tier: ["standard", "premium", "enterprise"],
+      subscription_status: ["active", "trial", "cancelled", "expired"],
     },
   },
 } as const
