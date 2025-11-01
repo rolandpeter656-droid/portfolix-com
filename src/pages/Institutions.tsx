@@ -4,6 +4,7 @@ import { Footer } from "@/components/landing/Footer";
 import { InstitutionalStrategyCard } from "@/components/institutional/InstitutionalStrategyCard";
 import { CustomPortfolioBuilder } from "@/components/institutional/CustomPortfolioBuilder";
 import { InstitutionalPricingPlans } from "@/components/institutional/InstitutionalPricingPlans";
+import { InstitutionalDisclaimer } from "@/components/institutional/InstitutionalDisclaimer";
 import { Building2, TrendingUp } from "lucide-react";
 
 export interface InstitutionalStrategy {
@@ -199,19 +200,7 @@ export default function Institutions() {
       {/* Compliance Notice */}
       <section className="py-12 px-4 bg-muted/30 border-t border-border">
         <div className="container mx-auto max-w-5xl">
-          <div className="text-center space-y-3">
-            <p className="text-sm font-semibold text-foreground">
-              Important Compliance Notice
-            </p>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              PortfoliX Institutional Models are AI-generated research
-              frameworks based on historically validated corporate investment
-              strategies. They are for educational and informational use only
-              and not intended as financial advice or asset management services.
-              All strategies should be reviewed by qualified financial
-              professionals before implementation.
-            </p>
-          </div>
+          <InstitutionalDisclaimer variant="full" />
         </div>
       </section>
 

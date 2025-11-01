@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Check, Building2, TrendingUp, Crown } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export type InstitutionalPlanType = "corporate-starter" | "corporate-growth" | "corporate-enterprise";
 export type Currency = "USD";
@@ -164,12 +164,22 @@ export const InstitutionalPricingPlans = ({ className }: InstitutionalPricingPla
         ))}
       </div>
 
-      <div className="text-center mt-12 space-y-2">
+      <div className="text-center mt-12 space-y-3">
         <p className="text-sm text-muted-foreground">
           All plans include automated billing, invoice generation, and instant dashboard access
         </p>
         <p className="text-xs text-muted-foreground">
           Secure payments powered by Paystack • PCI DSS compliant
+        </p>
+        <p className="text-xs text-muted-foreground mt-4">
+          All institutional models are for educational use only. See{" "}
+          <Link 
+            to="/legal/institutional-disclaimer" 
+            className="text-primary hover:underline"
+          >
+            compliance documentation
+          </Link>{" "}
+          for details.
         </p>
       </div>
     </div>
