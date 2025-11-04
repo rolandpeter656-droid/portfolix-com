@@ -2,11 +2,11 @@ import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Check, Crown, Building2 } from "lucide-react";
+import { Check, Crown, Building2, Briefcase } from "lucide-react";
 import { PaystackPayment } from "./PaystackPayment";
 import { useNavigate } from "react-router-dom";
 
-export type PlanType = "free" | "pro" | "institutional";
+export type PlanType = "free" | "pro" | "institutional" | "institutional-portal";
 export type Currency = "USD";
 
 interface PricingPlan {
@@ -70,6 +70,22 @@ const plans: PricingPlan[] = [
     ],
     buttonText: "Contact Sales",
     icon: <Building2 className="h-6 w-6" />
+  },
+  {
+    id: "institutional-portal",
+    name: "Institutional AI Portfolios",
+    price: 0,
+    description: "Tailored for brokerage firms, asset managers, and fintechs managing client portfolios at scale. Access categorized institutional packages, tiered billing, and powerful AI portfolio tools.",
+    features: [
+      "Categorized institutional packages",
+      "Tiered billing by firm size",
+      "AI-powered portfolio generation",
+      "Custom model portfolios",
+      "Institutional-grade analytics",
+      "Multi-client portfolio management"
+    ],
+    buttonText: "Explore Institutional Portal →",
+    icon: <Briefcase className="h-6 w-6" />
   }
 ];
 
@@ -93,6 +109,12 @@ export const PricingPlans = ({ currentPlan = "free", onPlanSelect }: PricingPlan
     if (planId === "institutional") {
       // Handle institutional plan contact
       window.open("mailto:PortfoliX@mail.com?subject=Institutional Plan Inquiry", "_blank");
+      return;
+    }
+
+    if (planId === "institutional-portal") {
+      // Navigate to institutions page
+      navigate("/institutions");
       return;
     }
 
@@ -143,7 +165,7 @@ export const PricingPlans = ({ currentPlan = "free", onPlanSelect }: PricingPlan
         </p>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
         {plans.map((plan) => (
           <Card
             key={plan.id}
