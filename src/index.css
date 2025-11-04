@@ -104,4 +104,43 @@ All colors MUST be HSL.
   .hover-glow {
     @apply transition-shadow duration-300 hover:shadow-glow;
   }
+
+  /* Premium micro-animations */
+  .hover-lift {
+    @apply transition-all duration-250 ease-out hover:-translate-y-0.5 hover:shadow-glow;
+  }
+
+  .btn-glow {
+    @apply relative overflow-hidden;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .btn-glow::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: hsl(var(--primary-glow) / 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.4s ease-out, height 0.4s ease-out;
+  }
+
+  .btn-glow:hover::before {
+    width: 300px;
+    height: 300px;
+  }
+
+  .chart-segment {
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), 
+                filter 0.25s ease-out;
+    cursor: pointer;
+  }
+
+  .chart-segment:hover {
+    transform: scale(1.05);
+    filter: brightness(1.15) drop-shadow(0 4px 12px hsl(var(--primary) / 0.4));
+  }
 }
