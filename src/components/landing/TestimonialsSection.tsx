@@ -6,32 +6,32 @@ const testimonials = [
   {
     id: 1,
     name: "Sarah Chen",
-    role: "Portfolio Manager",
-    company: "Goldman Sachs",
-    image: "photo-1494790108755-2616b612b786",
-    content: "PortfoliX has revolutionized how I approach portfolio construction. The AI insights are incredibly accurate and have helped me achieve 23% better returns for my clients.",
+    role: "Portfolio Strategist",
+    company: "Ardent Brokerage Ltd (UK)",
+    image: "photo-1573496359142-b8d87734a5a2",
+    content: "PortfoliX transformed the way we build model portfolios for our clients. The AI-driven insights are sharp, fast, and intuitive — it's like having an in-house quant team without the overhead.",
     rating: 5,
-    highlight: "23% better returns"
+    highlight: "In-house quant team"
   },
   {
     id: 2,
-    name: "Michael Rodriguez",
-    role: "Investment Advisor",
-    company: "Fidelity Investments",
-    image: "photo-1507003211169-0a1dd7228f2d",
-    content: "The speed and accuracy of PortfoliX's market analysis is unmatched. What used to take hours now takes minutes, and the results are consistently superior.",
+    name: "Michael Odebanjo",
+    role: "Founder",
+    company: "TradeLynk FinTech (Nigeria)",
+    image: "photo-1506794778202-cad84cf45f1d",
+    content: "As a fintech, speed and precision matter. PortfoliX lets us deliver smart portfolios in minutes — it's been a game changer for our clients and internal team alike.",
     rating: 5,
-    highlight: "Hours to minutes"
+    highlight: "Minutes to deliver"
   },
   {
     id: 3,
     name: "Emily Thompson",
-    role: "Wealth Manager",
-    company: "JP Morgan Chase",
-    image: "photo-1438761681033-6461ffad8d80",
-    content: "My clients love the transparency and real-time insights. PortfoliX has helped me scale my practice while maintaining personalized service for each client.",
+    role: "Head of Client Experience",
+    company: "WealthFlow Advisory (USA)",
+    image: "photo-1580489944761-15a19d654956",
+    content: "PortfoliX bridges technology and investing beautifully. Our clients love the efficiency and accuracy it brings to portfolio recommendations.",
     rating: 5,
-    highlight: "Scaled practice 3x"
+    highlight: "Tech + investing"
   }
 ];
 
