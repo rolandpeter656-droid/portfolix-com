@@ -117,8 +117,8 @@ export const AssetAllocationEditor = ({ assets, onAssetsChange }: AssetAllocatio
     <Card className="h-full">
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2">
-            <PieChartIcon className="h-5 w-5" />
+          <CardTitle className="text-title flex items-center gap-2">
+            <PieChartIcon className="icon-md" />
             Asset Allocation Editor
           </CardTitle>
           <div className="flex items-center gap-2">
@@ -321,19 +321,19 @@ export const AssetAllocationEditor = ({ assets, onAssetsChange }: AssetAllocatio
         {/* Portfolio Metrics */}
         <div className="grid grid-cols-3 gap-4 p-3 bg-accent rounded-lg">
           <div className="text-center">
-            <div className="text-sm font-bold text-black">Assets</div>
-            <div className="font-medium text-black">{assets.length}</div>
+            <div className="metric-label text-black">Assets</div>
+            <div className="metric-secondary text-black">{assets.length}</div>
           </div>
           <div className="text-center">
-            <div className="text-sm font-bold text-black">Diversification</div>
-            <div className="font-medium flex items-center justify-center gap-1 text-black">
-              <TrendingUp className="h-3 w-3 text-black" />
+            <div className="metric-label text-black">Diversification</div>
+            <div className="metric-secondary flex items-center justify-center gap-1 text-black">
+              <TrendingUp className="icon-sm text-black" />
               Good
             </div>
           </div>
           <div className="text-center">
-            <div className="text-sm font-bold text-black">Risk Level</div>
-            <div className="font-medium text-black">Moderate</div>
+            <div className="metric-label text-black">Risk Level</div>
+            <div className="metric-secondary text-black">Moderate</div>
           </div>
         </div>
       </CardContent>

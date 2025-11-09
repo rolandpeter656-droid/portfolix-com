@@ -17,7 +17,19 @@ export default {
 				'2xl': '1400px'
 			}
 		},
-		extend: {
+    extend: {
+      fontSize: {
+        'display': ['3.5rem', { lineHeight: '1.1', letterSpacing: '-0.02em', fontWeight: '700' }],
+        'headline': ['2.5rem', { lineHeight: '1.2', letterSpacing: '-0.01em', fontWeight: '700' }],
+        'title': ['1.875rem', { lineHeight: '1.3', letterSpacing: '-0.01em', fontWeight: '700' }],
+        'subtitle': ['1.25rem', { lineHeight: '1.4', fontWeight: '600' }],
+        'body': ['1rem', { lineHeight: '1.6', fontWeight: '400' }],
+        'caption': ['0.875rem', { lineHeight: '1.5', fontWeight: '400' }],
+      },
+      letterSpacing: {
+        'tighter': '-0.02em',
+        'tight': '-0.01em',
+      },
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',

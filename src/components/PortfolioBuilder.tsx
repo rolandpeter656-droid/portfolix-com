@@ -93,10 +93,10 @@ const PortfolioBuilder = () => {
     <section className="py-24 px-4">
       <div className="container mx-auto max-w-6xl">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+          <h2 className="text-headline mb-4">
             Build Your Perfect Portfolio
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-body text-muted-foreground max-w-2xl mx-auto">
             Choose your investment level and see real-time projections for your portfolio growth
           </p>
         </div>
@@ -117,10 +117,10 @@ const PortfolioBuilder = () => {
                 
                 <CardHeader className="relative z-10 text-center pb-4">
                   <div className="mx-auto mb-4 p-3 rounded-full bg-background/80 backdrop-blur-sm w-fit">
-                    <Icon className="h-8 w-8 text-primary" />
+                    <Icon className="icon-lg text-primary" />
                   </div>
-                  <CardTitle className="text-2xl font-bold">{category.title}</CardTitle>
-                  <p className="text-muted-foreground">{category.description}</p>
+                  <CardTitle className="text-title">{category.title}</CardTitle>
+                  <p className="text-body text-muted-foreground">{category.description}</p>
                   <Badge className={`w-fit mx-auto mt-2 ${category.riskColor}`}>
                     {category.riskLevel} Risk
                   </Badge>
@@ -145,22 +145,22 @@ const PortfolioBuilder = () => {
 
                   <div className="bg-background/60 backdrop-blur-sm rounded-lg p-4 space-y-3">
                     <div className="text-center">
-                      <h4 className="text-lg font-semibold text-foreground">
+                      <h4 className="metric-label mb-1">
                         Amount You're Investing
                       </h4>
-                      <p className="text-2xl font-bold text-primary">
+                      <p className="metric-primary text-primary">
                         {formatCurrency(amount)}
                       </p>
                     </div>
 
                     <div className="text-center">
-                      <h4 className="text-sm font-medium text-muted-foreground mb-1">
+                      <h4 className="metric-label mb-1">
                         Estimated Annual Returns
                       </h4>
-                      <p className="text-lg font-semibold text-foreground">
+                      <p className="metric-secondary text-foreground">
                         {formatCurrency(minAnnualReturn)} – {formatCurrency(maxAnnualReturn)}
                       </p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-caption">
                         ({category.minReturn}% – {category.maxReturn}% annually)
                       </p>
                     </div>

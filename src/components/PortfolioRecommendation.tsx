@@ -132,13 +132,13 @@ export const PortfolioRecommendation = ({ riskScore, onStartInvesting, onBack }:
           
           <div className="text-center mb-12">
             <Badge variant="secondary" className="mb-4 px-4 py-2">
-              <PieChart className="h-4 w-4 mr-2" />
+              <PieChart className="icon-sm mr-2" />
               AI Recommendation Ready
             </Badge>
-            <h2 className="text-4xl font-bold text-foreground mb-4">
+            <h2 className="text-headline mb-4">
               Your Personalized Portfolio
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-body text-muted-foreground max-w-2xl mx-auto">
               Based on your risk assessment, our AI recommends a {portfolioType.toLowerCase()} investment strategy
             </p>
           </div>
@@ -160,23 +160,23 @@ export const PortfolioRecommendation = ({ riskScore, onStartInvesting, onBack }:
               <CardContent>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-6">
                   <div className="text-center p-4 bg-accent rounded-lg">
-                    <TrendingUp className="h-8 w-8 text-success mx-auto mb-2" />
-                    <p className="text-sm font-bold text-black">Expected Return</p>
-                    <p className="text-2xl font-bold text-foreground">{portfolio.expectedReturn}</p>
+                    <TrendingUp className="icon-lg text-success mx-auto mb-2" />
+                    <p className="metric-label text-black">Expected Return</p>
+                    <p className="metric-primary">{portfolio.expectedReturn}</p>
                   </div>
                   <div className="text-center p-4 bg-accent rounded-lg">
-                    <BarChart3 className="h-8 w-8 text-primary mx-auto mb-2" />
-                    <p className="text-sm font-bold text-black">Volatility</p>
-                    <p className="text-2xl font-bold text-foreground">{portfolio.volatility}</p>
+                    <BarChart3 className="icon-lg text-primary mx-auto mb-2" />
+                    <p className="metric-label text-black">Volatility</p>
+                    <p className="metric-primary">{portfolio.volatility}</p>
                   </div>
                 </div>
 
                 <div className="space-y-3">
-                  <h4 className="font-semibold text-foreground mb-3">Key Features:</h4>
+                  <h4 className="text-subtitle text-foreground mb-3">Key Features:</h4>
                   {portfolio.features.map((feature, index) => (
                     <div key={index} className="flex items-center gap-3">
-                      <CheckCircle className="h-5 w-5 text-success flex-shrink-0" />
-                      <span className="text-foreground">{feature}</span>
+                      <CheckCircle className="icon-md text-success flex-shrink-0" />
+                      <span className="text-body text-foreground">{feature}</span>
                     </div>
                   ))}
                 </div>
@@ -186,8 +186,8 @@ export const PortfolioRecommendation = ({ riskScore, onStartInvesting, onBack }:
             {/* Asset Allocation */}
             <Card className="shadow-soft border-0">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <PieChart className="h-5 w-5" />
+                <CardTitle className="text-title flex items-center gap-2">
+                  <PieChart className="icon-md" />
                   Asset Allocation
                 </CardTitle>
               </CardHeader>
@@ -196,8 +196,8 @@ export const PortfolioRecommendation = ({ riskScore, onStartInvesting, onBack }:
                   {portfolio.allocations.map((allocation) => (
                     <div key={allocation.name} className="space-y-2">
                       <div className="flex justify-between items-center">
-                        <span className="font-medium text-foreground">{allocation.name}</span>
-                        <span className="text-muted-foreground">{allocation.percentage}%</span>
+                        <span className="text-body font-semibold text-foreground">{allocation.name}</span>
+                        <span className="metric-secondary">{allocation.percentage}%</span>
                       </div>
                       <div className="w-full bg-muted rounded-full h-3">
                         <div
@@ -211,10 +211,11 @@ export const PortfolioRecommendation = ({ riskScore, onStartInvesting, onBack }:
 
                 <div className="mt-8 p-4 bg-gradient-primary rounded-lg text-black">
                   <div className="flex items-center gap-3 mb-2">
-                    <span className="font-semibold">Minimum Investment</span>
+                    <DollarSign className="icon-md text-black" />
+                    <span className="text-subtitle text-black">Minimum Investment</span>
                   </div>
-                  <p className="text-2xl font-bold">$25</p>
-                  <div className="text-black/80 text-sm italic space-y-1">
+                  <p className="metric-primary text-black">$25</p>
+                  <div className="text-black/80 text-caption space-y-1">
                     <p>Start building wealth today</p>
                     <p>Minimum investments are set to investors' experience.</p>
                   </div>

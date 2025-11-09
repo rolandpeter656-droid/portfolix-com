@@ -176,10 +176,10 @@ export const PortfolioWorkspace = ({
                   className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
                   aria-label="Go back"
                 >
-                  <ArrowLeft className="h-5 w-5" />
+                  <ArrowLeft className="icon-md" />
                 </button>
               )}
-              <h1 className="text-2xl font-bold text-foreground">Portfolio Workspace</h1>
+              <h1 className="text-title text-foreground">Portfolio Workspace</h1>
               <Separator orientation="vertical" className="h-6" />
               <Input 
                 value={portfolioName}

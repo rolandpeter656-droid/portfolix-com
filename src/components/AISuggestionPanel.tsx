@@ -154,8 +154,8 @@ export const AISuggestionPanel = ({
     <Card className="h-full">
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2">
-            <Brain className="h-5 w-5" />
+          <CardTitle className="text-title flex items-center gap-2">
+            <Brain className="icon-md" />
             AI Suggestions
           </CardTitle>
           <div className="flex items-center gap-2">
@@ -178,16 +178,16 @@ export const AISuggestionPanel = ({
         {/* Quick Stats */}
         <div className="grid grid-cols-3 gap-3 text-center">
           <div className="p-2 bg-accent rounded-lg">
-            <div className="text-lg font-bold text-black">{suggestions.length}</div>
-            <div className="text-xs font-bold text-black">Total</div>
+            <div className="metric-secondary text-black">{suggestions.length}</div>
+            <div className="metric-label text-black">Total</div>
           </div>
           <div className="p-2 bg-accent rounded-lg">
-            <div className="text-lg font-bold" style={{ color: '#B22222' }}>{highPrioritySuggestions}</div>
-            <div className="text-xs font-bold text-black">High Priority</div>
+            <div className="metric-secondary" style={{ color: '#B22222' }}>{highPrioritySuggestions}</div>
+            <div className="metric-label text-black">High Priority</div>
           </div>
           <div className="p-2 bg-accent rounded-lg">
-            <div className="text-lg font-bold text-black">{averageConfidence.toFixed(0)}%</div>
-            <div className="text-xs font-bold text-black">Confidence</div>
+            <div className="metric-secondary text-black">{averageConfidence.toFixed(0)}%</div>
+            <div className="metric-label text-black">Confidence</div>
           </div>
         </div>
 
@@ -253,7 +253,7 @@ export const AISuggestionPanel = ({
                 </div>
                 <div className="flex-1 space-y-2">
                   <div className="flex items-center justify-between">
-                    <h4 className="font-medium text-sm">{suggestion.title}</h4>
+                    <h4 className="text-body font-semibold">{suggestion.title}</h4>
                     <div className="flex items-center gap-2">
                       <Badge variant={getPriorityColor(suggestion.priority)} className="text-xs">
                         {suggestion.priority}
@@ -264,7 +264,7 @@ export const AISuggestionPanel = ({
                     </div>
                   </div>
                   
-                  <p className="text-sm text-muted-foreground leading-relaxed">
+                  <p className="text-caption leading-relaxed">
                     {suggestion.description}
                   </p>
                   
@@ -321,24 +321,24 @@ export const AISuggestionPanel = ({
 
         {/* AI Analysis Summary */}
         <div className="p-4 bg-gradient-primary rounded-lg text-black">
-          <h4 className="font-medium mb-2 flex items-center gap-2 text-black">
-            <Brain className="h-4 w-4 text-black" />
+          <h4 className="text-subtitle mb-2 flex items-center gap-2 text-black">
+            <Brain className="icon-sm text-black" />
             AI Portfolio Analysis
           </h4>
-          <p className="text-sm text-black mb-3">
+          <p className="text-caption text-black mb-3">
             Your portfolio shows good diversification with room for optimization. 
             Focus on reducing tech concentration and adding international exposure.
           </p>
-          <div className="flex justify-between items-center text-sm text-black">
+          <div className="flex justify-between items-center text-caption text-black">
             <div className="flex items-center gap-2">
               <span>Overall Score:</span>
               <div className="flex items-center gap-1">
-                <TrendingUp className="h-3 w-3 text-black" />
-                <strong>8.2/10</strong>
+                <TrendingUp className="icon-sm text-black" />
+                <strong className="metric-secondary">8.2/10</strong>
               </div>
             </div>
             <Button size="sm" variant="secondary" className="h-7 text-xs">
-              <Settings className="h-3 w-3 mr-1" />
+              <Settings className="icon-sm mr-1" />
               Customize AI
             </Button>
           </div>
