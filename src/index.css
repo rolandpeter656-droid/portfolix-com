@@ -143,4 +143,64 @@ All colors MUST be HSL.
     transform: scale(1.05);
     filter: brightness(1.15) drop-shadow(0 4px 12px hsl(var(--primary) / 0.4));
   }
+
+  /* Premium chart animations - GPU accelerated */
+  @keyframes chart-fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px) translateZ(0);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) translateZ(0);
+    }
+  }
+
+  @keyframes chart-scale-pulse {
+    0%, 100% {
+      transform: scale(1) translateZ(0);
+    }
+    50% {
+      transform: scale(1.02) translateZ(0);
+    }
+  }
+
+  .recharts-wrapper {
+    will-change: transform;
+    transform: translateZ(0);
+  }
+
+  .recharts-surface {
+    will-change: transform;
+    transform: translateZ(0);
+  }
+
+  /* Smooth number transitions */
+  @keyframes number-update {
+    0% {
+      opacity: 0.7;
+      transform: translateY(-4px) scale(0.98) translateZ(0);
+    }
+    50% {
+      opacity: 1;
+      transform: translateY(2px) scale(1.02) translateZ(0);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1) translateZ(0);
+    }
+  }
+
+  .animate-number-update {
+    animation: number-update 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* Performance optimization for charts */
+  .recharts-pie-sector,
+  .recharts-layer,
+  .recharts-sector {
+    will-change: transform, filter;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
 }
