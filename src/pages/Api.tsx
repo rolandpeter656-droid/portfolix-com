@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,11 +7,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
+import HCaptcha from "@hcaptcha/react-hcaptcha";
 
 const Api = () => {
   const [email, setEmail] = useState("");
   const [company, setCompany] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const captchaRef = useRef<HCaptcha>(null);
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -21,6 +24,15 @@ const Api = () => {
       toast({
         title: "Email required",
         description: "Please enter your email address.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!captchaToken) {
+      toast({
+        title: "Verification required",
+        description: "Please complete the captcha verification.",
         variant: "destructive",
       });
       return;
@@ -50,6 +62,8 @@ const Api = () => {
         });
         setEmail("");
         setCompany("");
+        setCaptchaToken(null);
+        captchaRef.current?.resetCaptcha();
       }
     } catch (error) {
       console.error("Error joining waitlist:", error);
@@ -120,10 +134,19 @@ const Api = () => {
                   />
                 </div>
 
+                <div className="flex justify-center">
+                  <HCaptcha
+                    ref={captchaRef}
+                    sitekey="c72a67e8-3fb8-4f80-b682-f3c8bff87750"
+                    onVerify={(token) => setCaptchaToken(token)}
+                    onExpire={() => setCaptchaToken(null)}
+                  />
+                </div>
+
                 <Button 
                   type="submit" 
                   className="w-full" 
-                  disabled={isLoading}
+                  disabled={isLoading || !captchaToken}
                 >
                   {isLoading ? "Joining..." : "Join Waitlist"}
                 </Button>
