@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,7 +9,6 @@ import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff, ArrowLeft, Phone, Mail } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
-import HCaptcha from "@hcaptcha/react-hcaptcha";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
@@ -20,10 +19,6 @@ const SignIn = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [otp, setOtp] = useState("");
   const [otpSent, setOtpSent] = useState(false);
-  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
-  const [phoneCaptchaToken, setPhoneCaptchaToken] = useState<string | null>(null);
-  const captchaRef = useRef<HCaptcha>(null);
-  const phoneCaptchaRef = useRef<HCaptcha>(null);
   const { signIn, signInWithPhone, verifyOtp } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -36,15 +31,6 @@ const SignIn = () => {
       toast({
         title: "Something went wrong. Please try again.",
         description: "",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (!captchaToken) {
-      toast({
-        title: "Verification required",
-        description: "Please complete the captcha verification.",
         variant: "destructive",
       });
       return;
@@ -86,15 +72,6 @@ const SignIn = () => {
       toast({
         title: "Something went wrong. Please try again.",
         description: "",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (!phoneCaptchaToken) {
-      toast({
-        title: "Verification required",
-        description: "Please complete the captcha verification.",
         variant: "destructive",
       });
       return;
@@ -249,19 +226,10 @@ const SignIn = () => {
                     </div>
                   </div>
 
-                  <div className="flex justify-center">
-                    <HCaptcha
-                      ref={captchaRef}
-                      sitekey="c72a67e8-3fb8-4f80-b682-f3c8bff87750"
-                      onVerify={(token) => setCaptchaToken(token)}
-                      onExpire={() => setCaptchaToken(null)}
-                    />
-                  </div>
-
                   <Button
                     type="submit"
                     className="w-full h-11"
-                    disabled={isLoading || !captchaToken}
+                    disabled={isLoading}
                   >
                     {isLoading ? "Signing in..." : "Sign In"}
                   </Button>
@@ -307,19 +275,10 @@ const SignIn = () => {
                       </p>
                     </div>
 
-                    <div className="flex justify-center">
-                      <HCaptcha
-                        ref={phoneCaptchaRef}
-                        sitekey="c72a67e8-3fb8-4f80-b682-f3c8bff87750"
-                        onVerify={(token) => setPhoneCaptchaToken(token)}
-                        onExpire={() => setPhoneCaptchaToken(null)}
-                      />
-                    </div>
-
                     <Button
                       type="submit"
                       className="w-full h-11"
-                      disabled={isLoading || !phoneCaptchaToken}
+                      disabled={isLoading}
                     >
                       {isLoading ? "Sending OTP..." : "Send OTP"}
                     </Button>
