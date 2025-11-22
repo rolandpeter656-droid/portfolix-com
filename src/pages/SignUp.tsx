@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,7 +9,6 @@ import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Eye, EyeOff, ArrowLeft } from "lucide-react";
-import HCaptcha from "@hcaptcha/react-hcaptcha";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -21,8 +20,6 @@ const SignUp = () => {
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [extraInfo, setExtraInfo] = useState("");
-  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
-  const captchaRef = useRef<HCaptcha>(null);
   const { signUp } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -44,15 +41,6 @@ const SignUp = () => {
       toast({
         title: "Terms required",
         description: "Please agree to the terms and conditions to continue.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (!captchaToken) {
-      toast({
-        title: "Verification required",
-        description: "Please complete the captcha verification.",
         variant: "destructive",
       });
       return;
@@ -243,19 +231,10 @@ const SignUp = () => {
                 </Label>
               </div>
 
-              <div className="flex justify-center">
-                <HCaptcha
-                  ref={captchaRef}
-                  sitekey="c72a67e8-3fb8-4f80-b682-f3c8bff87750"
-                  onVerify={(token) => setCaptchaToken(token)}
-                  onExpire={() => setCaptchaToken(null)}
-                />
-              </div>
-
               <Button
                 type="submit"
                 className="w-full h-11"
-                disabled={isLoading || !captchaToken}
+                disabled={isLoading}
               >
                 {isLoading ? "Creating account..." : "Create Account"}
               </Button>
