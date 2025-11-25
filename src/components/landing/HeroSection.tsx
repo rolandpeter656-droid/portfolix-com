@@ -23,27 +23,25 @@ export const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
           <h1 className="font-serif-display text-5xl md:text-7xl lg:text-8xl font-bold text-foreground mb-8 leading-tight">
             {/* Mobile: Stack each word */}
             <span className="block md:hidden">
-              <span className="block">Build</span>
-              <span className="block">Smarter</span>
-              <span className="block">Investment</span>
+              <span className="block">Professionally</span>
+              <span className="block">Built</span>
               <span className="text-gradient block">Portfolios</span>
             </span>
             {/* Desktop: Two lines */}
             <span className="hidden md:block">
-              Build Smarter
+              Professionally Built
               <span className="text-gradient block mt-2">Investment Portfolios</span>
             </span>
           </h1>
 
           {/* Subheading */}
           <p className="text-xl md:text-2xl text-muted-foreground mb-6 leading-relaxed max-w-4xl mx-auto">
-            Our AI analyzes market trends, risk profiles, and investment goals to create 
-            personalized portfolio bundles for optimal returns.
+            Simple, professionally built investment portfolios for brokerages and investors—ready to deploy with confidence.
           </p>
 
           {/* Tagline */}
           <p className="text-lg text-primary mb-12 font-medium">
-            Think of ChatGPT + Notion + Wealthfront, for investing
+            Invest with confidence—professionally built portfolios, ready to deploy.
           </p>
 
           {/* CTA Buttons */}
