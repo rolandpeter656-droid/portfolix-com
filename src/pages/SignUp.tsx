@@ -28,6 +28,7 @@ const SignUp = () => {
   const navigate = useNavigate();
 
   const hcaptchaSiteKey = import.meta.env.VITE_HCAPTCHA_SITE_KEY;
+  const isCaptchaEnabled = hcaptchaSiteKey && hcaptchaSiteKey.trim() !== '';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,8 +52,8 @@ const SignUp = () => {
       return;
     }
 
-    // Check captcha if site key is configured
-    if (hcaptchaSiteKey && !captchaToken) {
+    // Check captcha only if it's enabled
+    if (isCaptchaEnabled && !captchaToken) {
       toast({
         title: "Verification required",
         description: "Please complete the captcha verification.",
@@ -252,7 +253,7 @@ const SignUp = () => {
               </div>
 
               {/* hCaptcha - only render if site key is configured */}
-              {hcaptchaSiteKey && (
+              {isCaptchaEnabled && (
                 <div className="flex justify-center">
                   <HCaptcha
                     ref={captchaRef}
