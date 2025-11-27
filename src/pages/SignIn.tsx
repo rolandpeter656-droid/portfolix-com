@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff, ArrowLeft, Phone, Mail } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
+import HCaptcha from "@hcaptcha/react-hcaptcha";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
@@ -19,9 +20,13 @@ const SignIn = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [otp, setOtp] = useState("");
   const [otpSent, setOtpSent] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const captchaRef = useRef<HCaptcha>(null);
   const { signIn, signInWithPhone, verifyOtp } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  const hcaptchaSiteKey = import.meta.env.VITE_HCAPTCHA_SITE_KEY;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,6 +36,16 @@ const SignIn = () => {
       toast({
         title: "Something went wrong. Please try again.",
         description: "",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Check captcha if site key is configured
+    if (hcaptchaSiteKey && !captchaToken) {
+      toast({
+        title: "Verification required",
+        description: "Please complete the captcha verification.",
         variant: "destructive",
       });
       return;
@@ -62,6 +77,11 @@ const SignIn = () => {
       });
     } finally {
       setIsLoading(false);
+      // Reset captcha for retry
+      if (captchaRef.current) {
+        captchaRef.current.resetCaptcha();
+      }
+      setCaptchaToken(null);
     }
   };
 
@@ -225,6 +245,19 @@ const SignIn = () => {
                       </Button>
                     </div>
                   </div>
+
+                  {/* hCaptcha - only render if site key is configured */}
+                  {hcaptchaSiteKey && (
+                    <div className="flex justify-center">
+                      <HCaptcha
+                        ref={captchaRef}
+                        sitekey={hcaptchaSiteKey}
+                        onVerify={(token) => setCaptchaToken(token)}
+                        onExpire={() => setCaptchaToken(null)}
+                        onError={() => setCaptchaToken(null)}
+                      />
+                    </div>
+                  )}
 
                   <Button
                     type="submit"
