@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 import { Eye, EyeOff, ArrowLeft, Phone, Mail } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
@@ -53,6 +54,38 @@ const SignIn = () => {
     }
 
     setIsLoading(true);
+
+    // Verify captcha with backend if enabled
+    if (isCaptchaEnabled && captchaToken) {
+      try {
+        const verifyResponse = await supabase.functions.invoke('verify-captcha', {
+          body: { token: captchaToken }
+        });
+
+        if (verifyResponse.error || !verifyResponse.data?.success) {
+          toast({
+            title: "Captcha Verification Failed",
+            description: "Please try again.",
+            variant: "destructive",
+          });
+          setIsLoading(false);
+          setCaptchaToken(null);
+          if (captchaRef.current) {
+            captchaRef.current.resetCaptcha();
+          }
+          return;
+        }
+      } catch (error) {
+        console.error('Captcha verification error:', error);
+        toast({
+          title: "Verification Error",
+          description: "Please try again.",
+          variant: "destructive",
+        });
+        setIsLoading(false);
+        return;
+      }
+    }
 
     try {
       const { data, error } = await signIn(email, password);

@@ -64,6 +64,38 @@ const SignUp = () => {
 
     setIsLoading(true);
 
+    // Verify captcha with backend if enabled
+    if (isCaptchaEnabled && captchaToken) {
+      try {
+        const verifyResponse = await supabase.functions.invoke('verify-captcha', {
+          body: { token: captchaToken }
+        });
+
+        if (verifyResponse.error || !verifyResponse.data?.success) {
+          toast({
+            title: "Captcha Verification Failed",
+            description: "Please try again.",
+            variant: "destructive",
+          });
+          setIsLoading(false);
+          setCaptchaToken(null);
+          if (captchaRef.current) {
+            captchaRef.current.resetCaptcha();
+          }
+          return;
+        }
+      } catch (error) {
+        console.error('Captcha verification error:', error);
+        toast({
+          title: "Verification Error",
+          description: "Please try again.",
+          variant: "destructive",
+        });
+        setIsLoading(false);
+        return;
+      }
+    }
+
     try {
       const { data, error } = await signUp(email, password);
       
