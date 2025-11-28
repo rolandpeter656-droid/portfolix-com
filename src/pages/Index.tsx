@@ -42,6 +42,14 @@ const Index = () => {
   const { user } = useAuth();
   const { canGenerate, checkAndIncrementLimit } = usePortfolioLimit();
 
+  // Check if coming from builder choice
+  useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('start') === 'builder' && user) {
+      setCurrentStep("assessment");
+    }
+  });
+
   const handleGetStarted = () => {
     if (!user) {
       window.location.href = '/signup';
