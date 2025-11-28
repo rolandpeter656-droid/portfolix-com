@@ -8,6 +8,7 @@ import { TeamSection } from "@/components/landing/TeamSection";
 import { Footer } from "@/components/landing/Footer";
 import { PricingPlans } from "@/components/PricingPlans";
 import { RiskAssessment } from "@/components/RiskAssessment";
+import { GoalSelection } from "@/components/GoalSelection";
 import { PortfolioRecommendation } from "@/components/PortfolioRecommendation";
 import { PortfolioWorkspace } from "@/components/PortfolioWorkspace";
 import PortfolioSummary from "@/pages/PortfolioSummary";
@@ -16,7 +17,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { UpgradeModal } from "@/components/UpgradeModal";
 import { usePortfolioLimit } from "@/hooks/usePortfolioLimit";
 
-type Step = "landing" | "assessment" | "recommendation" | "summary" | "workspace";
+type Step = "landing" | "assessment" | "goal" | "recommendation" | "summary" | "workspace";
 
 interface PortfolioAsset {
   id?: string;
@@ -34,6 +35,7 @@ const Index = () => {
   const [riskScore, setRiskScore] = useState<number>(0);
   const [experienceLevel, setExperienceLevel] = useState<"beginner" | "intermediate" | "advanced">("intermediate");
   const [timeline, setTimeline] = useState<string>("");
+  const [investmentGoal, setInvestmentGoal] = useState<string>("");
   const [generatedPortfolio, setGeneratedPortfolio] = useState<PortfolioAsset[]>([]);
   const [portfolioName, setPortfolioName] = useState<string>("");
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
@@ -52,6 +54,11 @@ const Index = () => {
     setRiskScore(score);
     setExperienceLevel(experience);
     setTimeline(timelineValue);
+    setCurrentStep("goal");
+  };
+
+  const handleGoalComplete = (goal: string) => {
+    setInvestmentGoal(goal);
     setCurrentStep("recommendation");
   };
 
@@ -87,6 +94,10 @@ const Index = () => {
     setCurrentStep("assessment");
   };
 
+  const handleBackToGoal = () => {
+    setCurrentStep("goal");
+  };
+
   const handleBackToSummary = () => {
     setCurrentStep("summary");
   };
@@ -100,13 +111,21 @@ const Index = () => {
     );
   }
 
+  if (currentStep === "goal") {
+    return (
+      <AuthGuard>
+        <GoalSelection onComplete={handleGoalComplete} onBack={handleBackToAssessment} />
+      </AuthGuard>
+    );
+  }
+
   if (currentStep === "recommendation") {
     return (
       <AuthGuard>
         <PortfolioRecommendation 
           riskScore={riskScore} 
           onStartInvesting={handleStartInvesting}
-          onBack={handleBackToAssessment}
+          onBack={handleBackToGoal}
         />
       </AuthGuard>
     );

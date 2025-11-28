@@ -3,9 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Menu, X, ArrowRight } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { SignupModal } from "@/components/SignupModal";
 
 export const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showSignupModal, setShowSignupModal] = useState(false);
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
 
@@ -66,7 +68,7 @@ export const Navigation = () => {
                 </Button>
                 <Button 
                   className="bg-primary hover:bg-primary-glow text-primary-foreground"
-                  onClick={() => navigate('/signup')}
+                  onClick={() => setShowSignupModal(true)}
                 >
                   Get Started
                   <ArrowRight className="ml-2 h-4 w-4" />
@@ -134,7 +136,7 @@ export const Navigation = () => {
                     </Button>
                     <Button 
                       className="bg-primary hover:bg-primary-glow text-primary-foreground"
-                      onClick={() => navigate('/signup')}
+                      onClick={() => setShowSignupModal(true)}
                     >
                       Get Started
                       <ArrowRight className="ml-2 h-4 w-4" />
@@ -146,6 +148,8 @@ export const Navigation = () => {
           </div>
         )}
       </div>
+      
+      <SignupModal open={showSignupModal} onOpenChange={setShowSignupModal} />
     </nav>
   );
 };

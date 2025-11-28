@@ -320,30 +320,42 @@ export type Database = {
           created_at: string
           first_name: string | null
           id: number
+          investment_experience: string | null
           last_name: string | null
           phone_number: string
           portfolio_count: number | null
+          primary_goal: string | null
+          risk_tolerance: string | null
           subscription_plan: string | null
+          time_horizon: string | null
           user_id: string
         }
         Insert: {
           created_at?: string
           first_name?: string | null
           id?: number
+          investment_experience?: string | null
           last_name?: string | null
           phone_number: string
           portfolio_count?: number | null
+          primary_goal?: string | null
+          risk_tolerance?: string | null
           subscription_plan?: string | null
+          time_horizon?: string | null
           user_id?: string
         }
         Update: {
           created_at?: string
           first_name?: string | null
           id?: number
+          investment_experience?: string | null
           last_name?: string | null
           phone_number?: string
           portfolio_count?: number | null
+          primary_goal?: string | null
+          risk_tolerance?: string | null
           subscription_plan?: string | null
+          time_horizon?: string | null
           user_id?: string
         }
         Relationships: []
