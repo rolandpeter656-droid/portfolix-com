@@ -5,11 +5,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { BarChart3, Loader2, Download, Save, X } from "lucide-react";
+import { BarChart3, Loader2, Download, Save } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
+import { Portfolio3DPieChart } from "@/components/Portfolio3DPieChart";
 
 interface AnalysisResult {
   allocation: {
@@ -27,11 +27,11 @@ interface MarketAnalysisToolProps {
   onClose: () => void;
 }
 
-const COLORS = {
-  stocks: "hsl(var(--primary))",
-  bonds: "hsl(var(--success))",
-  realEstate: "hsl(var(--warning))",
-  cash: "hsl(var(--muted-foreground))"
+const ASSET_COLORS = {
+  stocks: "#8b5cf6",
+  bonds: "#10b981",
+  realEstate: "#f59e0b",
+  cash: "#64748b"
 };
 
 export const MarketAnalysisTool = ({ isOpen, onClose }: MarketAnalysisToolProps) => {
@@ -138,10 +138,30 @@ export const MarketAnalysisTool = ({ isOpen, onClose }: MarketAnalysisToolProps)
   };
 
   const chartData = result ? [
-    { name: "Stocks", value: result.allocation.stocks, color: COLORS.stocks },
-    { name: "Bonds", value: result.allocation.bonds, color: COLORS.bonds },
-    { name: "Real Estate", value: result.allocation.realEstate, color: COLORS.realEstate },
-    { name: "Cash/Alternatives", value: result.allocation.cash, color: COLORS.cash }
+    { 
+      symbol: "STK", 
+      name: "Stocks", 
+      allocation: result.allocation.stocks, 
+      color: ASSET_COLORS.stocks 
+    },
+    { 
+      symbol: "BND", 
+      name: "Bonds", 
+      allocation: result.allocation.bonds, 
+      color: ASSET_COLORS.bonds 
+    },
+    { 
+      symbol: "REI", 
+      name: "Real Estate", 
+      allocation: result.allocation.realEstate, 
+      color: ASSET_COLORS.realEstate 
+    },
+    { 
+      symbol: "CSH", 
+      name: "Cash/Alternatives", 
+      allocation: result.allocation.cash, 
+      color: ASSET_COLORS.cash 
+    }
   ] : [];
 
   return (
@@ -250,26 +270,7 @@ export const MarketAnalysisTool = ({ isOpen, onClose }: MarketAnalysisToolProps)
                       <CardTitle>Recommended Allocation</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <ResponsiveContainer width="100%" height={250}>
-                        <PieChart>
-                          <Pie
-                            data={chartData}
-                            cx="50%"
-                            cy="50%"
-                            labelLine={false}
-                            label={({ name, value }) => `${name}: ${value}%`}
-                            outerRadius={80}
-                            fill="#8884d8"
-                            dataKey="value"
-                          >
-                            {chartData.map((entry, index) => (
-                              <Cell key={`cell-${index}`} fill={entry.color} />
-                            ))}
-                          </Pie>
-                          <Tooltip />
-                          <Legend />
-                        </PieChart>
-                      </ResponsiveContainer>
+                      <Portfolio3DPieChart data={chartData} className="h-[300px]" />
                     </CardContent>
                   </Card>
 
