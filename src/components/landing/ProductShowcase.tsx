@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Monitor, Smartphone, Tablet, TrendingUp, PieChart, BarChart3, ArrowUpRight } from "lucide-react";
+import { MarketAnalysisTool } from "@/components/MarketAnalysisTool";
 
 const showcaseItems = [
   {
@@ -45,9 +46,22 @@ const showcaseItems = [
 
 export const ProductShowcase = () => {
   const [activeItem, setActiveItem] = useState(showcaseItems[0]);
+  const [isMarketAnalysisOpen, setIsMarketAnalysisOpen] = useState(false);
+
+  const handleItemClick = (item: typeof showcaseItems[0]) => {
+    setActiveItem(item);
+    if (item.id === "analysis") {
+      setIsMarketAnalysisOpen(true);
+    }
+  };
 
   return (
-    <section id="product" className="py-24 bg-background">
+    <>
+      <MarketAnalysisTool 
+        isOpen={isMarketAnalysisOpen} 
+        onClose={() => setIsMarketAnalysisOpen(false)} 
+      />
+      <section id="product" className="py-24 bg-background">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="text-center mb-16">
           <Badge className="mb-4 bg-primary/10 text-primary border-primary/20">
@@ -74,7 +88,7 @@ export const ProductShowcase = () => {
                       ? 'bg-gradient-card border-primary shadow-glow' 
                       : 'bg-card border-border hover:border-primary/50'
                   }`}
-                  onClick={() => setActiveItem(item)}
+                  onClick={() => handleItemClick(item)}
                 >
                   <CardContent className="p-6">
                     <div className="flex items-start gap-4">
@@ -187,5 +201,6 @@ export const ProductShowcase = () => {
         </div>
       </div>
     </section>
+    </>
   );
 };
