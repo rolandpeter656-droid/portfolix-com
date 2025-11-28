@@ -1,17 +1,28 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Monitor, Smartphone, Tablet, TrendingUp, PieChart, BarChart3, ArrowUpRight } from "lucide-react";
 import { MarketAnalysisTool } from "@/components/MarketAnalysisTool";
 
-const showcaseItems = [
+interface ShowcaseItem {
+  id: string;
+  title: string;
+  description: string;
+  icon: any;
+  image: string;
+  metrics: { label: string; value: string; trend: string }[];
+  link?: string;
+}
+
+const showcaseItems: ShowcaseItem[] = [
   {
     id: "dashboard",
     title: "AI Dashboard",
     description: "Real-time portfolio analytics with AI-powered insights",
     icon: Monitor,
-    image: "photo-1461749280684-dccba630e2f6", // Java programming monitor
+    image: "photo-1461749280684-dccba630e2f6",
     metrics: [
       { label: "Portfolio Value", value: "$127,834", trend: "+12.3%" },
       { label: "Monthly Return", value: "8.4%", trend: "+2.1%" },
@@ -23,7 +34,7 @@ const showcaseItems = [
     title: "Market Analysis",
     description: "Deep market insights powered by advanced AI algorithms",
     icon: BarChart3,
-    image: "photo-1487058792275-0ad4aaf24ca7", // Colorful code
+    image: "photo-1487058792275-0ad4aaf24ca7",
     metrics: [
       { label: "Market Sentiment", value: "Bullish", trend: "+5.2%" },
       { label: "Volatility Index", value: "16.7", trend: "-1.3%" },
@@ -31,24 +42,43 @@ const showcaseItems = [
     ]
   },
   {
-    id: "portfolio",
+    id: "builder",
     title: "Portfolio Builder",
-    description: "Drag-and-drop portfolio construction with AI optimization",
+    description: "Guided templates & drag-and-drop portfolio construction",
     icon: PieChart,
-    image: "photo-1518770660439-4636190af475", // Circuit board
+    image: "photo-1518770660439-4636190af475",
     metrics: [
       { label: "Asset Allocation", value: "Optimized", trend: "Updated" },
       { label: "Diversification", value: "Excellent", trend: "+7.8%" },
       { label: "Expected Return", value: "14.2%", trend: "+1.9%" }
+    ],
+    link: "/app/builder"
+  },
+  {
+    id: "portfolio",
+    title: "Portfolio Workspace",
+    description: "Advanced portfolio management with AI optimization",
+    icon: TrendingUp,
+    image: "photo-1526374965328-7f61d4dc18c5",
+    metrics: [
+      { label: "Active Portfolios", value: "12", trend: "+3 this month" },
+      { label: "Total Assets", value: "$847K", trend: "+15.2%" },
+      { label: "Performance", value: "Excellent", trend: "+9.4%" }
     ]
   }
 ];
 
 export const ProductShowcase = () => {
+  const navigate = useNavigate();
   const [activeItem, setActiveItem] = useState(showcaseItems[0]);
   const [isMarketAnalysisOpen, setIsMarketAnalysisOpen] = useState(false);
 
   const handleItemClick = (item: typeof showcaseItems[0]) => {
+    if (item.link) {
+      navigate(item.link);
+      return;
+    }
+    
     setActiveItem(item);
     if (item.id === "analysis") {
       setIsMarketAnalysisOpen(true);
