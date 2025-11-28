@@ -210,8 +210,7 @@ export const PortfolioRecommendation = ({ riskScore, onStartInvesting, onBack }:
                 </div>
 
                 <div className="mt-8 p-4 bg-gradient-primary rounded-lg text-black">
-                  <div className="flex items-center gap-3 mb-2">
-                    <DollarSign className="icon-md text-black" />
+                  <div className="mb-2">
                     <span className="text-subtitle text-black">Minimum Investment</span>
                   </div>
                   <p className="metric-primary text-black">$25</p>
