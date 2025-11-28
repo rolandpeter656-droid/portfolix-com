@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,7 +9,6 @@ import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Eye, EyeOff, ArrowLeft } from "lucide-react";
-import HCaptcha from "@hcaptcha/react-hcaptcha";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -21,14 +20,9 @@ const SignUp = () => {
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [extraInfo, setExtraInfo] = useState("");
-  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
-  const captchaRef = useRef<HCaptcha>(null);
   const { signUp } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
-
-  const hcaptchaSiteKey = import.meta.env.VITE_HCAPTCHA_SITE_KEY;
-  const isCaptchaEnabled = hcaptchaSiteKey && hcaptchaSiteKey.trim() !== '';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,49 +46,7 @@ const SignUp = () => {
       return;
     }
 
-    // Check captcha only if it's enabled
-    if (isCaptchaEnabled && !captchaToken) {
-      toast({
-        title: "Verification required",
-        description: "Please complete the captcha verification.",
-        variant: "destructive",
-      });
-      return;
-    }
-
     setIsLoading(true);
-
-    // Verify captcha with backend if enabled
-    if (isCaptchaEnabled && captchaToken) {
-      try {
-        const verifyResponse = await supabase.functions.invoke('verify-captcha', {
-          body: { token: captchaToken }
-        });
-
-        if (verifyResponse.error || !verifyResponse.data?.success) {
-          toast({
-            title: "Captcha Verification Failed",
-            description: "Please try again.",
-            variant: "destructive",
-          });
-          setIsLoading(false);
-          setCaptchaToken(null);
-          if (captchaRef.current) {
-            captchaRef.current.resetCaptcha();
-          }
-          return;
-        }
-      } catch (error) {
-        console.error('Captcha verification error:', error);
-        toast({
-          title: "Verification Error",
-          description: "Please try again.",
-          variant: "destructive",
-        });
-        setIsLoading(false);
-        return;
-      }
-    }
 
     try {
       const { data, error } = await signUp(email, password);
@@ -138,11 +90,6 @@ const SignUp = () => {
       });
     } finally {
       setIsLoading(false);
-      // Reset captcha for retry
-      if (captchaRef.current) {
-        captchaRef.current.resetCaptcha();
-      }
-      setCaptchaToken(null);
     }
   };
 
@@ -283,19 +230,6 @@ const SignUp = () => {
                   </Link>
                 </Label>
               </div>
-
-              {/* hCaptcha - only render if site key is configured */}
-              {isCaptchaEnabled && (
-                <div className="flex justify-center">
-                  <HCaptcha
-                    ref={captchaRef}
-                    sitekey={hcaptchaSiteKey}
-                    onVerify={(token) => setCaptchaToken(token)}
-                    onExpire={() => setCaptchaToken(null)}
-                    onError={() => setCaptchaToken(null)}
-                  />
-                </div>
-              )}
 
               <Button
                 type="submit"
