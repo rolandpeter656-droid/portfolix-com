@@ -1,5 +1,8 @@
-import { Brain, Target, Zap, Shield, BarChart3, Sparkles } from "lucide-react";
+import { Brain, Target, Zap, Shield, BarChart3, Sparkles, TrendingUp } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { useState } from "react";
+import { AIDashboardModal } from "@/components/AIDashboardModal";
+import { useNavigate } from "react-router-dom";
 
 const features = [
   {
@@ -25,11 +28,38 @@ const features = [
     title: "Risk Management",
     description: "Built-in risk monitoring with automated alerts and protective measures to safeguard your investments during market volatility.",
     gradient: "from-blue-500 to-blue-400"
+  },
+  {
+    icon: TrendingUp,
+    title: "AI Dashboard",
+    description: "Real-time portfolio analytics with AI-powered insights",
+    gradient: "from-primary to-primary-glow",
+    isClickable: true
   }
 ];
 
 export const FeaturesSection = () => {
+  const [isDashboardModalOpen, setIsDashboardModalOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleFeatureClick = (feature: typeof features[0]) => {
+    if (feature.isClickable) {
+      setIsDashboardModalOpen(true);
+    }
+  };
+
+  const handleSignUpClick = () => {
+    setIsDashboardModalOpen(false);
+    navigate('/signup');
+  };
+
   return (
+    <>
+      <AIDashboardModal 
+        isOpen={isDashboardModalOpen}
+        onClose={() => setIsDashboardModalOpen(false)}
+        onSignUpClick={handleSignUpClick}
+      />
     <section id="features" className="py-24 bg-secondary/30">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="text-center mb-16">
@@ -46,7 +76,10 @@ export const FeaturesSection = () => {
           {features.map((feature, index) => (
             <Card 
               key={index} 
-              className="group bg-gradient-card border-border hover:shadow-card transition-all duration-500 hover-scale overflow-hidden"
+              className={`group bg-gradient-card border-border hover:shadow-card transition-all duration-500 hover-scale overflow-hidden ${
+                feature.isClickable ? 'cursor-pointer' : ''
+              }`}
+              onClick={() => handleFeatureClick(feature)}
             >
               <CardContent className="p-8">
                 <div className="relative">
@@ -99,5 +132,6 @@ export const FeaturesSection = () => {
         </div>
       </div>
     </section>
+    </>
   );
 };
