@@ -19,8 +19,8 @@ export const Footer = () => {
               <div className="space-y-3 text-sm">
                 <div className="flex items-center gap-3 text-muted-foreground">
                   <Mail className="h-4 w-4 text-primary" />
-                  <a href="mailto:PortfoliX@mail.com" className="hover:text-primary transition-colors">
-                    PortfoliX@mail.com
+                  <a href="mailto:peter@portfolixapps.com" className="hover:text-primary transition-colors">
+                    peter@portfolixapps.com
                   </a>
                 </div>
                 <div className="flex items-center gap-3 text-muted-foreground">
