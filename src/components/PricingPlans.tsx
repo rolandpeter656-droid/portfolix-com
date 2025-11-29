@@ -108,7 +108,7 @@ export const PricingPlans = ({ currentPlan = "free", onPlanSelect }: PricingPlan
     
     if (planId === "institutional") {
       // Handle institutional plan contact
-      window.open("mailto:PortfoliX@mail.com?subject=Institutional Plan Inquiry", "_blank");
+      window.open("mailto:peter@portfolixapps.com?subject=Institutional Plan Inquiry", "_blank");
       return;
     }
 
