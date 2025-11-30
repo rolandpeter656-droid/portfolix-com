@@ -19,6 +19,10 @@ export const SignupModal = ({ open, onOpenChange }: SignupModalProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [referralCode, setReferralCode] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [userId, setUserId] = useState<string>("");
@@ -37,6 +41,10 @@ export const SignupModal = ({ open, onOpenChange }: SignupModalProps) => {
     setEmail("");
     setPassword("");
     setConfirmPassword("");
+    setFirstName("");
+    setLastName("");
+    setPhoneNumber("");
+    setReferralCode("");
     setShowPassword(false);
     setInvestmentExperience("");
     setRiskTolerance("");
@@ -77,6 +85,74 @@ export const SignupModal = ({ open, onOpenChange }: SignupModalProps) => {
           variant: "destructive",
         });
       } else if (data.user) {
+        // Generate unique referral code
+        const { data: referralCodeData, error: referralCodeError } = await supabase
+          .rpc('generate_unique_referral_code');
+        
+        if (referralCodeError) {
+          console.error('Referral code generation error:', referralCodeError);
+        }
+
+        const generatedReferralCode = referralCodeData || `PORTFOLIX-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+
+        // Save user profile with referral code and initial credits
+        const { error: profileError } = await supabase
+          .from('users')
+          .insert({
+            user_id: data.user.id,
+            first_name: firstName,
+            last_name: lastName,
+            phone_number: phoneNumber,
+            referred_by: referralCode || null,
+            referral_code: generatedReferralCode,
+            credit_balance: 5,
+          });
+
+        if (profileError) {
+          console.error('Profile creation error:', profileError);
+        } else {
+          // Log credit transaction for signup
+          await supabase.from('credit_transactions').insert({
+            user_id: data.user.id,
+            amount: 5,
+            reason: 'Signup bonus',
+          });
+
+          // If user was referred, process referral rewards
+          if (referralCode) {
+            const { data: referrerData } = await supabase
+              .from('users')
+              .select('user_id, credit_balance, referral_count')
+              .eq('referral_code', referralCode)
+              .single();
+
+            if (referrerData) {
+              await supabase.from('referrals').insert({
+                referrer_code: referralCode,
+                referee_email: email,
+                status: 'activated',
+              });
+
+              const newReferrerBalance = (referrerData.credit_balance || 0) + 10;
+              const newReferralCount = (referrerData.referral_count || 0) + 1;
+
+              await supabase
+                .from('users')
+                .update({
+                  credit_balance: newReferrerBalance,
+                  referral_count: newReferralCount,
+                })
+                .eq('user_id', referrerData.user_id);
+
+              await supabase.from('credit_transactions').insert({
+                user_id: referrerData.user_id,
+                amount: 10,
+                reason: `Referral reward for ${email}`,
+              });
+            }
+          }
+        }
+        
         setUserId(data.user.id);
         setStep("survey");
       }
@@ -108,17 +184,16 @@ export const SignupModal = ({ open, onOpenChange }: SignupModalProps) => {
     try {
       const { error } = await supabase
         .from('users')
-        .insert({
-          user_id: userId,
-          phone_number: '', // Empty for now, can be collected later
+        .update({
           investment_experience: investmentExperience,
           risk_tolerance: riskTolerance,
           time_horizon: timeHorizon,
           primary_goal: primaryGoal,
-        });
+        })
+        .eq('user_id', userId);
 
       if (error) {
-        console.error('Profile creation error:', error);
+        console.error('Profile update error:', error);
         toast({
           title: "Profile saved with limited data",
           description: "Please check your email to verify your account.",
@@ -126,7 +201,7 @@ export const SignupModal = ({ open, onOpenChange }: SignupModalProps) => {
       } else {
         toast({
           title: "Welcome to PortfoliX!",
-          description: "Your profile has been created. Please check your email to verify your account.",
+          description: "Your profile has been created. Please check your email to verify your account. You've earned 5 credits!",
         });
       }
       
@@ -166,6 +241,31 @@ export const SignupModal = ({ open, onOpenChange }: SignupModalProps) => {
             </DialogHeader>
             
             <form onSubmit={handleSignup} className="space-y-4 mt-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="firstName">First Name</Label>
+                  <Input
+                    id="firstName"
+                    type="text"
+                    placeholder="First name"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="lastName">Last Name</Label>
+                  <Input
+                    id="lastName"
+                    type="text"
+                    placeholder="Last name"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
+
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -174,6 +274,18 @@ export const SignupModal = ({ open, onOpenChange }: SignupModalProps) => {
                   placeholder="Enter your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="phoneNumber">Phone Number</Label>
+                <Input
+                  id="phoneNumber"
+                  type="tel"
+                  placeholder="Enter your phone number"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
                   required
                 />
               </div>
@@ -213,6 +325,17 @@ export const SignupModal = ({ open, onOpenChange }: SignupModalProps) => {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
                   minLength={6}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="referralCode">Referral Code (Optional)</Label>
+                <Input
+                  id="referralCode"
+                  type="text"
+                  placeholder="Enter referral code if you have one"
+                  value={referralCode}
+                  onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
                 />
               </div>
 
