@@ -68,7 +68,17 @@ const SignUp = () => {
           variant: "destructive",
         });
       } else if (data.user) {
-        // Save additional user profile data
+        // Generate unique referral code
+        const { data: referralCodeData, error: referralCodeError } = await supabase
+          .rpc('generate_unique_referral_code');
+        
+        if (referralCodeError) {
+          console.error('Referral code generation error:', referralCodeError);
+        }
+
+        const generatedReferralCode = referralCodeData || `PORTFOLIX-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+
+        // Save user profile with referral code and initial credits
         const { error: profileError } = await supabase
           .from('users')
           .insert({
@@ -77,6 +87,8 @@ const SignUp = () => {
             last_name: lastName,
             phone_number: phoneNumber,
             referred_by: referredBy || null,
+            referral_code: generatedReferralCode,
+            credit_balance: 5, // Award 5 credits for signing up
           });
 
         if (profileError) {
@@ -86,9 +98,54 @@ const SignUp = () => {
             description: "Please check your email to verify your account, then sign in.",
           });
         } else {
+          // Log credit transaction for signup
+          await supabase.from('credit_transactions').insert({
+            user_id: data.user.id,
+            amount: 5,
+            reason: 'Signup bonus',
+          });
+
+          // If user was referred, process referral rewards
+          if (referredBy) {
+            // Find referrer by referral code
+            const { data: referrerData } = await supabase
+              .from('users')
+              .select('user_id, credit_balance, referral_count')
+              .eq('referral_code', referredBy)
+              .single();
+
+            if (referrerData) {
+              // Create referral record
+              await supabase.from('referrals').insert({
+                referrer_code: referredBy,
+                referee_email: email,
+                status: 'activated',
+              });
+
+              // Award 10 credits to referrer
+              const newReferrerBalance = (referrerData.credit_balance || 0) + 10;
+              const newReferralCount = (referrerData.referral_count || 0) + 1;
+
+              await supabase
+                .from('users')
+                .update({
+                  credit_balance: newReferrerBalance,
+                  referral_count: newReferralCount,
+                })
+                .eq('user_id', referrerData.user_id);
+
+              // Log credit transaction for referrer
+              await supabase.from('credit_transactions').insert({
+                user_id: referrerData.user_id,
+                amount: 10,
+                reason: `Referral reward for ${email}`,
+              });
+            }
+          }
+
           toast({
             title: "Account created successfully!",
-            description: "Please check your email to verify your account, then sign in.",
+            description: "Please check your email to verify your account, then sign in. You've earned 5 credits!",
           });
         }
         navigate("/signin");
