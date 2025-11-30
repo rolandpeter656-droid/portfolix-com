@@ -57,10 +57,49 @@ const ReferralDashboard = () => {
     }
 
     if (!data) {
-      // User record doesn't exist yet - this can happen if trigger hasn't executed
+      // User record doesn't exist - create it now
+      console.log("User record not found, creating...");
+      
+      // Generate referral code and create user record
+      const { data: newCode } = await supabase.rpc('generate_unique_referral_code');
+      
+      if (!newCode) {
+        toast({
+          title: "Error",
+          description: "Failed to generate referral code. Please try again.",
+          variant: "destructive",
+        });
+        setLoading(false);
+        return;
+      }
+
+      const { data: newUser, error: insertError } = await supabase
+        .from("users")
+        .insert({
+          user_id: user.id,
+          phone_number: user.phone || "",
+          referral_code: newCode,
+          credit_balance: 0,
+          referral_count: 0,
+        })
+        .select("referral_code, credit_balance, referral_count")
+        .single();
+
+      if (insertError) {
+        console.error("Error creating user record:", insertError);
+        toast({
+          title: "Error",
+          description: "Failed to set up your referral account. Please try again.",
+          variant: "destructive",
+        });
+        setLoading(false);
+        return;
+      }
+
+      setUserData(newUser);
       toast({
-        title: "Setting up your account",
-        description: "Please refresh the page in a moment.",
+        title: "Success",
+        description: "Your referral code has been generated!",
       });
       setLoading(false);
       return;
