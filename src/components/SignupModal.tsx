@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Eye, EyeOff, CheckCircle2 } from "lucide-react";
@@ -33,7 +32,6 @@ export const SignupModal = ({ open, onOpenChange }: SignupModalProps) => {
   const [timeHorizon, setTimeHorizon] = useState("");
   const [primaryGoal, setPrimaryGoal] = useState("");
   
-  const { signUp } = useAuth();
   const { toast } = useToast();
 
   const resetForm = () => {
@@ -76,7 +74,19 @@ export const SignupModal = ({ open, onOpenChange }: SignupModalProps) => {
     setIsLoading(true);
 
     try {
-      const { data, error } = await signUp(email, password);
+      // Sign up with user metadata - trigger will handle referral logic
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            first_name: firstName,
+            last_name: lastName,
+            phone_number: phoneNumber,
+            referred_by: referralCode || null,
+          }
+        }
+      });
       
       if (error) {
         toast({
@@ -85,74 +95,6 @@ export const SignupModal = ({ open, onOpenChange }: SignupModalProps) => {
           variant: "destructive",
         });
       } else if (data.user) {
-        // Generate unique referral code
-        const { data: referralCodeData, error: referralCodeError } = await supabase
-          .rpc('generate_unique_referral_code');
-        
-        if (referralCodeError) {
-          console.error('Referral code generation error:', referralCodeError);
-        }
-
-        const generatedReferralCode = referralCodeData || `PORTFOLIX-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
-
-        // Save user profile with referral code and initial credits
-        const { error: profileError } = await supabase
-          .from('users')
-          .insert({
-            user_id: data.user.id,
-            first_name: firstName,
-            last_name: lastName,
-            phone_number: phoneNumber,
-            referred_by: referralCode || null,
-            referral_code: generatedReferralCode,
-            credit_balance: 5,
-          });
-
-        if (profileError) {
-          console.error('Profile creation error:', profileError);
-        } else {
-          // Log credit transaction for signup
-          await supabase.from('credit_transactions').insert({
-            user_id: data.user.id,
-            amount: 5,
-            reason: 'Signup bonus',
-          });
-
-          // If user was referred, process referral rewards
-          if (referralCode) {
-            const { data: referrerData } = await supabase
-              .from('users')
-              .select('user_id, credit_balance, referral_count')
-              .eq('referral_code', referralCode)
-              .single();
-
-            if (referrerData) {
-              await supabase.from('referrals').insert({
-                referrer_code: referralCode,
-                referee_email: email,
-                status: 'activated',
-              });
-
-              const newReferrerBalance = (referrerData.credit_balance || 0) + 10;
-              const newReferralCount = (referrerData.referral_count || 0) + 1;
-
-              await supabase
-                .from('users')
-                .update({
-                  credit_balance: newReferrerBalance,
-                  referral_count: newReferralCount,
-                })
-                .eq('user_id', referrerData.user_id);
-
-              await supabase.from('credit_transactions').insert({
-                user_id: referrerData.user_id,
-                amount: 10,
-                reason: `Referral reward for ${email}`,
-              });
-            }
-          }
-        }
-        
         setUserId(data.user.id);
         setStep("survey");
       }
