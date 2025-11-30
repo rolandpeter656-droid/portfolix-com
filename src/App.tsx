@@ -25,6 +25,7 @@ import Documentation from "./pages/Documentation";
 import AdminInstitutionalModels from "./pages/AdminInstitutionalModels";
 import PortfolioBuilderChoice from "./pages/PortfolioBuilderChoice";
 import ExpertBuilderPlaceholder from "./pages/ExpertBuilderPlaceholder";
+import ReferralDashboard from "./pages/ReferralDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -58,6 +59,7 @@ const App = () => (
           <Route path="/admin/institutional_models" element={<AdminInstitutionalModels />} />
           <Route path="/app/builder" element={<PortfolioBuilderChoice />} />
           <Route path="/app/builder/expert" element={<ExpertBuilderPlaceholder />} />
+          <Route path="/referrals" element={<ReferralDashboard />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
