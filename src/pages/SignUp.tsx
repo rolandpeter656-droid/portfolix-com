@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,9 +20,19 @@ const SignUp = () => {
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [extraInfo, setExtraInfo] = useState("");
+  const [referredBy, setReferredBy] = useState("");
   const { signUp } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  // Detect referral code from URL on mount
+  useEffect(() => {
+    const refCode = searchParams.get('ref');
+    if (refCode) {
+      setReferredBy(refCode);
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,6 +76,7 @@ const SignUp = () => {
             first_name: firstName,
             last_name: lastName,
             phone_number: phoneNumber,
+            referred_by: referredBy || null,
           });
 
         if (profileError) {
@@ -126,6 +137,13 @@ const SignUp = () => {
                 style={{ display: 'none' }}
                 tabIndex={-1}
                 autoComplete="off"
+              />
+              
+              {/* Hidden referral tracking field */}
+              <input
+                type="hidden"
+                name="referred_by"
+                value={referredBy}
               />
               
               <div className="grid grid-cols-2 gap-4">
