@@ -483,6 +483,7 @@ export type Database = {
       can_generate_portfolio: { Args: { user_uuid: string }; Returns: boolean }
       cleanup_expired_email_tokens: { Args: never; Returns: undefined }
       generate_api_key: { Args: never; Returns: string }
+      generate_unique_referral_code: { Args: never; Returns: string }
       get_auth_config: { Args: { config_name: string }; Returns: string }
       has_role: {
         Args: {
