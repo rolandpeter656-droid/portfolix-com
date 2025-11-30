@@ -59,6 +59,30 @@ export type Database = {
         }
         Relationships: []
       }
+      credit_transactions: {
+        Row: {
+          amount: number
+          created_at: string | null
+          id: string
+          reason: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          id?: string
+          reason: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          id?: string
+          reason?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       institutional_api_keys: {
         Row: {
           api_key: string
@@ -291,6 +315,30 @@ export type Database = {
           },
         ]
       }
+      referrals: {
+        Row: {
+          created_at: string | null
+          id: string
+          referee_email: string
+          referrer_code: string
+          status: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          referee_email: string
+          referrer_code: string
+          status?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          referee_email?: string
+          referrer_code?: string
+          status?: string | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string | null
@@ -318,6 +366,7 @@ export type Database = {
       users: {
         Row: {
           created_at: string
+          credit_balance: number | null
           first_name: string | null
           id: number
           investment_experience: string | null
@@ -325,6 +374,9 @@ export type Database = {
           phone_number: string
           portfolio_count: number | null
           primary_goal: string | null
+          referral_code: string | null
+          referral_count: number | null
+          referred_by: string | null
           risk_tolerance: string | null
           subscription_plan: string | null
           time_horizon: string | null
@@ -332,6 +384,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          credit_balance?: number | null
           first_name?: string | null
           id?: number
           investment_experience?: string | null
@@ -339,6 +392,9 @@ export type Database = {
           phone_number: string
           portfolio_count?: number | null
           primary_goal?: string | null
+          referral_code?: string | null
+          referral_count?: number | null
+          referred_by?: string | null
           risk_tolerance?: string | null
           subscription_plan?: string | null
           time_horizon?: string | null
@@ -346,6 +402,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          credit_balance?: number | null
           first_name?: string | null
           id?: number
           investment_experience?: string | null
@@ -353,6 +410,9 @@ export type Database = {
           phone_number?: string
           portfolio_count?: number | null
           primary_goal?: string | null
+          referral_code?: string | null
+          referral_count?: number | null
+          referred_by?: string | null
           risk_tolerance?: string | null
           subscription_plan?: string | null
           time_horizon?: string | null
