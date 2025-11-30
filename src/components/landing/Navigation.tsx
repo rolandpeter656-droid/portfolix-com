@@ -46,6 +46,13 @@ export const Navigation = () => {
           <div className="hidden md:flex items-center space-x-4">
             {user ? (
               <div className="flex items-center space-x-4">
+                <Button
+                  variant="ghost"
+                  className="text-muted-foreground hover:text-foreground"
+                  onClick={() => navigate('/referrals')}
+                >
+                  Referrals
+                </Button>
                 <span className="text-muted-foreground text-sm">
                   Welcome, {user.email?.split('@')[0]}
                 </span>
@@ -114,6 +121,13 @@ export const Navigation = () => {
               <div className="flex flex-col space-y-2 pt-4">
                 {user ? (
                   <div className="flex flex-col space-y-2">
+                    <Button
+                      variant="ghost"
+                      className="text-muted-foreground hover:text-foreground"
+                      onClick={() => navigate('/referrals')}
+                    >
+                      Referrals
+                    </Button>
                     <span className="text-muted-foreground text-sm px-3 py-2">
                       Welcome, {user.email?.split('@')[0]}
                     </span>
