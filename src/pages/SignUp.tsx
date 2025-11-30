@@ -288,6 +288,18 @@ const SignUp = () => {
                 </p>
               </div>
 
+              <div className="space-y-2">
+                <Label htmlFor="referralCodeInput">Referral Code (Optional)</Label>
+                <Input
+                  id="referralCodeInput"
+                  type="text"
+                  placeholder="Enter referral code if you have one"
+                  value={referredBy}
+                  onChange={(e) => setReferredBy(e.target.value.toUpperCase())}
+                  className="h-11"
+                />
+              </div>
+
               <div className="flex items-center space-x-2">
                 <Checkbox
                   id="terms"
