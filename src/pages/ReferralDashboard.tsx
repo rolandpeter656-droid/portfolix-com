@@ -43,7 +43,7 @@ const ReferralDashboard = () => {
       .from("users")
       .select("referral_code, credit_balance, referral_count")
       .eq("user_id", user.id)
-      .single();
+      .maybeSingle();
 
     if (error) {
       console.error("Error fetching user data:", error);
@@ -52,9 +52,21 @@ const ReferralDashboard = () => {
         description: "Failed to load your referral information.",
         variant: "destructive",
       });
-    } else {
-      setUserData(data);
+      setLoading(false);
+      return;
     }
+
+    if (!data) {
+      // User record doesn't exist yet - this can happen if trigger hasn't executed
+      toast({
+        title: "Setting up your account",
+        description: "Please refresh the page in a moment.",
+      });
+      setLoading(false);
+      return;
+    }
+
+    setUserData(data);
     setLoading(false);
   };
 
