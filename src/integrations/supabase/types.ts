@@ -501,6 +501,10 @@ export type Database = {
         Args: { token_created_at: string; user_id: string }
         Returns: boolean
       }
+      redeem_credits: {
+        Args: { p_required_amount: number; p_user_id: string }
+        Returns: string
+      }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
