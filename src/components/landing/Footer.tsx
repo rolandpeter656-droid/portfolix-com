@@ -1,8 +1,24 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Mail, Phone, MapPin, ArrowRight } from "lucide-react";
+import { toast } from "sonner";
 
 export const Footer = () => {
+  const [email, setEmail] = useState("");
+
+  const handleSubscribe = () => {
+    if (!email || !email.includes("@")) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+    // Open Beehiiv subscribe page with email pre-filled
+    const subscribeUrl = `https://portfolix.beehiiv.com/subscribe?email=${encodeURIComponent(email)}`;
+    window.open(subscribeUrl, "_blank");
+    setEmail("");
+    toast.success("Redirecting to newsletter signup...");
+  };
+
   return (
     <footer className="bg-secondary/50 border-t border-border">
       <div className="container mx-auto px-4 lg:px-8">
@@ -87,9 +103,12 @@ export const Footer = () => {
               <input
                 type="email"
                 placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSubscribe()}
                 className="flex-1 md:w-64 px-4 py-2 bg-input border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
               />
-              <Button className="bg-primary hover:bg-primary-glow text-primary-foreground">
+              <Button onClick={handleSubscribe} className="bg-primary hover:bg-primary-glow text-primary-foreground">
                 Subscribe
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
