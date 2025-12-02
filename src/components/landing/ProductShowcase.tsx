@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Monitor, Smartphone, Tablet, TrendingUp, PieChart, BarChart3, ArrowUpRight } from "lucide-react";
 import { MarketAnalysisTool } from "@/components/MarketAnalysisTool";
-
+import { AIDashboardModal } from "@/components/AIDashboardModal";
 interface ShowcaseItem {
   id: string;
   title: string;
@@ -72,6 +72,7 @@ export const ProductShowcase = () => {
   const navigate = useNavigate();
   const [activeItem, setActiveItem] = useState(showcaseItems[0]);
   const [isMarketAnalysisOpen, setIsMarketAnalysisOpen] = useState(false);
+  const [isDashboardModalOpen, setIsDashboardModalOpen] = useState(false);
 
   const handleItemClick = (item: typeof showcaseItems[0]) => {
     if (item.link) {
@@ -83,6 +84,14 @@ export const ProductShowcase = () => {
     if (item.id === "analysis") {
       setIsMarketAnalysisOpen(true);
     }
+    if (item.id === "dashboard") {
+      setIsDashboardModalOpen(true);
+    }
+  };
+
+  const handleSignUpClick = () => {
+    setIsDashboardModalOpen(false);
+    navigate("/signup");
   };
 
   return (
@@ -90,6 +99,11 @@ export const ProductShowcase = () => {
       <MarketAnalysisTool 
         isOpen={isMarketAnalysisOpen} 
         onClose={() => setIsMarketAnalysisOpen(false)} 
+      />
+      <AIDashboardModal
+        isOpen={isDashboardModalOpen}
+        onClose={() => setIsDashboardModalOpen(false)}
+        onSignUpClick={handleSignUpClick}
       />
       <section id="product" className="py-24 bg-background">
       <div className="container mx-auto px-4 lg:px-8">
