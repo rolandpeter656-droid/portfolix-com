@@ -23,25 +23,25 @@ export const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
           <h1 className="font-serif-display text-5xl md:text-7xl lg:text-8xl font-bold text-foreground mb-8 leading-tight">
             {/* Mobile: Stack each word */}
             <span className="block md:hidden">
-              <span className="block">Professionally</span>
-              <span className="block">Built</span>
-              <span className="text-gradient block">Portfolios</span>
+              <span className="block">Financial</span>
+              <span className="block">Freedom</span>
+              <span className="text-gradient block">Starts Here</span>
             </span>
             {/* Desktop: Two lines */}
             <span className="hidden md:block">
-              Professionally Built
-              <span className="text-gradient block mt-2">Investment Portfolios</span>
+              Financial Freedom Begins
+              <span className="text-gradient block mt-2">With the Right Portfolio</span>
             </span>
           </h1>
 
           {/* Subheading */}
           <p className="text-xl md:text-2xl text-muted-foreground mb-6 leading-relaxed max-w-4xl mx-auto">
-            Simple, professionally built investment portfolios for brokerages and investors—ready to deploy with confidence.
+            Build professionally crafted investment portfolios tailored to your goals—ready to deploy with confidence.
           </p>
 
           {/* Tagline */}
           <p className="text-lg text-primary mb-12 font-medium">
-            Invest with confidence—professionally built portfolios, ready to deploy.
+            Start with PortfoliX—your path to smarter investing.
           </p>
 
           {/* CTA Buttons */}
