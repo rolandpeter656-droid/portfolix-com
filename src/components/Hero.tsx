@@ -25,15 +25,15 @@ export const Hero = ({ onGetStarted }: { onGetStarted: () => void }) => {
           </div>
           
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
-            Professionally Built
+            Financial Freedom Begins
             <br />
             <span className="bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
-              Investment Portfolios
+              With the Right Portfolio
             </span>
           </h1>
           
           <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed">
-            Invest with confidence—professionally built portfolios, ready to deploy for brokerages and investors.
+            Financial freedom begins with the right portfolio—start with PortfoliX.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
