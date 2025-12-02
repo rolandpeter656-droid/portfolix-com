@@ -82,6 +82,7 @@ const SignUp = () => {
           title: "Account created successfully!",
           description: "Please check your email to verify your account, then sign in. You've earned 5 credits!",
         });
+        // Preserve redirect destination for after email verification
         navigate("/signin");
       }
     } catch (error) {

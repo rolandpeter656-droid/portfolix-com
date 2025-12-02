@@ -3,7 +3,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { TrendingUp, DollarSign, Shield } from "lucide-react";
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 
 interface AIDashboardModalProps {
   isOpen: boolean;
@@ -12,6 +13,20 @@ interface AIDashboardModalProps {
 }
 
 export const AIDashboardModal = ({ isOpen, onClose, onSignUpClick }: AIDashboardModalProps) => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleTryDashboard = () => {
+    onClose();
+    if (user) {
+      // User is logged in, go directly to dashboard
+      navigate("/dashboard");
+    } else {
+      // User not logged in, store destination and go to signup
+      sessionStorage.setItem("redirectAfterAuth", "/dashboard");
+      onSignUpClick();
+    }
+  };
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl w-full">
@@ -83,11 +98,11 @@ export const AIDashboardModal = ({ isOpen, onClose, onSignUpClick }: AIDashboard
           {/* CTA Button */}
           <div className="flex justify-center pt-4">
             <Button 
-              onClick={onSignUpClick}
+              onClick={handleTryDashboard}
               size="lg"
               className="btn-glow"
             >
-              Try Full Dashboard
+              {user ? "Open Dashboard" : "Try Full Dashboard"}
             </Button>
           </div>
         </div>

@@ -52,7 +52,10 @@ const SignIn = () => {
           title: "Welcome back!",
           description: "You've successfully signed in.",
         });
-        navigate("/");
+        // Redirect to stored destination or home
+        const redirectTo = sessionStorage.getItem("redirectAfterAuth") || "/";
+        sessionStorage.removeItem("redirectAfterAuth");
+        navigate(redirectTo);
       }
     } catch (error) {
       toast({
@@ -124,7 +127,10 @@ const SignIn = () => {
           title: "Welcome back!",
           description: "You've successfully signed in.",
         });
-        navigate("/");
+        // Redirect to stored destination or home
+        const redirectTo = sessionStorage.getItem("redirectAfterAuth") || "/";
+        sessionStorage.removeItem("redirectAfterAuth");
+        navigate(redirectTo);
       }
     } catch (error) {
       toast({

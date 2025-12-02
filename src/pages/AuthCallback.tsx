@@ -39,7 +39,10 @@ export default function AuthCallback() {
               title: "Email Confirmed!",
               description: "Welcome to PortfoliX. Your account is now active.",
             });
-            navigate("/");
+            // Redirect to stored destination or home
+            const redirectTo = sessionStorage.getItem("redirectAfterAuth") || "/";
+            sessionStorage.removeItem("redirectAfterAuth");
+            navigate(redirectTo);
             return;
           }
         }
@@ -63,7 +66,10 @@ export default function AuthCallback() {
             title: "Welcome!",
             description: "Successfully signed in to PortfoliX.",
           });
-          navigate("/");
+          // Redirect to stored destination or home
+          const redirectTo = sessionStorage.getItem("redirectAfterAuth") || "/";
+          sessionStorage.removeItem("redirectAfterAuth");
+          navigate(redirectTo);
         } else {
           navigate("/signin");
         }
