@@ -27,6 +27,10 @@ import PortfolioBuilderChoice from "./pages/PortfolioBuilderChoice";
 import ExpertBuilderPlaceholder from "./pages/ExpertBuilderPlaceholder";
 import ReferralDashboard from "./pages/ReferralDashboard";
 import AIDashboard from "./pages/AIDashboard";
+import Advisors from "./pages/Advisors";
+import AdvisorOnboarding from "./pages/AdvisorOnboarding";
+import AdvisorPayment from "./pages/AdvisorPayment";
+import AdvisorDashboard from "./pages/AdvisorDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -62,6 +66,10 @@ const App = () => (
           <Route path="/app/builder/expert" element={<ExpertBuilderPlaceholder />} />
           <Route path="/referrals" element={<ReferralDashboard />} />
           <Route path="/dashboard" element={<AIDashboard />} />
+          <Route path="/advisors" element={<Advisors />} />
+          <Route path="/advisors/onboarding" element={<AdvisorOnboarding />} />
+          <Route path="/advisors/payment" element={<AdvisorPayment />} />
+          <Route path="/advisors/dashboard" element={<AdvisorDashboard />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

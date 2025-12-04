@@ -14,6 +14,60 @@ export type Database = {
   }
   public: {
     Tables: {
+      advisor_subscriptions: {
+        Row: {
+          created_at: string
+          firm_location: string | null
+          firm_name: string
+          id: string
+          investment_focus: string[] | null
+          looking_for: string | null
+          monthly_price: number
+          number_of_clients: string | null
+          payment_reference: string | null
+          subscription_ends_at: string | null
+          subscription_starts_at: string | null
+          subscription_status: Database["public"]["Enums"]["advisor_subscription_status"]
+          trial_ends_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          firm_location?: string | null
+          firm_name: string
+          id?: string
+          investment_focus?: string[] | null
+          looking_for?: string | null
+          monthly_price?: number
+          number_of_clients?: string | null
+          payment_reference?: string | null
+          subscription_ends_at?: string | null
+          subscription_starts_at?: string | null
+          subscription_status?: Database["public"]["Enums"]["advisor_subscription_status"]
+          trial_ends_at?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          firm_location?: string | null
+          firm_name?: string
+          id?: string
+          investment_focus?: string[] | null
+          looking_for?: string | null
+          monthly_price?: number
+          number_of_clients?: string | null
+          payment_reference?: string | null
+          subscription_ends_at?: string | null
+          subscription_starts_at?: string | null
+          subscription_status?: Database["public"]["Enums"]["advisor_subscription_status"]
+          trial_ends_at?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       api_waitlist: {
         Row: {
           company: string | null
@@ -485,6 +539,10 @@ export type Database = {
       generate_api_key: { Args: never; Returns: string }
       generate_unique_referral_code: { Args: never; Returns: string }
       get_auth_config: { Args: { config_name: string }; Returns: string }
+      has_active_advisor_subscription: {
+        Args: { user_uuid: string }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -507,6 +565,11 @@ export type Database = {
       }
     }
     Enums: {
+      advisor_subscription_status:
+        | "pending"
+        | "active"
+        | "cancelled"
+        | "expired"
       app_role: "admin" | "moderator" | "user"
       currency_type: "USD" | "NGN" | "EUR" | "GBP"
       institutional_plan_tier:
@@ -642,6 +705,12 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      advisor_subscription_status: [
+        "pending",
+        "active",
+        "cancelled",
+        "expired",
+      ],
       app_role: ["admin", "moderator", "user"],
       currency_type: ["USD", "NGN", "EUR", "GBP"],
       institutional_plan_tier: [
