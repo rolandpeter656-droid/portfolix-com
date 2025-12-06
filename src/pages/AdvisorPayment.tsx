@@ -13,7 +13,8 @@ import {
   Globe, 
   Shield, 
   CheckCircle,
-  Building2
+  Building2,
+  Loader2
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -36,6 +37,7 @@ const AdvisorPayment = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
   const [onboardingData, setOnboardingData] = useState<OnboardingData | null>(null);
   const [couponCode, setCouponCode] = useState("");
   const [discount, setDiscount] = useState(0);
@@ -110,47 +112,73 @@ const AdvisorPayment = () => {
   };
 
   const handlePaymentSuccess = async (reference: any) => {
-    if (!user || !onboardingData) return;
+    if (!user) return;
 
-    try {
-      // Create advisor subscription in database
-      const { error } = await supabase
-        .from('advisor_subscriptions')
-        .insert({
-          user_id: user.id,
-          firm_name: onboardingData.firmName,
-          firm_location: onboardingData.firmLocation || null,
-          number_of_clients: onboardingData.numberOfClients || null,
-          investment_focus: onboardingData.investmentFocus,
-          looking_for: onboardingData.lookingFor || null,
-          subscription_status: 'active',
-          monthly_price: finalPrice * 100,
-          payment_reference: reference.reference,
-          subscription_starts_at: new Date().toISOString(),
-          subscription_ends_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 days
+    setIsVerifying(true);
+    
+    toast({
+      title: "Payment Received!",
+      description: "Verifying your payment and activating subscription...",
+    });
+
+    // Poll for subscription status update (webhook processes async)
+    let attempts = 0;
+    const maxAttempts = 10;
+    const pollInterval = 2000; // 2 seconds
+
+    const checkSubscriptionStatus = async () => {
+      try {
+        // Check for active advisor subscription
+        const { data: subscription, error } = await supabase
+          .from('advisor_subscriptions')
+          .select('subscription_status')
+          .eq('user_id', user.id)
+          .eq('subscription_status', 'active')
+          .maybeSingle();
+
+        if (error) {
+          console.error("Error checking subscription:", error);
+        }
+
+        if (subscription) {
+          setIsVerifying(false);
+          // Clear session storage
+          sessionStorage.removeItem('advisorOnboardingData');
+          
+          toast({
+            title: "Welcome to PortfoliX Advisors!",
+            description: "Your subscription is now active. Redirecting to your dashboard...",
+          });
+          
+          navigate('/advisors/dashboard');
+          return true;
+        }
+
+        attempts++;
+        if (attempts < maxAttempts) {
+          setTimeout(checkSubscriptionStatus, pollInterval);
+        } else {
+          // Max attempts reached, payment went through but webhook might be slow
+          setIsVerifying(false);
+          toast({
+            title: "Payment Successful!",
+            description: "Your subscription is being processed. You'll have full access shortly.",
+          });
+          navigate('/advisors/dashboard');
+        }
+      } catch (error) {
+        console.error("Error verifying subscription:", error);
+        setIsVerifying(false);
+        toast({
+          title: "Payment Successful!",
+          description: "Your subscription is being activated. Please refresh if you don't see updates.",
         });
-
-      if (error) throw error;
-
-      // Clear session storage
-      sessionStorage.removeItem('advisorOnboardingData');
-
-      toast({
-        title: "Welcome to PortfoliX Advisors!",
-        description: "Your subscription is now active. Redirecting to your dashboard...",
-      });
-
-      setTimeout(() => {
         navigate('/advisors/dashboard');
-      }, 2000);
-    } catch (error) {
-      console.error('Error creating subscription:', error);
-      toast({
-        title: "Error",
-        description: "Payment successful but there was an issue activating your account. Please contact support.",
-        variant: "destructive"
-      });
-    }
+      }
+    };
+
+    // Start polling after a brief delay to allow webhook processing
+    setTimeout(checkSubscriptionStatus, 1500);
   };
 
   const handlePayment = () => {
@@ -378,18 +406,27 @@ const AdvisorPayment = () => {
                 variant="outline"
                 className="w-full"
                 size="lg"
-                disabled={isProcessing}
+                disabled={isProcessing || isVerifying}
               >
                 Start 7-Day Free Trial
               </Button>
               
               <Button
                 onClick={handlePayment}
-                disabled={isProcessing}
+                disabled={isProcessing || isVerifying}
                 className="w-full bg-primary hover:bg-primary-glow"
                 size="lg"
               >
-                {isProcessing ? "Processing..." : `Subscribe Now - $${finalPrice}/month`}
+                {isVerifying ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Activating Subscription...
+                  </>
+                ) : isProcessing ? (
+                  "Processing..."
+                ) : (
+                  `Subscribe Now - $${finalPrice}/month`
+                )}
               </Button>
             </div>
 
