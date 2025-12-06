@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { usePaystackPayment } from "react-paystack";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, CreditCard, Globe, Shield, Smartphone } from "lucide-react";
+import { ArrowLeft, CreditCard, Globe, Shield, Smartphone, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-
+import { supabase } from "@/integrations/supabase/client";
 interface PricingPlan {
   id: string;
   name: string;
@@ -33,8 +34,10 @@ export const PaystackPayment = ({ plan, currency, onSuccess, onCancel }: Paystac
     teamSize: 1
   });
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
   const [discount, setDiscount] = useState(0);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   // Environment variable validation
   const paystackPublicKey = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY;
@@ -124,14 +127,76 @@ export const PaystackPayment = ({ plan, currency, onSuccess, onCancel }: Paystac
     setIsProcessing(true);
 
     initializePayment({
-      onSuccess: (reference) => {
+      onSuccess: async (reference) => {
         console.log("Payment successful:", reference);
-        toast({
-          title: "Payment Successful!",
-          description: `Welcome to ${plan.name}! Your subscription is now active.`,
-        });
         setIsProcessing(false);
-        onSuccess();
+        setIsVerifying(true);
+        
+        toast({
+          title: "Payment Received!",
+          description: "Verifying your payment and activating subscription...",
+        });
+
+        // Poll for subscription status update (webhook processes async)
+        let attempts = 0;
+        const maxAttempts = 10;
+        const pollInterval = 2000; // 2 seconds
+
+        const checkSubscriptionStatus = async () => {
+          try {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) {
+              throw new Error("User not authenticated");
+            }
+
+            // Check for active subscription based on plan type
+            const { data: subscription, error } = await supabase
+              .from('users')
+              .select('subscription_plan')
+              .eq('user_id', user.id)
+              .maybeSingle();
+
+            if (error) {
+              console.error("Error checking subscription:", error);
+            }
+
+            if (subscription?.subscription_plan === 'pro' || subscription?.subscription_plan === plan.id) {
+              setIsVerifying(false);
+              toast({
+                title: "Subscription Activated!",
+                description: `Welcome to ${plan.name}! Redirecting to your dashboard...`,
+              });
+              onSuccess();
+              navigate('/dashboard');
+              return true;
+            }
+
+            attempts++;
+            if (attempts < maxAttempts) {
+              setTimeout(checkSubscriptionStatus, pollInterval);
+            } else {
+              // Max attempts reached, assume success since payment went through
+              setIsVerifying(false);
+              toast({
+                title: "Payment Successful!",
+                description: `Your ${plan.name} subscription is being processed. You'll have full access shortly.`,
+              });
+              onSuccess();
+              navigate('/dashboard');
+            }
+          } catch (error) {
+            console.error("Error verifying subscription:", error);
+            setIsVerifying(false);
+            toast({
+              title: "Payment Successful!",
+              description: "Your subscription is being activated. Please refresh if you don't see updates.",
+            });
+            onSuccess();
+          }
+        };
+
+        // Start polling after a brief delay to allow webhook processing
+        setTimeout(checkSubscriptionStatus, 1500);
       },
       onClose: () => {
         console.log("Payment closed");
@@ -324,11 +389,20 @@ export const PaystackPayment = ({ plan, currency, onSuccess, onCancel }: Paystac
 
           <Button
             onClick={handlePayment}
-            disabled={isProcessing || !customerData.email || !customerData.firstName || !customerData.lastName}
+            disabled={isProcessing || isVerifying || !customerData.email || !customerData.firstName || !customerData.lastName}
             className="w-full"
             size="lg"
           >
-            {isProcessing ? "Processing..." : `Pay ${formatPrice(finalPrice)}`}
+            {isVerifying ? (
+              <>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                Activating Subscription...
+              </>
+            ) : isProcessing ? (
+              "Processing..."
+            ) : (
+              `Pay ${formatPrice(finalPrice)}`
+            )}
           </Button>
 
           <p className="text-xs text-muted-foreground text-center">
