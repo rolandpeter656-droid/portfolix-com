@@ -60,19 +60,19 @@ export const FeaturesSection = () => {
         onClose={() => setIsDashboardModalOpen(false)}
         onSignUpClick={handleSignUpClick}
       />
-    <section id="features" className="py-24 bg-secondary/30">
-      <div className="container mx-auto px-4 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-sans-bold text-foreground mb-6">
+    <section id="features" className="py-12 sm:py-16 md:py-24 bg-secondary/30">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-10 sm:mb-12 md:mb-16">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-sans-bold text-foreground mb-4 sm:mb-6">
             Powerful Features for
             <span className="text-gradient block mt-2">Smart Investing</span>
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto px-2">
             Everything you need to build, manage, and optimize your investment portfolio with cutting-edge AI technology.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8 max-w-6xl mx-auto">
           {features.map((feature, index) => (
             <Card 
               key={index} 
@@ -81,53 +81,53 @@ export const FeaturesSection = () => {
               }`}
               onClick={() => handleFeatureClick(feature)}
             >
-              <CardContent className="p-8">
+              <CardContent className="p-4 sm:p-6 md:p-8">
                 <div className="relative">
                   {/* Icon with gradient background */}
-                  <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-r ${feature.gradient} mb-6 shadow-glow`}>
-                    <feature.icon className="h-8 w-8 text-white" />
+                  <div className={`inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-xl sm:rounded-2xl bg-gradient-to-r ${feature.gradient} mb-4 sm:mb-6 shadow-glow`}>
+                    <feature.icon className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 text-white" />
                   </div>
                   
                   {/* Decorative sparkle */}
-                  <Sparkles className="absolute -top-2 -right-2 h-6 w-6 text-primary opacity-50 group-hover:opacity-100 transition-opacity" />
+                  <Sparkles className="absolute -top-2 -right-2 h-5 w-5 sm:h-6 sm:w-6 text-primary opacity-50 group-hover:opacity-100 transition-opacity" />
                 </div>
 
-                <h3 className="text-2xl font-sans-bold text-foreground mb-4 group-hover:text-primary transition-colors">
+                <h3 className="text-lg sm:text-xl md:text-2xl font-sans-bold text-foreground mb-2 sm:mb-4 group-hover:text-primary transition-colors">
                   {feature.title}
                 </h3>
                 
-                <p className="text-muted-foreground leading-relaxed">
+                <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
                   {feature.description}
                 </p>
 
                 {/* Hover effect line */}
-                <div className="mt-6 h-1 bg-gradient-to-r from-primary to-success rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+                <div className="mt-4 sm:mt-6 h-1 bg-gradient-to-r from-primary to-success rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
               </CardContent>
             </Card>
           ))}
         </div>
 
         {/* Additional Feature Stats */}
-        <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          <div className="group">
-            <BarChart3 className="h-8 w-8 text-primary mx-auto mb-3 group-hover:scale-110 transition-transform" />
-            <div className="text-2xl font-sans-bold text-foreground">500+</div>
-            <div className="text-sm text-muted-foreground">Asset Classes</div>
+        <div className="mt-12 sm:mt-16 md:mt-20 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:gap-8 text-center">
+          <div className="group p-3 sm:p-4">
+            <BarChart3 className="h-6 w-6 sm:h-8 sm:w-8 text-primary mx-auto mb-2 sm:mb-3 group-hover:scale-110 transition-transform" />
+            <div className="text-xl sm:text-2xl font-sans-bold text-foreground">500+</div>
+            <div className="text-xs sm:text-sm text-muted-foreground">Asset Classes</div>
           </div>
-          <div className="group">
-            <Target className="h-8 w-8 text-success mx-auto mb-3 group-hover:scale-110 transition-transform" />
-            <div className="text-2xl font-sans-bold text-foreground">24/7</div>
-            <div className="text-sm text-muted-foreground">Monitoring</div>
+          <div className="group p-3 sm:p-4">
+            <Target className="h-6 w-6 sm:h-8 sm:w-8 text-success mx-auto mb-2 sm:mb-3 group-hover:scale-110 transition-transform" />
+            <div className="text-xl sm:text-2xl font-sans-bold text-foreground">24/7</div>
+            <div className="text-xs sm:text-sm text-muted-foreground">Monitoring</div>
           </div>
-          <div className="group">
-            <Zap className="h-8 w-8 text-warning mx-auto mb-3 group-hover:scale-110 transition-transform" />
-            <div className="text-2xl font-sans-bold text-foreground">0.1s</div>
-            <div className="text-sm text-muted-foreground">Response Time</div>
+          <div className="group p-3 sm:p-4">
+            <Zap className="h-6 w-6 sm:h-8 sm:w-8 text-warning mx-auto mb-2 sm:mb-3 group-hover:scale-110 transition-transform" />
+            <div className="text-xl sm:text-2xl font-sans-bold text-foreground">0.1s</div>
+            <div className="text-xs sm:text-sm text-muted-foreground">Response Time</div>
           </div>
-          <div className="group">
-            <Shield className="h-8 w-8 text-blue-400 mx-auto mb-3 group-hover:scale-110 transition-transform" />
-            <div className="text-2xl font-sans-bold text-foreground">99.9%</div>
-            <div className="text-sm text-muted-foreground">Uptime</div>
+          <div className="group p-3 sm:p-4">
+            <Shield className="h-6 w-6 sm:h-8 sm:w-8 text-blue-400 mx-auto mb-2 sm:mb-3 group-hover:scale-110 transition-transform" />
+            <div className="text-xl sm:text-2xl font-sans-bold text-foreground">99.9%</div>
+            <div className="text-xs sm:text-sm text-muted-foreground">Uptime</div>
           </div>
         </div>
       </div>

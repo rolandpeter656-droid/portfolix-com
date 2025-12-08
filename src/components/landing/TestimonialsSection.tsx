@@ -37,70 +37,64 @@ const testimonials = [
 
 export const TestimonialsSection = () => {
   return (
-    <section id="testimonials" className="py-24 bg-secondary/30">
-      <div className="container mx-auto px-4 lg:px-8">
-        <div className="text-center mb-16">
-          <Badge className="mb-4 bg-success/10 text-success border-success/20">
+    <section id="testimonials" className="py-12 sm:py-16 md:py-24 bg-secondary/30">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-10 sm:mb-12 md:mb-16">
+          <Badge className="mb-3 sm:mb-4 bg-success/10 text-success border-success/20 text-xs sm:text-sm">
             Testimonials
           </Badge>
-          <h2 className="text-4xl md:text-5xl font-sans-bold text-foreground mb-6">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-sans-bold text-foreground mb-4 sm:mb-6">
             Trusted by Investment
             <span className="text-gradient block mt-2">Professionals</span>
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto px-2">
             See what industry leaders are saying about PortfoliX and how it's transforming their investment strategies.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
-          {testimonials.map((testimonial, index) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 max-w-7xl mx-auto">
+          {testimonials.map((testimonial) => (
             <Card 
               key={testimonial.id}
               className="group bg-gradient-card border-border hover:shadow-card transition-all duration-500 hover-scale relative overflow-hidden"
             >
-              {/* Decorative Quote */}
               <div className="absolute top-4 right-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                <Quote className="h-16 w-16 text-primary" />
+                <Quote className="h-10 w-10 sm:h-12 sm:w-12 md:h-16 md:w-16 text-primary" />
               </div>
 
-              <CardContent className="p-8 relative z-10">
-                {/* Rating */}
-                <div className="flex items-center gap-1 mb-6">
+              <CardContent className="p-4 sm:p-6 md:p-8 relative z-10">
+                <div className="flex items-center gap-1 mb-4 sm:mb-6">
                   {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} className="h-5 w-5 fill-warning text-warning" />
+                    <Star key={i} className="h-4 w-4 sm:h-5 sm:w-5 fill-warning text-warning" />
                   ))}
                 </div>
 
-                {/* Testimonial Content */}
-                <blockquote className="text-foreground leading-relaxed mb-6 text-lg">
+                <blockquote className="text-foreground leading-relaxed mb-4 sm:mb-6 text-sm sm:text-base md:text-lg">
                   "{testimonial.content}"
                 </blockquote>
 
-                {/* Highlight Metric */}
-                <div className="mb-6">
-                  <Badge className="bg-primary/10 text-primary border-primary/20">
+                <div className="mb-4 sm:mb-6">
+                  <Badge className="bg-primary/10 text-primary border-primary/20 text-xs sm:text-sm">
                     {testimonial.highlight}
                   </Badge>
                 </div>
 
-                {/* Author Info */}
-                <div className="flex items-center gap-4">
-                  <div className="relative">
+                <div className="flex items-center gap-3 sm:gap-4">
+                  <div className="relative flex-shrink-0">
                     <img
                       src={`https://images.unsplash.com/${testimonial.image}?auto=format&fit=crop&w=64&q=80`}
                       alt={testimonial.name}
-                      className="w-12 h-12 rounded-full object-cover border-2 border-border"
+                      className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-border"
                     />
-                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-success rounded-full border-2 border-background" />
+                    <div className="absolute -bottom-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 bg-success rounded-full border-2 border-background" />
                   </div>
-                  <div>
-                    <div className="font-sans-bold text-foreground">{testimonial.name}</div>
-                    <div className="text-sm text-muted-foreground">{testimonial.role}</div>
-                    <div className="text-sm text-primary">{testimonial.company}</div>
+                  <div className="min-w-0">
+                    <div className="font-sans-bold text-foreground text-sm sm:text-base truncate">{testimonial.name}</div>
+                    <div className="text-xs sm:text-sm text-muted-foreground truncate">{testimonial.role}</div>
+                    <div className="text-xs sm:text-sm text-primary truncate">{testimonial.company}</div>
                   </div>
                 </div>
 
-                {/* Hover Effect */}
                 <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-success/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               </CardContent>
             </Card>
@@ -108,30 +102,29 @@ export const TestimonialsSection = () => {
         </div>
 
         {/* Wall Street-Level Strategies */}
-        <div className="mt-20 text-center">
-          <h3 className="text-3xl md:text-4xl font-sans-bold text-foreground mb-4">
+        <div className="mt-12 sm:mt-16 md:mt-20 text-center px-2">
+          <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-sans-bold text-foreground mb-3 sm:mb-4">
             Backed by Wall Street-Level Strategies
           </h3>
-          <p className="text-xl text-muted-foreground mb-6 max-w-3xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-4 sm:mb-6 max-w-3xl mx-auto">
             PortfoliX is built on the same principles and portfolio construction methods used by leading investment managers worldwide.
           </p>
-          <p className="text-lg text-muted-foreground mb-8 max-w-4xl mx-auto leading-relaxed">
-            We draw inspiration from the strategies pioneered by global firms like Goldman Sachs, JP Morgan, and BlackRock — but designed for everyday investors. Our portfolios follow time-tested frameworks trusted by institutional investors, adapted for accessibility and simplicity. PortfoliX bridges the gap between Wall Street and Main Street, bringing proven asset allocation methods to your fingertips.
+          <p className="text-sm sm:text-base md:text-lg text-muted-foreground mb-6 sm:mb-8 max-w-4xl mx-auto leading-relaxed">
+            We draw inspiration from the strategies pioneered by global firms like Goldman Sachs, JP Morgan, and BlackRock — but designed for everyday investors.
           </p>
           
-          {/* Credibility Markers */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            <div className="flex items-center justify-center space-x-3">
-              <div className="w-2 h-2 bg-primary rounded-full"></div>
-              <span className="text-foreground font-medium">Inspired by leading institutional frameworks</span>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 max-w-4xl mx-auto">
+            <div className="flex items-center justify-center space-x-2 sm:space-x-3 p-2">
+              <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0"></div>
+              <span className="text-foreground font-medium text-xs sm:text-sm">Inspired by leading institutional frameworks</span>
             </div>
-            <div className="flex items-center justify-center space-x-3">
-              <div className="w-2 h-2 bg-primary rounded-full"></div>
-              <span className="text-foreground font-medium">Built on rigorous investment research</span>
+            <div className="flex items-center justify-center space-x-2 sm:space-x-3 p-2">
+              <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0"></div>
+              <span className="text-foreground font-medium text-xs sm:text-sm">Built on rigorous investment research</span>
             </div>
-            <div className="flex items-center justify-center space-x-3">
-              <div className="w-2 h-2 bg-primary rounded-full"></div>
-              <span className="text-foreground font-medium">Designed for real investors — not just Wall Street insiders</span>
+            <div className="flex items-center justify-center space-x-2 sm:space-x-3 p-2">
+              <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0"></div>
+              <span className="text-foreground font-medium text-xs sm:text-sm">Designed for real investors</span>
             </div>
           </div>
         </div>
