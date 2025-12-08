@@ -118,29 +118,30 @@ const AdvisorOnboarding = () => {
     <div className="min-h-screen bg-background">
       <Navigation />
       
-      <div className="container mx-auto px-4 pt-32 pb-20 max-w-2xl">
+      <div className="container mx-auto px-3 sm:px-4 pt-24 sm:pt-32 pb-12 sm:pb-20 max-w-2xl">
         <Button
           variant="ghost"
           onClick={() => navigate('/advisors')}
-          className="mb-6"
+          className="mb-4 sm:mb-6 text-sm"
         >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Partnership Details
+          <ArrowLeft className="h-4 w-4 mr-1 sm:mr-2" />
+          <span className="hidden sm:inline">Back to Partnership Details</span>
+          <span className="sm:hidden">Back</span>
         </Button>
 
         <Card>
-          <CardHeader className="text-center">
-            <div className="mx-auto p-3 bg-primary/10 rounded-lg w-fit mb-4">
-              <Building2 className="h-8 w-8 text-primary" />
+          <CardHeader className="text-center p-4 sm:p-6">
+            <div className="mx-auto p-2 sm:p-3 bg-primary/10 rounded-lg w-fit mb-3 sm:mb-4">
+              <Building2 className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
             </div>
-            <CardTitle className="text-2xl">Advisor Partnership Onboarding</CardTitle>
-            <CardDescription>
+            <CardTitle className="text-xl sm:text-2xl">Advisor Partnership Onboarding</CardTitle>
+            <CardDescription className="text-sm">
               Tell us about your advisory practice so we can tailor your experience.
             </CardDescription>
           </CardHeader>
 
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
+          <CardContent className="p-4 sm:p-6">
+            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
               {/* Personal Information */}
               <div className="space-y-4">
                 <div>

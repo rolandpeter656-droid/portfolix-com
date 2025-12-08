@@ -181,71 +181,72 @@ const ReferralDashboard = () => {
       <div className="min-h-screen bg-background">
         {/* Navigation Bar */}
         <nav className="border-b border-border bg-card">
-          <div className="container mx-auto px-4 lg:px-8">
-            <div className="flex items-center justify-between h-16">
+          <div className="container mx-auto px-3 sm:px-4 lg:px-8">
+            <div className="flex items-center justify-between h-14 sm:h-16">
               <Button
                 variant="ghost"
                 onClick={() => navigate("/")}
-                className="text-muted-foreground hover:text-foreground"
+                className="text-muted-foreground hover:text-foreground text-sm"
               >
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Home
+                <ArrowLeft className="h-4 w-4 mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">Back to Home</span>
+                <span className="sm:hidden">Back</span>
               </Button>
-              <h1 className="text-2xl font-sans-bold text-gradient">PortfoliX</h1>
-              <div className="w-24"></div>
+              <h1 className="text-xl sm:text-2xl font-sans-bold text-gradient">PortfoliX</h1>
+              <div className="w-16 sm:w-24"></div>
             </div>
           </div>
         </nav>
 
         {/* Main Content */}
-        <div className="container mx-auto px-4 py-12 max-w-6xl">
-          <div className="mb-8">
-            <h1 className="text-display text-gradient mb-2">Referral Dashboard</h1>
-            <p className="text-muted-foreground text-lg">
+        <div className="container mx-auto px-3 sm:px-4 py-8 sm:py-12 max-w-6xl">
+          <div className="mb-6 sm:mb-8">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gradient mb-2">Referral Dashboard</h1>
+            <p className="text-sm sm:text-base md:text-lg text-muted-foreground">
               Share PortfoliX with friends and earn credits together
             </p>
           </div>
 
           {/* Stats Overview */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
             <Card className="bg-gradient-card border-border hover-lift">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                  <Coins className="h-4 w-4 text-primary" />
+              <CardHeader className="pb-2 sm:pb-3">
+                <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground flex items-center gap-2">
+                  <Coins className="h-3 w-3 sm:h-4 sm:w-4 text-primary" />
                   Credit Balance
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="metric-primary text-primary">{userData?.credit_balance || 0}</div>
-                <p className="text-caption mt-1">Available credits</p>
+                <div className="text-2xl sm:text-3xl font-bold text-primary">{userData?.credit_balance || 0}</div>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-1">Available credits</p>
               </CardContent>
             </Card>
 
             <Card className="bg-gradient-card border-border hover-lift">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                  <Users className="h-4 w-4 text-success" />
+              <CardHeader className="pb-2 sm:pb-3">
+                <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground flex items-center gap-2">
+                  <Users className="h-3 w-3 sm:h-4 sm:w-4 text-success" />
                   Total Referrals
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="metric-primary text-success">{userData?.referral_count || 0}</div>
-                <p className="text-caption mt-1">Friends joined</p>
+                <div className="text-2xl sm:text-3xl font-bold text-success">{userData?.referral_count || 0}</div>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-1">Friends joined</p>
               </CardContent>
             </Card>
 
             <Card className="bg-gradient-card border-border hover-lift">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                  <Gift className="h-4 w-4 text-warning" />
+              <CardHeader className="pb-2 sm:pb-3">
+                <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground flex items-center gap-2">
+                  <Gift className="h-3 w-3 sm:h-4 sm:w-4 text-warning" />
                   Credits Earned
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="metric-primary text-warning">
+                <div className="text-2xl sm:text-3xl font-bold text-warning">
                   {(userData?.referral_count || 0) * 10}
                 </div>
-                <p className="text-caption mt-1">From referrals</p>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-1">From referrals</p>
               </CardContent>
             </Card>
           </div>

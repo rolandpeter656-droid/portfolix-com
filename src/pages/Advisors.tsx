@@ -108,35 +108,36 @@ const Advisors = () => {
       <Navigation />
       
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4">
+      <section className="pt-24 sm:pt-32 pb-12 sm:pb-20 px-4">
         <div className="container mx-auto max-w-6xl text-center">
-          <div className="inline-flex items-center px-4 py-2 bg-primary/10 rounded-full mb-6">
-            <Building2 className="h-4 w-4 text-primary mr-2" />
-            <span className="text-sm font-medium text-primary">For Financial Advisors</span>
+          <div className="inline-flex items-center px-3 sm:px-4 py-1.5 sm:py-2 bg-primary/10 rounded-full mb-4 sm:mb-6">
+            <Building2 className="h-3 w-3 sm:h-4 sm:w-4 text-primary mr-2" />
+            <span className="text-xs sm:text-sm font-medium text-primary">For Financial Advisors</span>
           </div>
           
-          <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6">
+          <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-4 sm:mb-6 leading-tight">
             Upgrade Your Advisory Business
             <span className="text-gradient block mt-2">With Ready-to-Use Model Portfolios</span>
           </h1>
           
-          <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-6 sm:mb-8 max-w-3xl mx-auto px-2">
             Built for independent advisors, small firms, and boutique wealth managers. 
             Save time, scale your client offering, and deploy institutional-grade portfolios without building an investment research team.
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4 sm:px-0">
             <Button 
               size="lg" 
-              className="bg-primary hover:bg-primary-glow"
+              className="bg-primary hover:bg-primary-glow w-full sm:w-auto text-sm sm:text-base"
               onClick={() => navigate('/advisors/onboarding')}
             >
               Start Partnership
-              <ArrowRight className="ml-2 h-5 w-5" />
+              <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
             </Button>
             <Button 
               size="lg" 
               variant="outline"
+              className="w-full sm:w-auto text-sm sm:text-base"
               onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })}
             >
               View Partnership Details
@@ -146,15 +147,15 @@ const Advisors = () => {
       </section>
 
       {/* Benefits Section */}
-      <section className="py-16 bg-muted/30">
+      <section className="py-10 sm:py-16 bg-muted/30">
         <div className="container mx-auto max-w-6xl px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {benefits.map((benefit, index) => (
-              <div key={index} className="flex items-start gap-3 p-4">
-                <div className="p-2 bg-primary/10 rounded-lg">
-                  <benefit.icon className="h-5 w-5 text-primary" />
+              <div key={index} className="flex items-start gap-3 p-3 sm:p-4">
+                <div className="p-2 bg-primary/10 rounded-lg flex-shrink-0">
+                  <benefit.icon className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                 </div>
-                <p className="text-foreground font-medium">{benefit.text}</p>
+                <p className="text-sm sm:text-base text-foreground font-medium">{benefit.text}</p>
               </div>
             ))}
           </div>

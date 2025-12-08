@@ -55,18 +55,19 @@ const PaymentMethod = () => {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <div className="border-b">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-4">
           <Button
             variant="ghost"
             onClick={() => navigate(isInstitutional ? "/institutions" : "/pricing")}
-            className="mb-4"
+            className="mb-3 sm:mb-4 text-sm"
           >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to {isInstitutional ? "Institutions" : "Pricing"}
+            <ArrowLeft className="h-4 w-4 mr-1 sm:mr-2" />
+            <span className="hidden sm:inline">Back to {isInstitutional ? "Institutions" : "Pricing"}</span>
+            <span className="sm:hidden">Back</span>
           </Button>
-          <div className="text-center">
-            <h1 className="text-3xl font-bold">Complete Your Purchase</h1>
-            <p className="text-muted-foreground mt-2">
+          <div className="text-center px-2">
+            <h1 className="text-2xl sm:text-3xl font-bold">Complete Your Purchase</h1>
+            <p className="text-sm sm:text-base text-muted-foreground mt-1 sm:mt-2">
               Secure payment processing for {planDetails.name}
               {isInstitutional && " • 7-day free trial included"}
             </p>

@@ -292,34 +292,34 @@ const AdvisorDashboard = () => {
     <div className="min-h-screen bg-background">
       <Navigation />
       
-      <div className="container mx-auto px-4 pt-24 pb-20">
+      <div className="container mx-auto px-3 sm:px-4 pt-20 sm:pt-24 pb-12 sm:pb-20">
         {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between flex-wrap gap-4">
+        <div className="mb-6 sm:mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
             <div>
-              <div className="flex items-center gap-3 mb-2">
-                <Building2 className="h-8 w-8 text-primary" />
-                <h1 className="text-3xl font-bold">Advisor Dashboard</h1>
+              <div className="flex items-center gap-2 sm:gap-3 mb-1 sm:mb-2">
+                <Building2 className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
+                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold">Advisor Dashboard</h1>
               </div>
-              <p className="text-muted-foreground">
+              <p className="text-sm sm:text-base text-muted-foreground">
                 Welcome back, {subscription?.firm_name || "Advisor"}
               </p>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 sm:gap-4">
               {subscription?.subscription_status === 'pending' && subscription?.trial_ends_at && (
-                <Badge variant="secondary" className="py-1 px-3">
+                <Badge variant="secondary" className="py-1 px-2 sm:px-3 text-xs sm:text-sm">
                   <Clock className="h-3 w-3 mr-1" />
                   Trial ends: {new Date(subscription.trial_ends_at).toLocaleDateString()}
                 </Badge>
               )}
               {subscription?.subscription_status === 'active' && (
-                <Badge variant="default" className="py-1 px-3">Active Subscription</Badge>
+                <Badge variant="default" className="py-1 px-2 sm:px-3 text-xs sm:text-sm">Active Subscription</Badge>
               )}
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6">
           {/* Sidebar Categories */}
           <div className="lg:col-span-1">
             <Card>
