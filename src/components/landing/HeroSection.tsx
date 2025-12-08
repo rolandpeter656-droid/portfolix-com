@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Play, TrendingUp, Users, Zap } from "lucide-react";
+import { ArrowRight, Play, TrendingUp, Users } from "lucide-react";
 import { DemoModal } from "@/components/DemoModal";
 
 interface HeroSectionProps {
@@ -56,12 +56,12 @@ export const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-2xl mx-auto">
+          <div className="grid grid-cols-2 gap-12 max-w-md mx-auto">
             <div className="flex flex-col items-center">
               <div className="flex items-center justify-center w-12 h-12 bg-success/20 rounded-full mb-3">
                 <TrendingUp className="h-6 w-6 text-success" />
               </div>
-              <div className="text-3xl font-sans-bold text-success">15.2%</div>
+              <div className="text-3xl font-sans-bold text-success">35%</div>
               <div className="text-sm text-muted-foreground">Avg. Return</div>
             </div>
             <div className="flex flex-col items-center">
@@ -70,13 +70,6 @@ export const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
               </div>
               <div className="text-3xl font-sans-bold text-primary">1M+</div>
               <div className="text-sm text-muted-foreground">Portfolios Built</div>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="flex items-center justify-center w-12 h-12 bg-warning/20 rounded-full mb-3">
-                <Zap className="h-6 w-6 text-warning" />
-              </div>
-              <div className="text-3xl font-sans-bold text-warning">3.2s</div>
-              <div className="text-sm text-muted-foreground">Analysis Time</div>
             </div>
           </div>
         </div>
