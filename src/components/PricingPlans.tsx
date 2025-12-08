@@ -137,7 +137,7 @@ export const PricingPlans = ({ currentPlan = "free", onPlanSelect }: PricingPlan
   };
 
   const formatPrice = (price: number, planId: PlanType) => {
-    if (price === 0 && planId === "free") return "Free";
+    if (price === 0 && planId === "free") return "$0";
     if (price === 0 && planId === "institutional") return "Custom";
     if (planId === "institutional-portal") return "$499-$2,999";
     return `$${price}`;
