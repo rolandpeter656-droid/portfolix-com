@@ -74,62 +74,62 @@ const MobileApp = () => {
       </nav>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-16">
+      <main className="container mx-auto px-4 py-10 sm:py-16">
         <div className="max-w-4xl mx-auto text-center">
           {/* Hero Section */}
-          <div className="mb-16">
-            <div className="flex justify-center mb-8">
+          <div className="mb-10 sm:mb-16">
+            <div className="flex justify-center mb-6 sm:mb-8">
               <div className="relative">
-                <div className="w-24 h-24 bg-gradient-to-r from-primary to-primary/80 rounded-2xl flex items-center justify-center mb-6">
-                  <Smartphone className="h-12 w-12 text-primary-foreground" />
+                <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-r from-primary to-primary/80 rounded-2xl flex items-center justify-center mb-4 sm:mb-6">
+                  <Smartphone className="h-10 w-10 sm:h-12 sm:w-12 text-primary-foreground" />
                 </div>
-                <div className="absolute -top-2 -right-2 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                  <Download className="h-4 w-4 text-white" />
+                <div className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 w-6 h-6 sm:w-8 sm:h-8 bg-green-500 rounded-full flex items-center justify-center">
+                  <Download className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
                 </div>
               </div>
             </div>
             
-            <h1 className="text-5xl md:text-6xl font-bold tracking-tight mb-6">
+            <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-4 sm:mb-6 leading-tight">
               PortfoliX in Your{" "}
               <span className="text-gradient bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
                 Pocket
               </span>
             </h1>
             
-            <p className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-8 sm:mb-12 max-w-2xl mx-auto px-2">
               We're building iOS and Android apps to make investing even easier. 
               Sign up to be notified when they launch.
             </p>
           </div>
 
           {/* Features Preview */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 mb-10 sm:mb-16">
             <div className="text-center">
-              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Smartphone className="h-8 w-8 text-primary" />
+              <div className="w-14 h-14 sm:w-16 sm:h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                <Smartphone className="h-7 w-7 sm:h-8 sm:w-8 text-primary" />
               </div>
-              <h3 className="text-lg font-semibold mb-2">Native Mobile Experience</h3>
-              <p className="text-muted-foreground">Optimized for iOS and Android with native performance</p>
+              <h3 className="text-base sm:text-lg font-semibold mb-2">Native Mobile Experience</h3>
+              <p className="text-sm sm:text-base text-muted-foreground">Optimized for iOS and Android with native performance</p>
             </div>
             
             <div className="text-center">
-              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="h-8 w-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-14 h-14 sm:w-16 sm:h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                <svg className="h-7 w-7 sm:h-8 sm:w-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5V9a7 7 0 11-5 6.93" />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold mb-2">Offline Access</h3>
-              <p className="text-muted-foreground">View your portfolios even without internet connection</p>
+              <h3 className="text-base sm:text-lg font-semibold mb-2">Offline Access</h3>
+              <p className="text-sm sm:text-base text-muted-foreground">View your portfolios even without internet connection</p>
             </div>
             
             <div className="text-center">
-              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="h-8 w-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-14 h-14 sm:w-16 sm:h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                <svg className="h-7 w-7 sm:h-8 sm:w-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5V9a7 7 0 11-5 6.93" />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold mb-2">Push Notifications</h3>
-              <p className="text-muted-foreground">Stay updated with market changes and portfolio insights</p>
+              <h3 className="text-base sm:text-lg font-semibold mb-2">Push Notifications</h3>
+              <p className="text-sm sm:text-base text-muted-foreground">Stay updated with market changes and portfolio insights</p>
             </div>
           </div>
 

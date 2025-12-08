@@ -290,25 +290,26 @@ const AdvisorPayment = () => {
     <div className="min-h-screen bg-background">
       <Navigation />
       
-      <div className="container mx-auto px-4 pt-32 pb-20 max-w-2xl">
+      <div className="container mx-auto px-3 sm:px-4 pt-24 sm:pt-32 pb-12 sm:pb-20 max-w-2xl">
         <Button
           variant="ghost"
           onClick={() => navigate('/advisors/onboarding')}
-          className="mb-6"
+          className="mb-4 sm:mb-6 text-sm"
         >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Onboarding
+          <ArrowLeft className="h-4 w-4 mr-1 sm:mr-2" />
+          <span className="hidden sm:inline">Back to Onboarding</span>
+          <span className="sm:hidden">Back</span>
         </Button>
 
         <Card>
-          <CardHeader>
-            <div className="flex items-center gap-3">
+          <CardHeader className="p-4 sm:p-6">
+            <div className="flex items-center gap-2 sm:gap-3">
               <div className="p-2 bg-primary/10 rounded-lg">
-                <Building2 className="h-6 w-6 text-primary" />
+                <Building2 className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
               </div>
               <div>
-                <CardTitle>Complete Your Membership</CardTitle>
-                <p className="text-sm text-muted-foreground mt-1">
+                <CardTitle className="text-lg sm:text-xl">Complete Your Membership</CardTitle>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-1">
                   {onboardingData.firmName}
                 </p>
               </div>

@@ -167,22 +167,22 @@ export const MarketAnalysisTool = ({ isOpen, onClose }: MarketAnalysisToolProps)
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto mx-2 sm:mx-auto">
           <DialogHeader>
-            <div className="flex items-center gap-3">
-              <div className="p-3 rounded-xl bg-primary/10">
-                <BarChart3 className="h-8 w-8 text-primary" />
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="p-2 sm:p-3 rounded-xl bg-primary/10">
+                <BarChart3 className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
               </div>
               <div>
-                <DialogTitle className="text-3xl">Market Analysis</DialogTitle>
-                <DialogDescription>
+                <DialogTitle className="text-xl sm:text-2xl md:text-3xl">Market Analysis</DialogTitle>
+                <DialogDescription className="text-xs sm:text-sm">
                   Deep market insights powered by advanced AI algorithms
                 </DialogDescription>
               </div>
             </div>
           </DialogHeader>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mt-4 sm:mt-6">
             {/* Input Form */}
             <Card className="bg-gradient-card border-border">
               <CardHeader>

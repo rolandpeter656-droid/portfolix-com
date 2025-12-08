@@ -137,21 +137,21 @@ export default function InstitutionalDashboard() {
     <div className="min-h-screen bg-background">
       <Navigation />
 
-      <div className="container mx-auto px-4 py-8 pt-24 max-w-7xl">
+      <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8 pt-20 sm:pt-24 max-w-7xl">
         {/* Header */}
-        <div className="mb-8 animate-fade-in">
-          <div className="flex items-center justify-between mb-2">
+        <div className="mb-6 sm:mb-8 animate-fade-in">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-2">
             <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-amber-600 to-amber-500 bg-clip-text text-transparent">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-amber-600 to-amber-500 bg-clip-text text-transparent">
                 Institutional Dashboard
               </h1>
-              <p className="text-muted-foreground mt-2">
+              <p className="text-sm sm:text-base text-muted-foreground mt-1 sm:mt-2">
                 Manage your AI-powered institutional portfolios
               </p>
             </div>
             <Badge
               variant="outline"
-              className="border-amber-500/50 text-amber-600 dark:text-amber-400"
+              className="border-amber-500/50 text-amber-600 dark:text-amber-400 w-fit text-xs sm:text-sm"
             >
               Corporate Growth Plan
             </Badge>
@@ -159,7 +159,7 @@ export default function InstitutionalDashboard() {
         </div>
 
         {/* Overview Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8 animate-fade-in">
           <Card className="border-border/50 hover:shadow-lg transition-all duration-300">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
