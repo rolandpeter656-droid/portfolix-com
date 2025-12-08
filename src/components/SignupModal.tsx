@@ -26,7 +26,6 @@ export const SignupModal = ({ open, onOpenChange }: SignupModalProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [userId, setUserId] = useState<string>("");
   
-  // Survey state
   const [investmentExperience, setInvestmentExperience] = useState("");
   const [riskTolerance, setRiskTolerance] = useState("");
   const [timeHorizon, setTimeHorizon] = useState("");
@@ -74,7 +73,6 @@ export const SignupModal = ({ open, onOpenChange }: SignupModalProps) => {
     setIsLoading(true);
 
     try {
-      // Sign up with user metadata - trigger will handle referral logic
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -172,20 +170,20 @@ export const SignupModal = ({ open, onOpenChange }: SignupModalProps) => {
       if (!open) resetForm();
       onOpenChange(open);
     }}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="w-[95vw] max-w-md max-h-[90vh] overflow-y-auto p-4 sm:p-6">
         {step === "signup" ? (
           <>
             <DialogHeader>
-              <DialogTitle className="text-2xl font-bold">Create Your Account</DialogTitle>
-              <DialogDescription>
+              <DialogTitle className="text-xl sm:text-2xl font-bold">Create Your Account</DialogTitle>
+              <DialogDescription className="text-sm">
                 Join thousands of investors building smarter portfolios
               </DialogDescription>
             </DialogHeader>
             
-            <form onSubmit={handleSignup} className="space-y-4 mt-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="firstName">First Name</Label>
+            <form onSubmit={handleSignup} className="space-y-3 sm:space-y-4 mt-3 sm:mt-4">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                <div className="space-y-1.5 sm:space-y-2">
+                  <Label htmlFor="firstName" className="text-sm">First Name</Label>
                   <Input
                     id="firstName"
                     type="text"
@@ -193,10 +191,11 @@ export const SignupModal = ({ open, onOpenChange }: SignupModalProps) => {
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                     required
+                    className="h-10 sm:h-11 text-sm"
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="lastName">Last Name</Label>
+                <div className="space-y-1.5 sm:space-y-2">
+                  <Label htmlFor="lastName" className="text-sm">Last Name</Label>
                   <Input
                     id="lastName"
                     type="text"
@@ -204,12 +203,13 @@ export const SignupModal = ({ open, onOpenChange }: SignupModalProps) => {
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
                     required
+                    className="h-10 sm:h-11 text-sm"
                   />
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+              <div className="space-y-1.5 sm:space-y-2">
+                <Label htmlFor="email" className="text-sm">Email</Label>
                 <Input
                   id="email"
                   type="email"
@@ -217,11 +217,12 @@ export const SignupModal = ({ open, onOpenChange }: SignupModalProps) => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
+                  className="h-10 sm:h-11 text-sm"
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="phoneNumber">Phone Number</Label>
+              <div className="space-y-1.5 sm:space-y-2">
+                <Label htmlFor="phoneNumber" className="text-sm">Phone Number</Label>
                 <Input
                   id="phoneNumber"
                   type="tel"
@@ -229,11 +230,12 @@ export const SignupModal = ({ open, onOpenChange }: SignupModalProps) => {
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
                   required
+                  className="h-10 sm:h-11 text-sm"
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+              <div className="space-y-1.5 sm:space-y-2">
+                <Label htmlFor="password" className="text-sm">Password</Label>
                 <div className="relative">
                   <Input
                     id="password"
@@ -243,7 +245,7 @@ export const SignupModal = ({ open, onOpenChange }: SignupModalProps) => {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                     minLength={6}
-                    className="pr-10"
+                    className="pr-10 h-10 sm:h-11 text-sm"
                   />
                   <Button
                     type="button"
@@ -257,8 +259,8 @@ export const SignupModal = ({ open, onOpenChange }: SignupModalProps) => {
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <div className="space-y-1.5 sm:space-y-2">
+                <Label htmlFor="confirmPassword" className="text-sm">Confirm Password</Label>
                 <Input
                   id="confirmPassword"
                   type="password"
@@ -267,21 +269,23 @@ export const SignupModal = ({ open, onOpenChange }: SignupModalProps) => {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
                   minLength={6}
+                  className="h-10 sm:h-11 text-sm"
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="referralCode">Referral Code (Optional)</Label>
+              <div className="space-y-1.5 sm:space-y-2">
+                <Label htmlFor="referralCode" className="text-sm">Referral Code (Optional)</Label>
                 <Input
                   id="referralCode"
                   type="text"
                   placeholder="Enter referral code if you have one"
                   value={referralCode}
                   onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
+                  className="h-10 sm:h-11 text-sm"
                 />
               </div>
 
-              <Button type="submit" className="w-full" disabled={isLoading}>
+              <Button type="submit" className="w-full h-10 sm:h-11 text-sm sm:text-base" disabled={isLoading}>
                 {isLoading ? "Creating account..." : "Continue"}
               </Button>
             </form>
@@ -289,89 +293,85 @@ export const SignupModal = ({ open, onOpenChange }: SignupModalProps) => {
         ) : (
           <>
             <DialogHeader>
-              <DialogTitle className="text-2xl font-bold flex items-center gap-2">
-                <CheckCircle2 className="h-6 w-6 text-primary" />
+              <DialogTitle className="text-xl sm:text-2xl font-bold flex items-center gap-2">
+                <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                 Tell Us About Yourself
               </DialogTitle>
-              <DialogDescription>
+              <DialogDescription className="text-sm">
                 Help us personalize your investment experience
               </DialogDescription>
             </DialogHeader>
 
-            <form onSubmit={handleSurveySubmit} className="space-y-6 mt-4">
-              {/* Question 1: Investment Experience */}
-              <div className="space-y-3">
-                <Label className="text-base font-semibold">1. Investment Experience</Label>
-                <div className="grid grid-cols-3 gap-2">
+            <form onSubmit={handleSurveySubmit} className="space-y-4 sm:space-y-6 mt-3 sm:mt-4">
+              <div className="space-y-2 sm:space-y-3">
+                <Label className="text-sm sm:text-base font-semibold">1. Investment Experience</Label>
+                <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
                   {surveyOptions.experience.map((option) => (
                     <Card
                       key={option}
-                      className={`p-3 cursor-pointer text-center transition-all hover:border-primary ${
+                      className={`p-2 sm:p-3 cursor-pointer text-center transition-all hover:border-primary ${
                         investmentExperience === option ? "border-primary bg-primary/5" : ""
                       }`}
                       onClick={() => setInvestmentExperience(option)}
                     >
-                      <span className="text-sm font-medium">{option}</span>
+                      <span className="text-xs sm:text-sm font-medium">{option}</span>
                     </Card>
                   ))}
                 </div>
               </div>
 
-              {/* Question 2: Risk Tolerance */}
-              <div className="space-y-3">
-                <Label className="text-base font-semibold">2. Risk Tolerance</Label>
-                <div className="grid grid-cols-3 gap-2">
+              <div className="space-y-2 sm:space-y-3">
+                <Label className="text-sm sm:text-base font-semibold">2. Risk Tolerance</Label>
+                <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
                   {surveyOptions.risk.map((option) => (
                     <Card
                       key={option}
-                      className={`p-3 cursor-pointer text-center transition-all hover:border-primary ${
+                      className={`p-2 sm:p-3 cursor-pointer text-center transition-all hover:border-primary ${
                         riskTolerance === option ? "border-primary bg-primary/5" : ""
                       }`}
                       onClick={() => setRiskTolerance(option)}
                     >
-                      <span className="text-sm font-medium">{option}</span>
+                      <span className="text-xs sm:text-sm font-medium">{option}</span>
                     </Card>
                   ))}
                 </div>
               </div>
 
-              {/* Question 3: Time Horizon */}
-              <div className="space-y-3">
-                <Label className="text-base font-semibold">3. Time Horizon</Label>
-                <div className="grid grid-cols-3 gap-2">
+              <div className="space-y-2 sm:space-y-3">
+                <Label className="text-sm sm:text-base font-semibold">3. Time Horizon</Label>
+                <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
                   {surveyOptions.horizon.map((option) => (
                     <Card
                       key={option}
-                      className={`p-3 cursor-pointer text-center transition-all hover:border-primary ${
+                      className={`p-2 sm:p-3 cursor-pointer text-center transition-all hover:border-primary ${
                         timeHorizon === option ? "border-primary bg-primary/5" : ""
                       }`}
                       onClick={() => setTimeHorizon(option)}
                     >
-                      <span className="text-sm font-medium">{option}</span>
+                      <span className="text-xs sm:text-sm font-medium">{option}</span>
                     </Card>
                   ))}
                 </div>
               </div>
 
-              {/* Question 4: Primary Goal */}
-              <div className="space-y-3">
-                <Label className="text-base font-semibold">4. Primary Goal</Label>
-                <div className="grid grid-cols-2 gap-2">
+              <div className="space-y-2 sm:space-y-3">
+                <Label className="text-sm sm:text-base font-semibold">4. Primary Goal</Label>
+                <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
                   {surveyOptions.goal.map((option) => (
                     <Card
                       key={option}
-                      className={`p-3 cursor-pointer text-center transition-all hover:border-primary ${
+                      className={`p-2 sm:p-3 cursor-pointer text-center transition-all hover:border-primary ${
                         primaryGoal === option ? "border-primary bg-primary/5" : ""
                       }`}
                       onClick={() => setPrimaryGoal(option)}
                     >
-                      <span className="text-sm font-medium">{option}</span>
+                      <span className="text-xs sm:text-sm font-medium">{option}</span>
                     </Card>
                   ))}
                 </div>
               </div>
 
-              <Button type="submit" className="w-full" disabled={isLoading}>
+              <Button type="submit" className="w-full h-10 sm:h-11 text-sm sm:text-base" disabled={isLoading}>
                 {isLoading ? "Completing setup..." : "Complete Setup"}
               </Button>
             </form>

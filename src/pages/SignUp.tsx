@@ -24,7 +24,6 @@ const SignUp = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  // Detect referral code from URL on mount
   useEffect(() => {
     const refCode = searchParams.get('ref');
     if (refCode) {
@@ -35,7 +34,6 @@ const SignUp = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Honeypot check - if filled, it's likely a bot
     if (extraInfo.trim() !== "") {
       toast({
         title: "Something went wrong. Please try again.",
@@ -57,7 +55,6 @@ const SignUp = () => {
     setIsLoading(true);
 
     try {
-      // Sign up with user metadata - trigger will handle everything
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -82,7 +79,6 @@ const SignUp = () => {
           title: "Account created successfully!",
           description: "Please check your email to verify your account, then sign in. You've earned 5 credits!",
         });
-        // Preserve redirect destination for after email verification
         navigate("/signin");
       }
     } catch (error) {
@@ -97,12 +93,11 @@ const SignUp = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <div className="w-full max-w-md space-y-6">
-        {/* Back to home button */}
+    <div className="min-h-[100svh] bg-background flex items-center justify-center p-4 py-8 sm:py-12">
+      <div className="w-full max-w-md space-y-4 sm:space-y-6">
         <Button
           variant="ghost"
-          className="mb-4"
+          className="mb-2 sm:mb-4 text-sm"
           onClick={() => navigate("/")}
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
@@ -110,17 +105,16 @@ const SignUp = () => {
         </Button>
 
         <Card className="animate-fade-in">
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-bold text-foreground">
+          <CardHeader className="text-center pb-4 sm:pb-6 px-4 sm:px-6">
+            <CardTitle className="text-xl sm:text-2xl font-bold text-foreground">
               Create Your Account
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-sm">
               Join thousands of investors building smarter portfolios with AI
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Honeypot field - hidden from users to catch bots */}
+          <CardContent className="px-4 sm:px-6">
+            <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
               <input
                 type="text"
                 name="extra_info"
@@ -131,16 +125,15 @@ const SignUp = () => {
                 autoComplete="off"
               />
               
-              {/* Hidden referral tracking field */}
               <input
                 type="hidden"
                 name="referred_by"
                 value={referredBy}
               />
               
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="firstName">First Name</Label>
+              <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                <div className="space-y-1.5 sm:space-y-2">
+                  <Label htmlFor="firstName" className="text-sm">First Name</Label>
                   <Input
                     id="firstName"
                     type="text"
@@ -148,11 +141,11 @@ const SignUp = () => {
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                     required
-                    className="h-11"
+                    className="h-10 sm:h-11 text-sm"
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="lastName">Last Name</Label>
+                <div className="space-y-1.5 sm:space-y-2">
+                  <Label htmlFor="lastName" className="text-sm">Last Name</Label>
                   <Input
                     id="lastName"
                     type="text"
@@ -160,13 +153,13 @@ const SignUp = () => {
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
                     required
-                    className="h-11"
+                    className="h-10 sm:h-11 text-sm"
                   />
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+              <div className="space-y-1.5 sm:space-y-2">
+                <Label htmlFor="email" className="text-sm">Email</Label>
                 <Input
                   id="email"
                   type="email"
@@ -174,12 +167,12 @@ const SignUp = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="h-11"
+                  className="h-10 sm:h-11 text-sm"
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="phoneNumber">Phone Number</Label>
+              <div className="space-y-1.5 sm:space-y-2">
+                <Label htmlFor="phoneNumber" className="text-sm">Phone Number</Label>
                 <Input
                   id="phoneNumber"
                   type="tel"
@@ -187,12 +180,12 @@ const SignUp = () => {
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
                   required
-                  className="h-11"
+                  className="h-10 sm:h-11 text-sm"
                 />
               </div>
               
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+              <div className="space-y-1.5 sm:space-y-2">
+                <Label htmlFor="password" className="text-sm">Password</Label>
                 <div className="relative">
                   <Input
                     id="password"
@@ -202,13 +195,13 @@ const SignUp = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                     minLength={6}
-                    className="h-11 pr-10"
+                    className="h-10 sm:h-11 pr-10 text-sm"
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="icon"
-                    className="absolute right-0 top-0 h-11 w-10"
+                    className="absolute right-0 top-0 h-10 sm:h-11 w-10"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? (
@@ -223,25 +216,26 @@ const SignUp = () => {
                 </p>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="referralCodeInput">Referral Code (Optional)</Label>
+              <div className="space-y-1.5 sm:space-y-2">
+                <Label htmlFor="referralCodeInput" className="text-sm">Referral Code (Optional)</Label>
                 <Input
                   id="referralCodeInput"
                   type="text"
                   placeholder="Enter referral code if you have one"
                   value={referredBy}
                   onChange={(e) => setReferredBy(e.target.value.toUpperCase())}
-                  className="h-11"
+                  className="h-10 sm:h-11 text-sm"
                 />
               </div>
 
-              <div className="flex items-center space-x-2">
+              <div className="flex items-start space-x-2">
                 <Checkbox
                   id="terms"
                   checked={agreeToTerms}
                   onCheckedChange={(checked) => setAgreeToTerms(!!checked)}
+                  className="mt-0.5"
                 />
-                <Label htmlFor="terms" className="text-sm">
+                <Label htmlFor="terms" className="text-xs sm:text-sm leading-relaxed">
                   I agree to the{" "}
                   <Link to="/terms" className="text-primary hover:underline">
                     Terms of Service
@@ -255,15 +249,15 @@ const SignUp = () => {
 
               <Button
                 type="submit"
-                className="w-full h-11"
+                className="w-full h-10 sm:h-11 text-sm sm:text-base"
                 disabled={isLoading}
               >
                 {isLoading ? "Creating account..." : "Create Account"}
               </Button>
             </form>
 
-            <div className="mt-6 text-center">
-              <p className="text-sm text-muted-foreground">
+            <div className="mt-4 sm:mt-6 text-center">
+              <p className="text-xs sm:text-sm text-muted-foreground">
                 Already have an account?{" "}
                 <Link
                   to="/signin"
