@@ -90,18 +90,18 @@ const PortfolioBuilder = () => {
   };
 
   return (
-    <section className="py-24 px-4">
+    <section className="py-12 sm:py-16 md:py-24 px-4 sm:px-6 lg:px-8">
       <div className="container mx-auto max-w-6xl">
-        <div className="text-center mb-16">
-          <h2 className="text-headline mb-4">
+        <div className="text-center mb-10 sm:mb-12 md:mb-16">
+          <h2 className="text-headline mb-3 sm:mb-4">
             Build Your Perfect Portfolio
           </h2>
-          <p className="text-body text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-body text-muted-foreground max-w-2xl mx-auto px-2">
             Choose your investment level and see real-time projections for your portfolio growth
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
           {categories.map((category) => {
             const amount = amounts[category.id];
             const { minAnnualReturn, maxAnnualReturn } = calculateReturns(
@@ -115,20 +115,20 @@ const PortfolioBuilder = () => {
               <Card key={category.id} className="relative overflow-hidden group hover:shadow-xl transition-all duration-300">
                 <div className={`absolute inset-0 bg-gradient-to-br ${category.gradient} opacity-50`} />
                 
-                <CardHeader className="relative z-10 text-center pb-4">
-                  <div className="mx-auto mb-4 p-3 rounded-full bg-background/80 backdrop-blur-sm w-fit">
-                    <Icon className="icon-lg text-primary" />
+                <CardHeader className="relative z-10 text-center pb-3 sm:pb-4 p-4 sm:p-6">
+                  <div className="mx-auto mb-3 sm:mb-4 p-2.5 sm:p-3 rounded-full bg-background/80 backdrop-blur-sm w-fit">
+                    <Icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                   </div>
-                  <CardTitle className="text-title">{category.title}</CardTitle>
-                  <p className="text-body text-muted-foreground">{category.description}</p>
-                  <Badge className={`w-fit mx-auto mt-2 ${category.riskColor}`}>
+                  <CardTitle className="text-lg sm:text-xl md:text-title">{category.title}</CardTitle>
+                  <p className="text-sm sm:text-base text-muted-foreground">{category.description}</p>
+                  <Badge className={`w-fit mx-auto mt-2 text-xs sm:text-sm ${category.riskColor}`}>
                     {category.riskLevel} Risk
                   </Badge>
                 </CardHeader>
 
-                <CardContent className="relative z-10 space-y-6">
-                  <div className="space-y-4">
-                    <div className="flex justify-between text-sm text-muted-foreground">
+                <CardContent className="relative z-10 space-y-4 sm:space-y-6 p-4 sm:p-6 pt-0">
+                  <div className="space-y-3 sm:space-y-4">
+                    <div className="flex justify-between text-xs sm:text-sm text-muted-foreground">
                       <span>{formatCurrency(category.minAmount)}</span>
                       <span>{formatCurrency(category.maxAmount)}+</span>
                     </div>
@@ -143,24 +143,24 @@ const PortfolioBuilder = () => {
                     />
                   </div>
 
-                  <div className="bg-background/60 backdrop-blur-sm rounded-lg p-4 space-y-3">
+                  <div className="bg-background/60 backdrop-blur-sm rounded-lg p-3 sm:p-4 space-y-2 sm:space-y-3">
                     <div className="text-center">
-                      <h4 className="metric-label mb-1">
+                      <h4 className="metric-label mb-1 text-[10px] sm:text-xs">
                         Amount You're Investing
                       </h4>
-                      <p className="metric-primary text-primary">
+                      <p className="text-lg sm:text-xl md:text-2xl font-bold text-primary">
                         {formatCurrency(amount)}
                       </p>
                     </div>
 
                     <div className="text-center">
-                      <h4 className="metric-label mb-1">
+                      <h4 className="metric-label mb-1 text-[10px] sm:text-xs">
                         Estimated Annual Returns
                       </h4>
-                      <p className="metric-secondary text-foreground">
+                      <p className="text-base sm:text-lg md:text-xl font-bold text-foreground">
                         {formatCurrency(minAnnualReturn)} – {formatCurrency(maxAnnualReturn)}
                       </p>
-                      <p className="text-caption">
+                      <p className="text-caption text-[10px] sm:text-xs">
                         ({category.minReturn}% – {category.maxReturn}% annually)
                       </p>
                     </div>
@@ -171,8 +171,8 @@ const PortfolioBuilder = () => {
           })}
         </div>
 
-        <div className="text-center mt-12">
-          <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
+        <div className="text-center mt-8 sm:mt-10 md:mt-12">
+          <p className="text-xs sm:text-sm text-muted-foreground max-w-2xl mx-auto px-4">
             * Returns are estimates based on historical data and market analysis. 
             Actual returns may vary and past performance does not guarantee future results.
           </p>
