@@ -21,7 +21,7 @@ export const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
         <div className="max-w-5xl mx-auto">
           {/* Main Headline */}
           <h1 className="font-serif-display text-5xl md:text-7xl lg:text-8xl font-bold text-foreground mb-8 leading-tight">
-            <span className="text-gradient">Invest Like a Pro</span>
+            Invest Like a <span className="text-success">Pro</span>
           </h1>
 
           {/* Subheading */}
