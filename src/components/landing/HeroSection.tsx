@@ -21,17 +21,7 @@ export const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
         <div className="max-w-5xl mx-auto">
           {/* Main Headline */}
           <h1 className="font-serif-display text-5xl md:text-7xl lg:text-8xl font-bold text-foreground mb-8 leading-tight">
-            {/* Mobile: Stack each word */}
-            <span className="block md:hidden">
-              <span className="block">Financial</span>
-              <span className="block">Freedom</span>
-              <span className="text-gradient block">Starts Here</span>
-            </span>
-            {/* Desktop: Two lines */}
-            <span className="hidden md:block">
-              Financial Freedom Begins
-              <span className="text-gradient block mt-2">With the Right Portfolio</span>
-            </span>
+            <span className="text-gradient">Invest Like a Pro</span>
           </h1>
 
           {/* Subheading */}
