@@ -8,9 +8,9 @@ interface DemoModalProps {
 export const DemoModal = ({ isOpen, onClose }: DemoModalProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl w-full">
+      <DialogContent className="w-[95vw] max-w-4xl p-4 sm:p-6">
         <DialogHeader>
-          <DialogTitle className="text-center text-2xl font-bold">
+          <DialogTitle className="text-center text-xl sm:text-2xl font-bold">
             PortfoliX Demo
           </DialogTitle>
         </DialogHeader>
@@ -27,7 +27,7 @@ export const DemoModal = ({ isOpen, onClose }: DemoModalProps) => {
           />
         </div>
         
-        <DialogDescription className="text-center text-lg text-muted-foreground mt-4">
+        <DialogDescription className="text-center text-sm sm:text-base md:text-lg text-muted-foreground mt-3 sm:mt-4">
           Institutional-grade strategies, simplified for every investor.
         </DialogDescription>
       </DialogContent>

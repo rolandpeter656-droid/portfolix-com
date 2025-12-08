@@ -49,31 +49,30 @@ export const GoalSelection = ({ onComplete, onBack }: GoalSelectionProps) => {
   };
 
   return (
-    <section className="min-h-screen flex items-center justify-center bg-background py-20">
-      <div className="container mx-auto px-4">
+    <section className="min-h-[100svh] flex items-center justify-center bg-background py-16 sm:py-20 px-4">
+      <div className="container mx-auto">
         <div className="max-w-3xl mx-auto animate-fade-in">
-          {/* Back Arrow */}
           {onBack && (
             <button
               onClick={onBack}
-              className="mb-6 flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+              className="mb-4 sm:mb-6 flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
               aria-label="Go back"
             >
-              <ArrowLeft className="h-5 w-5" />
-              <span>Back</span>
+              <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5" />
+              <span className="text-sm sm:text-base">Back</span>
             </button>
           )}
           
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-foreground mb-4">
+          <div className="text-center mb-8 sm:mb-10 md:mb-12">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-2 sm:mb-4">
               What's Your Primary Investment Goal?
             </h2>
-            <p className="text-lg text-muted-foreground">
+            <p className="text-sm sm:text-base md:text-lg text-muted-foreground px-2">
               Help us tailor your portfolio to match your financial objectives
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-4 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-6 sm:mb-8">
             {goalOptions.map((option) => {
               const Icon = option.icon;
               return (
@@ -86,18 +85,18 @@ export const GoalSelection = ({ onComplete, onBack }: GoalSelectionProps) => {
                   }`}
                   onClick={() => handleGoalSelect(option.value)}
                 >
-                  <CardHeader>
-                    <div className="flex items-start gap-4">
-                      <div className={`p-3 rounded-full ${
+                  <CardHeader className="p-4 sm:p-6">
+                    <div className="flex items-start gap-3 sm:gap-4">
+                      <div className={`p-2 sm:p-3 rounded-full flex-shrink-0 ${
                         selectedGoal === option.value 
                           ? "bg-primary/20" 
                           : "bg-primary/10"
                       }`}>
-                        <Icon className="h-6 w-6 text-primary" />
+                        <Icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                       </div>
-                      <div className="flex-1">
-                        <CardTitle className="text-lg mb-2">{option.label}</CardTitle>
-                        <p className="text-sm text-muted-foreground">
+                      <div className="flex-1 min-w-0">
+                        <CardTitle className="text-base sm:text-lg mb-1 sm:mb-2">{option.label}</CardTitle>
+                        <p className="text-xs sm:text-sm text-muted-foreground">
                           {option.description}
                         </p>
                       </div>
@@ -113,7 +112,7 @@ export const GoalSelection = ({ onComplete, onBack }: GoalSelectionProps) => {
               size="lg"
               disabled={!selectedGoal}
               onClick={handleContinue}
-              className="px-8"
+              className="w-full sm:w-auto px-6 sm:px-8 py-3"
             >
               Continue to Portfolio
             </Button>

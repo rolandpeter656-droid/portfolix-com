@@ -26,7 +26,6 @@ const SignIn = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Honeypot check - if filled, it's likely a bot
     if (honeypot.trim() !== "") {
       toast({
         title: "Something went wrong. Please try again.",
@@ -52,7 +51,6 @@ const SignIn = () => {
           title: "Welcome back!",
           description: "You've successfully signed in.",
         });
-        // Redirect to stored destination or home
         const redirectTo = sessionStorage.getItem("redirectAfterAuth") || "/";
         sessionStorage.removeItem("redirectAfterAuth");
         navigate(redirectTo);
@@ -127,7 +125,6 @@ const SignIn = () => {
           title: "Welcome back!",
           description: "You've successfully signed in.",
         });
-        // Redirect to stored destination or home
         const redirectTo = sessionStorage.getItem("redirectAfterAuth") || "/";
         sessionStorage.removeItem("redirectAfterAuth");
         navigate(redirectTo);
@@ -144,12 +141,11 @@ const SignIn = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <div className="w-full max-w-md space-y-6">
-        {/* Back to home button */}
+    <div className="min-h-[100svh] bg-background flex items-center justify-center p-4 py-8 sm:py-12">
+      <div className="w-full max-w-md space-y-4 sm:space-y-6">
         <Button
           variant="ghost"
-          className="mb-4"
+          className="mb-2 sm:mb-4 text-sm"
           onClick={() => navigate("/")}
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
@@ -157,30 +153,29 @@ const SignIn = () => {
         </Button>
 
         <Card className="animate-fade-in">
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-bold text-foreground">
+          <CardHeader className="text-center pb-4 sm:pb-6 px-4 sm:px-6">
+            <CardTitle className="text-xl sm:text-2xl font-bold text-foreground">
               Welcome Back
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-sm">
               Sign in to your PortfoliX account to continue building smarter investment portfolios
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-4 sm:px-6">
             <Tabs defaultValue="email" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 mb-6">
-                <TabsTrigger value="email" className="flex items-center gap-2">
-                  <Mail className="h-4 w-4" />
+              <TabsList className="grid w-full grid-cols-2 mb-4 sm:mb-6">
+                <TabsTrigger value="email" className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm">
+                  <Mail className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   Email
                 </TabsTrigger>
-                <TabsTrigger value="phone" className="flex items-center gap-2">
-                  <Phone className="h-4 w-4" />
+                <TabsTrigger value="phone" className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm">
+                  <Phone className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   Phone
                 </TabsTrigger>
               </TabsList>
               
               <TabsContent value="email">
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  {/* Honeypot field */}
+                <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
                   <input
                     type="text"
                     name="website_url"
@@ -191,8 +186,8 @@ const SignIn = () => {
                     autoComplete="off"
                   />
                   
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
+                  <div className="space-y-1.5 sm:space-y-2">
+                    <Label htmlFor="email" className="text-sm">Email</Label>
                     <Input
                       id="email"
                       type="email"
@@ -200,12 +195,12 @@ const SignIn = () => {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
-                      className="h-11"
+                      className="h-10 sm:h-11 text-sm"
                     />
                   </div>
                   
-                  <div className="space-y-2">
-                    <Label htmlFor="password">Password</Label>
+                  <div className="space-y-1.5 sm:space-y-2">
+                    <Label htmlFor="password" className="text-sm">Password</Label>
                     <div className="relative">
                       <Input
                         id="password"
@@ -214,13 +209,13 @@ const SignIn = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
-                        className="h-11 pr-10"
+                        className="h-10 sm:h-11 pr-10 text-sm"
                       />
                       <Button
                         type="button"
                         variant="ghost"
                         size="icon"
-                        className="absolute right-0 top-0 h-11 w-10"
+                        className="absolute right-0 top-0 h-10 sm:h-11 w-10"
                         onClick={() => setShowPassword(!showPassword)}
                       >
                         {showPassword ? (
@@ -234,17 +229,17 @@ const SignIn = () => {
 
                   <Button
                     type="submit"
-                    className="w-full h-11"
+                    className="w-full h-10 sm:h-11 text-sm sm:text-base"
                     disabled={isLoading}
                   >
                     {isLoading ? "Signing in..." : "Sign In"}
                   </Button>
                 </form>
 
-                <div className="mt-4 text-center">
+                <div className="mt-3 sm:mt-4 text-center">
                   <Link
                     to="/forgot-password"
-                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                    className="text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors"
                   >
                     Forgot your password?
                   </Link>
@@ -253,8 +248,7 @@ const SignIn = () => {
 
               <TabsContent value="phone">
                 {!otpSent ? (
-                  <form onSubmit={handlePhoneSubmit} className="space-y-4">
-                    {/* Honeypot field */}
+                  <form onSubmit={handlePhoneSubmit} className="space-y-3 sm:space-y-4">
                     <input
                       type="text"
                       name="website_url"
@@ -265,8 +259,8 @@ const SignIn = () => {
                       autoComplete="off"
                     />
                     
-                    <div className="space-y-2">
-                      <Label htmlFor="phone">Phone Number</Label>
+                    <div className="space-y-1.5 sm:space-y-2">
+                      <Label htmlFor="phone" className="text-sm">Phone Number</Label>
                       <Input
                         id="phone"
                         type="tel"
@@ -274,7 +268,7 @@ const SignIn = () => {
                         value={phoneNumber}
                         onChange={(e) => setPhoneNumber(e.target.value)}
                         required
-                        className="h-11"
+                        className="h-10 sm:h-11 text-sm"
                       />
                       <p className="text-xs text-muted-foreground">
                         Include country code (e.g., +1 for US)
@@ -283,16 +277,16 @@ const SignIn = () => {
 
                     <Button
                       type="submit"
-                      className="w-full h-11"
+                      className="w-full h-10 sm:h-11 text-sm sm:text-base"
                       disabled={isLoading}
                     >
                       {isLoading ? "Sending OTP..." : "Send OTP"}
                     </Button>
                   </form>
                 ) : (
-                  <form onSubmit={handleOtpVerify} className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="otp">Enter Verification Code</Label>
+                  <form onSubmit={handleOtpVerify} className="space-y-3 sm:space-y-4">
+                    <div className="space-y-1.5 sm:space-y-2">
+                      <Label htmlFor="otp" className="text-sm">Enter Verification Code</Label>
                       <div className="flex justify-center">
                         <InputOTP
                           maxLength={6}
@@ -316,7 +310,7 @@ const SignIn = () => {
 
                     <Button
                       type="submit"
-                      className="w-full h-11"
+                      className="w-full h-10 sm:h-11 text-sm sm:text-base"
                       disabled={isLoading || otp.length !== 6}
                     >
                       {isLoading ? "Verifying..." : "Verify & Sign In"}
@@ -325,7 +319,7 @@ const SignIn = () => {
                     <Button
                       type="button"
                       variant="ghost"
-                      className="w-full"
+                      className="w-full text-sm"
                       onClick={() => {
                         setOtpSent(false);
                         setOtp("");
@@ -338,8 +332,8 @@ const SignIn = () => {
               </TabsContent>
             </Tabs>
 
-            <div className="mt-6 text-center">
-              <p className="text-sm text-muted-foreground">
+            <div className="mt-4 sm:mt-6 text-center">
+              <p className="text-xs sm:text-sm text-muted-foreground">
                 Don't have an account?{" "}
                 <Link
                   to="/signup"
