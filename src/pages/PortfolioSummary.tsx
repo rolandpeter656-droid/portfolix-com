@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ArrowLeft, Download, ExternalLink, Settings, Zap } from "lucide-react";
+import { ArrowLeft, Download, ExternalLink, Settings, Zap, Crown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
@@ -14,6 +14,7 @@ import { PortfolioSuccessAnimation } from "@/components/PortfolioSuccessAnimatio
 import { UpgradeModal } from "@/components/UpgradeModal";
 import { useToast } from "@/hooks/use-toast";
 import { usePortfolioLimit } from "@/hooks/usePortfolioLimit";
+import { ProSuggestionsPanel, RiskScoreCard, RebalancingAlerts } from "@/components/pro";
 import jsPDF from 'jspdf';
 
 interface Asset {
@@ -939,6 +940,37 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onBack, onCust
               )}
             </CardContent>
           </Card>
+        </div>
+
+        {/* Pro Features Section */}
+        <div className="mt-8">
+          <div className="flex items-center gap-2 mb-4">
+            <Crown className="h-5 w-5 text-primary" />
+            <h2 className="text-xl font-semibold">Pro Features</h2>
+            {subscriptionPlan === "pro" && (
+              <Badge variant="default" className="bg-primary">Active</Badge>
+            )}
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <ProSuggestionsPanel
+              portfolio={portfolio.map(p => ({ asset: p.name, percentage: p.allocation }))}
+              isPro={subscriptionPlan === "pro"}
+              riskTolerance={riskScore <= 30 ? "conservative" : riskScore <= 60 ? "moderate" : "aggressive"}
+              investmentHorizon={timeline}
+              onUpgrade={() => setShowUpgradeModal(true)}
+            />
+            <RiskScoreCard
+              portfolio={portfolio.map(p => ({ asset: p.name, percentage: p.allocation }))}
+              isPro={subscriptionPlan === "pro"}
+              onUpgrade={() => setShowUpgradeModal(true)}
+            />
+            <RebalancingAlerts
+              portfolio={portfolio.map(p => ({ asset: p.name, percentage: p.allocation }))}
+              isPro={subscriptionPlan === "pro"}
+              riskTolerance={riskScore <= 30 ? "conservative" : riskScore <= 60 ? "moderate" : "aggressive"}
+              onUpgrade={() => setShowUpgradeModal(true)}
+            />
+          </div>
         </div>
 
         {/* Portfolio Breakdown Table */}
