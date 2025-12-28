@@ -15,7 +15,8 @@ import {
   Bell,
   User,
   LogOut,
-  Home
+  Home,
+  Folder
 } from "lucide-react";
 
 export default function AIDashboard() {
@@ -200,7 +201,7 @@ export default function AIDashboard() {
         </div>
 
         {/* Quick Actions */}
-        <div className="mt-6 sm:mt-8 grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+        <div className="mt-6 sm:mt-8 grid grid-cols-2 md:grid-cols-5 gap-3 sm:gap-4">
           <Button 
             variant="outline" 
             className="h-auto py-4 sm:py-6 flex flex-col gap-2"
@@ -208,6 +209,14 @@ export default function AIDashboard() {
           >
             <PieChart className="h-5 w-5 sm:h-6 sm:w-6" />
             <span className="text-xs sm:text-sm">Build Portfolio</span>
+          </Button>
+          <Button 
+            variant="outline" 
+            className="h-auto py-4 sm:py-6 flex flex-col gap-2"
+            onClick={() => navigate("/my-portfolios")}
+          >
+            <Folder className="h-5 w-5 sm:h-6 sm:w-6" />
+            <span className="text-xs sm:text-sm">My Portfolios</span>
           </Button>
           <Button variant="outline" className="h-auto py-4 sm:py-6 flex flex-col gap-2">
             <BarChart3 className="h-5 w-5 sm:h-6 sm:w-6" />

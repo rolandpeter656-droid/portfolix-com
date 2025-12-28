@@ -27,6 +27,7 @@ import PortfolioBuilderChoice from "./pages/PortfolioBuilderChoice";
 import ExpertBuilderPlaceholder from "./pages/ExpertBuilderPlaceholder";
 import ReferralDashboard from "./pages/ReferralDashboard";
 import AIDashboard from "./pages/AIDashboard";
+import MyPortfolios from "./pages/MyPortfolios";
 import Advisors from "./pages/Advisors";
 import AdvisorOnboarding from "./pages/AdvisorOnboarding";
 import AdvisorPayment from "./pages/AdvisorPayment";
@@ -66,6 +67,7 @@ const App = () => (
           <Route path="/app/builder/expert" element={<ExpertBuilderPlaceholder />} />
           <Route path="/referrals" element={<ReferralDashboard />} />
           <Route path="/dashboard" element={<AIDashboard />} />
+          <Route path="/my-portfolios" element={<MyPortfolios />} />
           <Route path="/advisors" element={<Advisors />} />
           <Route path="/advisors/onboarding" element={<AdvisorOnboarding />} />
           <Route path="/advisors/payment" element={<AdvisorPayment />} />
