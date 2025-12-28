@@ -393,6 +393,48 @@ export type Database = {
         }
         Relationships: []
       }
+      user_portfolios: {
+        Row: {
+          assets: Json
+          created_at: string
+          experience_level: string
+          id: string
+          investment_amount: number
+          portfolio_name: string
+          rationale: string | null
+          risk_score: number
+          timeline: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          assets: Json
+          created_at?: string
+          experience_level: string
+          id?: string
+          investment_amount?: number
+          portfolio_name: string
+          rationale?: string | null
+          risk_score: number
+          timeline: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          assets?: Json
+          created_at?: string
+          experience_level?: string
+          id?: string
+          investment_amount?: number
+          portfolio_name?: string
+          rationale?: string | null
+          risk_score?: number
+          timeline?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string | null
