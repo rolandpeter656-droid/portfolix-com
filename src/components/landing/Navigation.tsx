@@ -54,6 +54,13 @@ export const Navigation = () => {
                 <Button
                   variant="ghost"
                   className="text-muted-foreground hover:text-foreground text-sm"
+                  onClick={() => navigate('/my-portfolios')}
+                >
+                  Your Built Portfolios
+                </Button>
+                <Button
+                  variant="ghost"
+                  className="text-muted-foreground hover:text-foreground text-sm"
                   onClick={() => navigate('/referrals')}
                 >
                   Referrals
@@ -159,6 +166,13 @@ export const Navigation = () => {
               <div className="flex flex-col space-y-2 pt-4 border-t border-border mt-4">
                 {user ? (
                   <>
+                    <Button
+                      variant="ghost"
+                      className="justify-start text-muted-foreground hover:text-foreground"
+                      onClick={() => { navigate('/my-portfolios'); closeMenu(); }}
+                    >
+                      Your Built Portfolios
+                    </Button>
                     <Button
                       variant="ghost"
                       className="justify-start text-muted-foreground hover:text-foreground"
