@@ -26,7 +26,7 @@ export const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
 
           {/* Subheading */}
           <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-muted-foreground mb-4 sm:mb-6 leading-relaxed max-w-4xl mx-auto px-2">
-            Build professionally crafted investment portfolios tailored to your goals—ready to deploy with confidence.
+            Build simple, expert-designed investment portfolios you can use with confidence.
           </p>
 
           {/* Tagline */}
