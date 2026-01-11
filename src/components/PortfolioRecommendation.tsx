@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -12,6 +13,8 @@ import {
   ArrowRight,
   ArrowLeft
 } from "lucide-react";
+import { usePortfolioLimit } from "@/hooks/usePortfolioLimit";
+import { PortfolioLimitModal } from "@/components/portfolios/PortfolioLimitModal";
 
 interface PortfolioRecommendationProps {
   riskScore: number;
@@ -113,6 +116,18 @@ const getPortfolioData = (riskScore: number) => {
 export const PortfolioRecommendation = ({ riskScore, onStartInvesting, onBack }: PortfolioRecommendationProps) => {
   const portfolioType = getPortfolioType(riskScore);
   const portfolio = getPortfolioData(riskScore);
+  const { canGenerate, subscriptionPlan, loading } = usePortfolioLimit();
+  const [showLimitModal, setShowLimitModal] = useState(false);
+
+  const handleStartBuilding = () => {
+    // If free user has reached limit, show paywall immediately
+    if (!canGenerate && subscriptionPlan !== "pro") {
+      setShowLimitModal(true);
+      return;
+    }
+    // Otherwise proceed with portfolio creation
+    onStartInvesting?.();
+  };
 
   return (
     <section className="min-h-screen bg-background py-8 sm:py-20">
@@ -227,7 +242,8 @@ export const PortfolioRecommendation = ({ riskScore, onStartInvesting, onBack }:
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Button 
                 size="lg" 
-                onClick={onStartInvesting}
+                onClick={handleStartBuilding}
+                disabled={loading}
                 className="bg-gradient-primary text-white hover:opacity-90 px-8 py-4 text-lg group w-full sm:w-auto"
               >
                 Start Building Portfolio
@@ -240,6 +256,12 @@ export const PortfolioRecommendation = ({ riskScore, onStartInvesting, onBack }:
           </div>
         </div>
       </div>
+
+      {/* Portfolio Limit Paywall Modal */}
+      <PortfolioLimitModal 
+        open={showLimitModal} 
+        onClose={() => setShowLimitModal(false)} 
+      />
     </section>
   );
 };
