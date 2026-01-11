@@ -32,6 +32,10 @@ import Advisors from "./pages/Advisors";
 import AdvisorOnboarding from "./pages/AdvisorOnboarding";
 import AdvisorPayment from "./pages/AdvisorPayment";
 import AdvisorDashboard from "./pages/AdvisorDashboard";
+import Terms from "./pages/Terms";
+import Privacy from "./pages/Privacy";
+import Disclaimers from "./pages/legal/Disclaimers";
+import RiskDisclosurePage from "./pages/legal/RiskDisclosure";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -72,6 +76,10 @@ const App = () => (
           <Route path="/advisors/onboarding" element={<AdvisorOnboarding />} />
           <Route path="/advisors/payment" element={<AdvisorPayment />} />
           <Route path="/advisors/dashboard" element={<AdvisorDashboard />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/legal/disclaimers" element={<Disclaimers />} />
+          <Route path="/legal/risk-disclosure" element={<RiskDisclosurePage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
