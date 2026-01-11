@@ -115,7 +115,7 @@ export const SavedPortfoliosSection = ({
               </p>
               <Button onClick={handleCreateNew}>
                 <Plus className="h-4 w-4 mr-2" />
-                Create Your First Portfolio
+                + Create Your First Portfolio
               </Button>
             </div>
           ) : (

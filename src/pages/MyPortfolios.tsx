@@ -14,7 +14,8 @@ const MyPortfoliosContent = () => {
   const [viewingPortfolio, setViewingPortfolio] = useState<SavedPortfolio | null>(null);
 
   const handleCreateNew = () => {
-    navigate("/app/builder");
+    // Navigate directly to risk assessment flow, bypassing builder choice
+    navigate("/?start=builder");
   };
 
   if (viewingPortfolio) {

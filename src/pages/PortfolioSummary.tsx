@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ArrowLeft, Download, ExternalLink, Settings, Zap, Crown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,6 +14,7 @@ import { PortfolioSuccessAnimation } from "@/components/PortfolioSuccessAnimatio
 import { UpgradeModal } from "@/components/UpgradeModal";
 import { useToast } from "@/hooks/use-toast";
 import { usePortfolioLimit } from "@/hooks/usePortfolioLimit";
+import { useSavedPortfolios } from "@/hooks/useSavedPortfolios";
 import { ProSuggestionsPanel, RiskScoreCard, RebalancingAlerts } from "@/components/pro";
 import jsPDF from 'jspdf';
 
@@ -603,11 +604,40 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onBack, onCust
   };
 
   const { portfolio, name } = generatePortfolio();
+  const { savePortfolio } = useSavedPortfolios();
+  const hasAutoSaved = useRef(false);
   
   // Update portfolio name state when portfolio changes
   useEffect(() => {
     setPortfolioName(name);
   }, [name]);
+
+  // Auto-save portfolio when component mounts (after generation)
+  useEffect(() => {
+    const autoSavePortfolio = async () => {
+      if (hasAutoSaved.current || !portfolio.length || !name) return;
+      
+      hasAutoSaved.current = true;
+      
+      await savePortfolio({
+        portfolio_name: name,
+        risk_score: riskScore,
+        experience_level: experienceLevel,
+        timeline: timeline,
+        investment_amount: investmentAmount,
+        assets: portfolio.map(asset => ({
+          symbol: asset.symbol,
+          name: asset.name,
+          allocation: asset.allocation,
+          rationale: asset.rationale,
+          assetClass: asset.assetClass,
+          color: asset.color,
+        })),
+      });
+    };
+
+    autoSavePortfolio();
+  }, [portfolio, name, riskScore, experienceLevel, timeline, savePortfolio]);
   
   const expectedReturn = 6 + (riskScore / 100) * 6; // 6-12% based on risk
   const volatility = 5 + (riskScore / 100) * 15; // 5-20% based on risk
