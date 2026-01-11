@@ -1,7 +1,8 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Mail, Phone, MapPin, ArrowRight } from "lucide-react";
+import { Mail, Phone, MapPin, ArrowRight, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 
 export const Footer = () => {
@@ -111,17 +112,33 @@ export const Footer = () => {
           </div>
         </div>
 
+        {/* Investment Disclaimer */}
+        <div className="py-6 border-t border-border">
+          <div className="flex items-start gap-3">
+            <AlertTriangle className="h-4 w-4 text-amber-500 flex-shrink-0 mt-0.5" />
+            <div className="space-y-2">
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                <strong>Investment Disclaimer:</strong> PortfoliX is an investment research and portfolio-modeling platform. We do not provide personalized financial advice and are not a registered investment adviser, broker-dealer, or asset manager. All investments involve risk, including potential loss of principal. Past performance does not guarantee future results.
+              </p>
+              <div className="flex flex-wrap gap-4 text-xs">
+                <Link to="/legal/disclaimers" className="text-primary hover:underline">Full Disclaimers</Link>
+                <Link to="/legal/risk-disclosure" className="text-primary hover:underline">Risk Disclosure</Link>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <Separator className="my-4 sm:my-6 md:my-8" />
 
         {/* Bottom Footer */}
         <div className="py-4 sm:py-6 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 text-xs sm:text-sm text-muted-foreground">
           <div>
-            © 2025 PortfoliX. All rights reserved.
+            © 2026 PortfoliX. All rights reserved.
           </div>
           <div className="flex items-center gap-4 sm:gap-6">
-            <a href="#" className="hover:text-primary transition-colors">Privacy</a>
-            <a href="#" className="hover:text-primary transition-colors">Terms</a>
-            <a href="#" className="hover:text-primary transition-colors">Cookies</a>
+            <Link to="/privacy" className="hover:text-primary transition-colors">Privacy</Link>
+            <Link to="/terms" className="hover:text-primary transition-colors">Terms</Link>
+            <Link to="/legal/disclaimers" className="hover:text-primary transition-colors">Disclaimers</Link>
           </div>
         </div>
       </div>
