@@ -32,7 +32,7 @@ export const SavedPortfolioCard = ({ portfolio, onView, onDelete }: SavedPortfol
   const topAssets = portfolio.assets.slice(0, 3);
 
   return (
-    <Card className="group hover:shadow-lg transition-all duration-300 border-border/50 hover:border-primary/30 cursor-pointer">
+    <Card className="group glass-card glass-glow-hover cursor-pointer">
       <CardContent className="p-4 sm:p-6" onClick={() => onView(portfolio)}>
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1 min-w-0">

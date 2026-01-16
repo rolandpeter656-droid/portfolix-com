@@ -37,8 +37,14 @@ const testimonials = [
 
 export const TestimonialsSection = () => {
   return (
-    <section id="testimonials" className="py-12 sm:py-16 md:py-24 bg-secondary/30">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="testimonials" className="relative py-12 sm:py-16 md:py-24 bg-secondary/30 overflow-hidden">
+      {/* Background Blobs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="glass-blob glass-blob-purple w-[450px] h-[450px] top-0 right-0 animate-blob-float opacity-10" />
+        <div className="glass-blob glass-blob-cyan w-[350px] h-[350px] bottom-0 left-0 animate-blob-float-delayed opacity-10" />
+      </div>
+      
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-10 sm:mb-12 md:mb-16">
           <Badge className="mb-3 sm:mb-4 bg-success/10 text-success border-success/20 text-xs sm:text-sm">
             Testimonials
@@ -56,7 +62,7 @@ export const TestimonialsSection = () => {
           {testimonials.map((testimonial) => (
             <Card 
               key={testimonial.id}
-              className="group bg-gradient-card border-border hover:shadow-card transition-all duration-500 hover-scale relative overflow-hidden"
+              className="group glass-card glass-glow-hover relative overflow-hidden"
             >
               <div className="absolute top-4 right-4 opacity-10 group-hover:opacity-20 transition-opacity">
                 <Quote className="h-10 w-10 sm:h-12 sm:w-12 md:h-16 md:w-16 text-primary" />

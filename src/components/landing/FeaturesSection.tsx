@@ -60,8 +60,13 @@ export const FeaturesSection = () => {
         onClose={() => setIsDashboardModalOpen(false)}
         onSignUpClick={handleSignUpClick}
       />
-    <section id="features" className="py-12 sm:py-16 md:py-24 bg-secondary/30">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="features" className="relative py-12 sm:py-16 md:py-24 bg-secondary/30 overflow-hidden">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Background Blobs */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="glass-blob glass-blob-cyan w-[400px] h-[400px] -top-20 -left-20 animate-blob-float opacity-10" />
+          <div className="glass-blob glass-blob-purple w-[350px] h-[350px] -bottom-20 -right-20 animate-blob-float-delayed opacity-10" />
+        </div>
         <div className="text-center mb-10 sm:mb-12 md:mb-16">
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-sans-bold text-foreground mb-4 sm:mb-6">
             Powerful Features for
@@ -72,11 +77,11 @@ export const FeaturesSection = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8 max-w-6xl mx-auto relative z-10">
           {features.map((feature, index) => (
             <Card 
               key={index} 
-              className={`group bg-gradient-card border-border hover:shadow-card transition-all duration-500 hover-scale overflow-hidden ${
+              className={`group glass-card glass-glow-hover overflow-hidden ${
                 feature.isClickable ? 'cursor-pointer' : ''
               }`}
               onClick={() => handleFeatureClick(feature)}
@@ -108,23 +113,23 @@ export const FeaturesSection = () => {
         </div>
 
         {/* Additional Feature Stats */}
-        <div className="mt-12 sm:mt-16 md:mt-20 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:gap-8 text-center">
-          <div className="group p-3 sm:p-4">
+        <div className="mt-12 sm:mt-16 md:mt-20 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:gap-8 text-center relative z-10">
+          <div className="group glass-stat p-3 sm:p-4">
             <BarChart3 className="h-6 w-6 sm:h-8 sm:w-8 text-primary mx-auto mb-2 sm:mb-3 group-hover:scale-110 transition-transform" />
             <div className="text-xl sm:text-2xl font-sans-bold text-foreground">500+</div>
             <div className="text-xs sm:text-sm text-muted-foreground">Asset Classes</div>
           </div>
-          <div className="group p-3 sm:p-4">
+          <div className="group glass-stat p-3 sm:p-4">
             <Target className="h-6 w-6 sm:h-8 sm:w-8 text-success mx-auto mb-2 sm:mb-3 group-hover:scale-110 transition-transform" />
             <div className="text-xl sm:text-2xl font-sans-bold text-foreground">24/7</div>
             <div className="text-xs sm:text-sm text-muted-foreground">Monitoring</div>
           </div>
-          <div className="group p-3 sm:p-4">
+          <div className="group glass-stat p-3 sm:p-4">
             <Zap className="h-6 w-6 sm:h-8 sm:w-8 text-warning mx-auto mb-2 sm:mb-3 group-hover:scale-110 transition-transform" />
             <div className="text-xl sm:text-2xl font-sans-bold text-foreground">0.1s</div>
             <div className="text-xs sm:text-sm text-muted-foreground">Response Time</div>
           </div>
-          <div className="group p-3 sm:p-4">
+          <div className="group glass-stat p-3 sm:p-4">
             <Shield className="h-6 w-6 sm:h-8 sm:w-8 text-blue-400 mx-auto mb-2 sm:mb-3 group-hover:scale-110 transition-transform" />
             <div className="text-xl sm:text-2xl font-sans-bold text-foreground">99.9%</div>
             <div className="text-xs sm:text-sm text-muted-foreground">Uptime</div>

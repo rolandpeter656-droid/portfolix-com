@@ -141,18 +141,24 @@ const SignIn = () => {
   };
 
   return (
-    <div className="min-h-[100svh] bg-background flex items-center justify-center p-4 py-8 sm:py-12">
-      <div className="w-full max-w-md space-y-4 sm:space-y-6">
+    <div className="min-h-[100svh] bg-background flex items-center justify-center p-4 py-8 sm:py-12 relative overflow-hidden">
+      {/* Background Blobs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="glass-blob glass-blob-cyan w-[400px] h-[400px] top-0 right-0 animate-blob-float opacity-15" />
+        <div className="glass-blob glass-blob-purple w-[350px] h-[350px] bottom-0 left-0 animate-blob-float-delayed opacity-15" />
+      </div>
+      
+      <div className="w-full max-w-md space-y-4 sm:space-y-6 relative z-10">
         <Button
           variant="ghost"
-          className="mb-2 sm:mb-4 text-sm"
+          className="mb-2 sm:mb-4 text-sm glass-button"
           onClick={() => navigate("/")}
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to PortfoliX
         </Button>
 
-        <Card className="animate-fade-in">
+        <Card className="animate-fade-in glass-card">
           <CardHeader className="text-center pb-4 sm:pb-6 px-4 sm:px-6">
             <CardTitle className="text-xl sm:text-2xl font-bold text-foreground">
               Welcome Back

@@ -158,20 +158,26 @@ export const PricingPlans = ({ currentPlan = "free", onPlanSelect }: PricingPlan
   }
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-      <div className="text-center mb-8 sm:mb-12">
+    <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 overflow-hidden">
+      {/* Background Blobs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="glass-blob glass-blob-cyan w-[400px] h-[400px] -top-40 -left-40 animate-blob-float opacity-10" />
+        <div className="glass-blob glass-blob-purple w-[350px] h-[350px] -bottom-40 -right-40 animate-blob-float-delayed opacity-10" />
+      </div>
+      
+      <div className="text-center mb-8 sm:mb-12 relative z-10">
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">Choose Your Plan</h1>
         <p className="text-base sm:text-lg text-muted-foreground mb-6 sm:mb-8 px-2">
           Scale your portfolio management with AI-powered insights
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8 max-w-7xl mx-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8 max-w-7xl mx-auto relative z-10">
         {plans.map((plan) => (
           <Card
             key={plan.id}
-            className={`relative transition-all duration-300 hover:shadow-lg ${
-              plan.popular ? "border-primary shadow-lg sm:scale-105" : ""
+            className={`relative glass-card glass-glow-hover ${
+              plan.popular ? "border-primary/50 shadow-lg sm:scale-105" : ""
             } ${currentPlan === plan.id ? "ring-2 ring-primary" : ""}`}
           >
             {plan.popular && (
