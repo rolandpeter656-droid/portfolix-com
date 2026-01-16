@@ -32,8 +32,14 @@ const teamMember = {
 
 export const TeamSection = () => {
   return (
-    <section id="team" className="py-12 sm:py-16 md:py-24 bg-background">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="team" className="relative py-12 sm:py-16 md:py-24 bg-background overflow-hidden">
+      {/* Background Blobs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="glass-blob glass-blob-cyan w-[400px] h-[400px] top-1/4 left-0 animate-blob-float opacity-10" />
+        <div className="glass-blob glass-blob-blue w-[300px] h-[300px] bottom-1/4 right-0 animate-blob-float-delayed opacity-10" />
+      </div>
+      
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-10 sm:mb-12 md:mb-16">
           <Badge className="mb-3 sm:mb-4 bg-warning/10 text-warning border-warning/20 text-xs sm:text-sm">
             Our Team
@@ -52,7 +58,7 @@ export const TeamSection = () => {
 
         <div className="flex justify-center max-w-7xl mx-auto">
           <Card 
-            className="group bg-gradient-card border-border hover:shadow-card transition-all duration-500 hover-scale overflow-hidden w-full max-w-xs sm:max-w-sm"
+            className="group glass-card glass-glow-hover overflow-hidden w-full max-w-xs sm:max-w-sm"
           >
             <CardContent className="p-0">
               <div className="relative overflow-hidden">
@@ -125,8 +131,8 @@ export const TeamSection = () => {
             Our Values
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 max-w-4xl mx-auto">
-            <div className="flex flex-col items-center p-4">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-primary/10 rounded-full flex items-center justify-center mb-3 sm:mb-4">
+            <div className="flex flex-col items-center glass-stat p-4">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 backdrop-blur-xl bg-primary/10 border border-primary/30 rounded-full flex items-center justify-center mb-3 sm:mb-4">
                 <Award className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 text-primary" />
               </div>
               <h4 className="font-sans-bold text-foreground mb-1 sm:mb-2 text-sm sm:text-base">Excellence</h4>
@@ -134,8 +140,8 @@ export const TeamSection = () => {
                 We strive for the highest standards in everything we do.
               </p>
             </div>
-            <div className="flex flex-col items-center p-4">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-success/10 rounded-full flex items-center justify-center mb-3 sm:mb-4">
+            <div className="flex flex-col items-center glass-stat p-4">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 backdrop-blur-xl bg-success/10 border border-success/30 rounded-full flex items-center justify-center mb-3 sm:mb-4">
                 <Github className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 text-success" />
               </div>
               <h4 className="font-sans-bold text-foreground mb-1 sm:mb-2 text-sm sm:text-base">Innovation</h4>
@@ -143,8 +149,8 @@ export const TeamSection = () => {
                 Pushing the boundaries of what's possible with AI and finance.
               </p>
             </div>
-            <div className="flex flex-col items-center p-4">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-warning/10 rounded-full flex items-center justify-center mb-3 sm:mb-4">
+            <div className="flex flex-col items-center glass-stat p-4">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 backdrop-blur-xl bg-warning/10 border border-warning/30 rounded-full flex items-center justify-center mb-3 sm:mb-4">
                 <Linkedin className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 text-warning" />
               </div>
               <h4 className="font-sans-bold text-foreground mb-1 sm:mb-2 text-sm sm:text-base">Trust</h4>

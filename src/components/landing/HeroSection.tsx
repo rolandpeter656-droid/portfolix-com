@@ -11,10 +11,15 @@ export const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
   const [isDemoOpen, setIsDemoOpen] = useState(false);
   return (
     <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden bg-gradient-hero pt-20 sm:pt-24 pb-16 sm:pb-20">
+      {/* Animated Glassmorphism Background Blobs */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="glass-blob glass-blob-cyan w-[500px] h-[500px] top-1/4 left-1/4 animate-blob-float" />
+        <div className="glass-blob glass-blob-purple w-[400px] h-[400px] bottom-1/4 right-1/4 animate-blob-float-delayed" />
+        <div className="glass-blob glass-blob-blue w-[300px] h-[300px] top-1/2 right-1/3 animate-blob-float" style={{ animationDelay: '2s' }} />
+      </div>
+      
       {/* Background Glow Effects */}
       <div className="absolute inset-0 bg-gradient-glow opacity-40" />
-      <div className="absolute top-1/4 left-1/4 w-48 sm:w-72 md:w-96 h-48 sm:h-72 md:h-96 bg-primary/10 rounded-full blur-3xl animate-pulse" />
-      <div className="absolute bottom-1/4 right-1/4 w-40 sm:w-60 md:w-80 h-40 sm:h-60 md:h-80 bg-success/10 rounded-full blur-3xl animate-pulse delay-2000" />
       
       {/* Content */}
       <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -55,17 +60,17 @@ export const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
             </Button>
           </div>
 
-          {/* Stats */}
+          {/* Stats - Glass Cards */}
           <div className="grid grid-cols-2 gap-6 sm:gap-8 md:gap-12 max-w-xs sm:max-w-md mx-auto">
-            <div className="flex flex-col items-center">
-              <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-success/20 rounded-full mb-2 sm:mb-3">
+            <div className="glass-stat flex flex-col items-center">
+              <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 backdrop-blur-xl bg-success/20 border border-success/30 rounded-full mb-2 sm:mb-3">
                 <TrendingUp className="h-5 w-5 sm:h-6 sm:w-6 text-success" />
               </div>
               <div className="text-2xl sm:text-3xl font-sans-bold text-success">35%</div>
               <div className="text-xs sm:text-sm text-muted-foreground">Avg. Return</div>
             </div>
-            <div className="flex flex-col items-center">
-              <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-primary/20 rounded-full mb-2 sm:mb-3">
+            <div className="glass-stat flex flex-col items-center">
+              <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 backdrop-blur-xl bg-primary/20 border border-primary/30 rounded-full mb-2 sm:mb-3">
                 <Users className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
               </div>
               <div className="text-2xl sm:text-3xl font-sans-bold text-primary">1M+</div>

@@ -14,7 +14,7 @@ export const Navigation = () => {
   const closeMenu = () => setIsMenuOpen(false);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-lg border-b border-border safe-area-inset">
+    <nav className="fixed top-0 left-0 right-0 z-50 glass-nav safe-area-inset">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-14 sm:h-16">
           {/* Logo */}
@@ -111,7 +111,7 @@ export const Navigation = () => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="lg:hidden border-t border-border bg-background/95 backdrop-blur-lg absolute left-0 right-0 top-full max-h-[calc(100vh-3.5rem)] overflow-y-auto">
+          <div className="lg:hidden border-t border-white/10 backdrop-blur-2xl absolute left-0 right-0 top-full max-h-[calc(100vh-3.5rem)] overflow-y-auto" style={{ background: 'hsl(218 23% 8% / 0.95)' }}>
             <div className="px-4 py-4 space-y-1">
               <a 
                 href="#features" 
