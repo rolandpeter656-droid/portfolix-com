@@ -4,6 +4,7 @@ import { Menu, X, ArrowRight } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { SignupModal } from "@/components/SignupModal";
+import portfolioLogo from "@/assets/portfolio-logo.png";
 
 export const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -18,8 +19,9 @@ export const Navigation = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-14 sm:h-16">
           {/* Logo */}
-          <Link to="/" className="flex-shrink-0">
-            <h1 className="text-xl sm:text-2xl font-sans-bold text-gradient cursor-pointer hover:opacity-80 transition-opacity">PortfoliX</h1>
+          <Link to="/" className="flex-shrink-0 flex items-center gap-2 hover:opacity-80 transition-opacity">
+            <img src={portfolioLogo} alt="PortfoliX" className="h-8 sm:h-10 w-auto" />
+            <span className="text-xl sm:text-2xl font-sans-bold text-gradient">PortfoliX</span>
           </Link>
 
           {/* Desktop Navigation */}
