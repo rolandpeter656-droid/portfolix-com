@@ -7,7 +7,9 @@ import {
   PieChart, 
   Plus, 
   FolderOpen,
-  AlertCircle
+  AlertCircle,
+  Crown,
+  Sparkles
 } from "lucide-react";
 import { useSavedPortfolios, SavedPortfolio } from "@/hooks/useSavedPortfolios";
 import { usePortfolioLimit } from "@/hooks/usePortfolioLimit";
@@ -58,17 +60,17 @@ export const SavedPortfoliosSection = ({
 
   if (loading) {
     return (
-      <Card className="shadow-card">
+      <Card className="glass-card">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <PieChart className="h-5 w-5 text-primary" />
-            Your Free Portfolios
+            Your Built Portfolios
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {[1, 2, 3].map((i) => (
-              <Skeleton key={i} className="h-48 w-full rounded-lg" />
+              <Skeleton key={i} className="h-48 w-full rounded-lg bg-white/5" />
             ))}
           </div>
         </CardContent>
@@ -78,23 +80,29 @@ export const SavedPortfoliosSection = ({
 
   return (
     <>
-      <Card className="shadow-card">
+      <Card className="glass-card">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
           <div className="flex items-center gap-3">
             <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
               <PieChart className="h-5 w-5 text-primary" />
-              Your Free Portfolios
+              Your Built Portfolios
             </CardTitle>
             {subscriptionPlan !== "pro" && (
-              <Badge variant="outline" className="text-xs">
+              <Badge variant="outline" className="text-xs border-white/20">
                 {portfolios.length}/{FREE_PORTFOLIO_LIMIT} used
+              </Badge>
+            )}
+            {subscriptionPlan === "pro" && (
+              <Badge className="bg-gradient-primary text-white text-xs">
+                <Crown className="h-3 w-3 mr-1" />
+                Unlimited
               </Badge>
             )}
           </div>
           <Button 
             onClick={handleCreateNew}
             size="sm"
-            className={isAtLimit ? "bg-muted text-muted-foreground hover:bg-muted" : ""}
+            className={isAtLimit ? "bg-muted text-muted-foreground hover:bg-muted" : "bg-gradient-primary hover:opacity-90"}
           >
             <Plus className="h-4 w-4 mr-1" />
             <span className="hidden sm:inline">Create New</span>
@@ -104,7 +112,7 @@ export const SavedPortfoliosSection = ({
         <CardContent>
           {portfolios.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <div className="p-4 bg-primary/10 rounded-full mb-4">
+              <div className="p-4 bg-gradient-to-br from-primary/20 to-cyan-500/20 rounded-full mb-4">
                 <FolderOpen className="h-8 w-8 text-primary" />
               </div>
               <h3 className="text-lg font-semibold text-foreground mb-2">
@@ -113,9 +121,9 @@ export const SavedPortfoliosSection = ({
               <p className="text-sm text-muted-foreground max-w-sm mb-4">
                 Create your first AI-powered portfolio and it will appear here for easy access.
               </p>
-              <Button onClick={handleCreateNew}>
-                <Plus className="h-4 w-4 mr-2" />
-                + Create Your First Portfolio
+              <Button onClick={handleCreateNew} className="bg-gradient-primary hover:opacity-90">
+                <Sparkles className="h-4 w-4 mr-2" />
+                Create Your First Portfolio
               </Button>
             </div>
           ) : (
@@ -132,7 +140,7 @@ export const SavedPortfoliosSection = ({
               </div>
 
               {isAtLimit && (
-                <div className="mt-6 p-4 bg-warning/10 border border-warning/20 rounded-lg flex items-start gap-3">
+                <div className="mt-6 p-4 glass-stat border border-warning/20 rounded-lg flex items-start gap-3">
                   <AlertCircle className="h-5 w-5 text-warning flex-shrink-0 mt-0.5" />
                   <div>
                     <p className="text-sm font-medium text-foreground">
@@ -162,7 +170,7 @@ export const SavedPortfoliosSection = ({
       />
 
       <AlertDialog open={!!portfolioToDelete} onOpenChange={() => setPortfolioToDelete(null)}>
-        <AlertDialogContent>
+        <AlertDialogContent className="glass-card">
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Portfolio?</AlertDialogTitle>
             <AlertDialogDescription>
@@ -170,7 +178,7 @@ export const SavedPortfoliosSection = ({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="glass-button">Cancel</AlertDialogCancel>
             <AlertDialogAction 
               onClick={handleDeleteConfirm}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
