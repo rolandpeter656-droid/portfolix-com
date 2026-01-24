@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, Lock, Download, Settings, Zap, ExternalLink, Crown } from "lucide-react";
+import { ArrowLeft, Lock, Download, Settings, Zap, ExternalLink, Crown, Lightbulb, Clock, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
@@ -35,13 +35,20 @@ const getRiskLabel = (riskScore: number) => {
   return "Aggressive";
 };
 
+const getRiskColor = (riskScore: number) => {
+  if (riskScore <= 25) return "text-blue-500";
+  if (riskScore <= 50) return "text-green-500";
+  if (riskScore <= 75) return "text-yellow-500";
+  return "text-red-500";
+};
+
 // Locked feature indicator component
 const LockedFeature = ({ label, children }: { label: string; children: React.ReactNode }) => (
   <Tooltip>
     <TooltipTrigger asChild>
       <div className="relative cursor-not-allowed opacity-60">
         {children}
-        <div className="absolute inset-0 flex items-center justify-center bg-background/50 rounded-lg">
+        <div className="absolute inset-0 flex items-center justify-center bg-background/50 rounded-lg backdrop-blur-sm">
           <Lock className="h-4 w-4 text-muted-foreground" />
         </div>
       </div>
@@ -80,20 +87,37 @@ export const SavedPortfolioView = ({ portfolio, onBack }: SavedPortfolioViewProp
   const expectedReturn = calculateExpectedReturn();
   const volatility = calculateVolatility();
 
+  // Format date
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
   return (
     <div className="min-h-screen bg-background">
+      {/* Animated Background Blobs */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 -left-32 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+      </div>
+
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
+      <header className="sticky top-0 z-50 glass-nav border-b border-white/10">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-4 min-w-0">
-              <Button variant="ghost" size="icon" onClick={onBack}>
+              <Button variant="ghost" size="icon" onClick={onBack} className="hover:bg-white/10">
                 <ArrowLeft className="h-5 w-5" />
               </Button>
               <div className="min-w-0">
                 <h1 className="text-lg sm:text-xl font-bold truncate">{portfolio.portfolio_name}</h1>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Badge variant="outline">{getRiskLabel(portfolio.risk_score)}</Badge>
+                  <Badge variant="outline" className={getRiskColor(portfolio.risk_score)}>
+                    {getRiskLabel(portfolio.risk_score)}
+                  </Badge>
                   <span>•</span>
                   <span>{portfolio.timeline}</span>
                 </div>
@@ -106,9 +130,54 @@ export const SavedPortfolioView = ({ portfolio, onBack }: SavedPortfolioViewProp
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-6 space-y-6 max-w-6xl">
+      <div className="container mx-auto px-4 py-6 space-y-6 max-w-6xl relative z-10">
+        {/* Portfolio Info Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Card className="glass-stat">
+            <CardContent className="pt-6">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-primary/20">
+                  <Clock className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Created</p>
+                  <p className="font-medium text-foreground">{formatDate(portfolio.created_at)}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="glass-stat">
+            <CardContent className="pt-6">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-success/20">
+                  <Target className="h-5 w-5 text-success" />
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Experience Level</p>
+                  <p className="font-medium text-foreground capitalize">{portfolio.experience_level}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="glass-stat">
+            <CardContent className="pt-6">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-warning/20">
+                  <Clock className="h-5 w-5 text-warning" />
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Investment Timeline</p>
+                  <p className="font-medium text-foreground">{portfolio.timeline}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
         {/* Investment Amount Card */}
-        <Card className="shadow-card">
+        <Card className="glass-card">
           <CardHeader>
             <CardTitle className="text-lg">Investment Amount</CardTitle>
           </CardHeader>
@@ -129,7 +198,7 @@ export const SavedPortfolioView = ({ portfolio, onBack }: SavedPortfolioViewProp
                       setIsInputMode(false);
                     }
                   }}
-                  className="text-2xl font-bold w-48"
+                  className="text-2xl font-bold w-48 bg-white/5 border-white/20"
                   min={MIN_AMOUNT}
                   max={MAX_AMOUNT}
                   autoFocus
@@ -162,19 +231,19 @@ export const SavedPortfolioView = ({ portfolio, onBack }: SavedPortfolioViewProp
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Portfolio Metrics */}
-          <Card className="shadow-card">
+          <Card className="glass-card">
             <CardHeader>
               <CardTitle>Portfolio Metrics</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 gap-4">
-                <div className="text-center p-4 bg-gradient-card rounded-lg">
+                <div className="text-center p-4 glass-stat rounded-lg">
                   <div className="text-2xl font-bold text-success">
                     {formatPercentage(expectedReturn)}
                   </div>
                   <div className="text-sm text-muted-foreground">Expected Return</div>
                 </div>
-                <div className="text-center p-4 bg-gradient-card rounded-lg">
+                <div className="text-center p-4 glass-stat rounded-lg">
                   <div className="text-2xl font-bold text-warning">
                     {formatPercentage(volatility)}
                   </div>
@@ -185,7 +254,7 @@ export const SavedPortfolioView = ({ portfolio, onBack }: SavedPortfolioViewProp
           </Card>
 
           {/* 3D Pie Chart */}
-          <Card className="shadow-card">
+          <Card className="glass-card">
             <CardHeader>
               <CardTitle>Asset Allocation</CardTitle>
             </CardHeader>
@@ -196,18 +265,38 @@ export const SavedPortfolioView = ({ portfolio, onBack }: SavedPortfolioViewProp
             </CardContent>
           </Card>
 
+          {/* AI Rationale - If available */}
+          {portfolio.rationale && (
+            <Card className="glass-card lg:col-span-2">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Lightbulb className="h-5 w-5 text-primary" />
+                  AI Portfolio Rationale
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground leading-relaxed">
+                  {portfolio.rationale}
+                </p>
+              </CardContent>
+            </Card>
+          )}
+
           {/* AI Market Tracker - LOCKED */}
           <LockedFeature label="AI Market Tracker">
-            <Card className="shadow-card border-2 border-dashed border-muted">
+            <Card className="glass-card border-2 border-dashed border-white/20">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-muted rounded-lg">
+                  <div className="p-2 bg-white/5 rounded-lg">
                     <Zap className="h-5 w-5 text-muted-foreground" />
                   </div>
                   <div>
                     <div className="font-semibold text-muted-foreground flex items-center gap-2">
                       AI Market Tracker
-                      <Badge variant="secondary" className="text-xs">Pro</Badge>
+                      <Badge variant="secondary" className="text-xs">
+                        <Crown className="h-3 w-3 mr-1" />
+                        Pro
+                      </Badge>
                     </div>
                     <p className="text-sm text-muted-foreground">
                       Real-time AI-powered market optimization
@@ -220,14 +309,14 @@ export const SavedPortfolioView = ({ portfolio, onBack }: SavedPortfolioViewProp
         </div>
 
         {/* Portfolio Breakdown Table */}
-        <Card className="shadow-card">
+        <Card className="glass-card">
           <CardHeader>
             <CardTitle>Portfolio Breakdown</CardTitle>
           </CardHeader>
           <CardContent className="overflow-x-auto">
             <Table>
               <TableHeader>
-                <TableRow>
+                <TableRow className="border-white/10">
                   <TableHead>Symbol</TableHead>
                   <TableHead>Asset Name</TableHead>
                   <TableHead>Asset Class</TableHead>
@@ -238,7 +327,7 @@ export const SavedPortfolioView = ({ portfolio, onBack }: SavedPortfolioViewProp
               </TableHeader>
               <TableBody>
                 {portfolio.assets.map((asset) => (
-                  <TableRow key={asset.symbol}>
+                  <TableRow key={asset.symbol} className="border-white/10">
                     <TableCell className="font-mono font-semibold">{asset.symbol}</TableCell>
                     <TableCell>{asset.name}</TableCell>
                     <TableCell>
@@ -265,12 +354,12 @@ export const SavedPortfolioView = ({ portfolio, onBack }: SavedPortfolioViewProp
         <div className="flex flex-wrap gap-4 justify-center">
           <Dialog open={isBrokerModalOpen} onOpenChange={setIsBrokerModalOpen}>
             <DialogTrigger asChild>
-              <Button size="lg" className="flex items-center gap-2">
+              <Button size="lg" className="glass-button flex items-center gap-2 bg-gradient-primary hover:opacity-90">
                 <ExternalLink className="h-4 w-4" />
                 Place Trades on Your Broker
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-md">
+            <DialogContent className="glass-card sm:max-w-md">
               <DialogHeader>
                 <DialogTitle>Broker Integration</DialogTitle>
                 <DialogDescription>
@@ -278,7 +367,7 @@ export const SavedPortfolioView = ({ portfolio, onBack }: SavedPortfolioViewProp
                 </DialogDescription>
               </DialogHeader>
               <div className="flex justify-end">
-                <Button onClick={() => setIsBrokerModalOpen(false)}>
+                <Button onClick={() => setIsBrokerModalOpen(false)} className="bg-gradient-primary">
                   Got it
                 </Button>
               </div>
@@ -288,7 +377,7 @@ export const SavedPortfolioView = ({ portfolio, onBack }: SavedPortfolioViewProp
           {/* Customize - LOCKED */}
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="outline" size="lg" className="flex items-center gap-2 opacity-60 cursor-not-allowed">
+              <Button variant="outline" size="lg" className="glass-button flex items-center gap-2 opacity-60 cursor-not-allowed">
                 <Settings className="h-4 w-4" />
                 Customize Portfolio
                 <Lock className="h-3 w-3 ml-1" />
@@ -300,7 +389,7 @@ export const SavedPortfolioView = ({ portfolio, onBack }: SavedPortfolioViewProp
           {/* Export PDF - LOCKED */}
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="outline" size="lg" className="flex items-center gap-2 opacity-60 cursor-not-allowed">
+              <Button variant="outline" size="lg" className="glass-button flex items-center gap-2 opacity-60 cursor-not-allowed">
                 <Download className="h-4 w-4" />
                 Export as PDF
                 <Lock className="h-3 w-3 ml-1" />
@@ -311,7 +400,7 @@ export const SavedPortfolioView = ({ portfolio, onBack }: SavedPortfolioViewProp
         </div>
 
         {/* Legal Disclaimer */}
-        <Card className="bg-muted/30 border-warning/20">
+        <Card className="glass-card border-warning/20">
           <CardContent className="pt-6">
             <p className="text-xs text-muted-foreground leading-relaxed">
               <strong>Legal Disclaimer:</strong> This portfolio was generated by AI based on your input. 

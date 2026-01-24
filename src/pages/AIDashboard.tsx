@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { useSavedPortfolios } from "@/hooks/useSavedPortfolios";
+import { usePortfolioLimit } from "@/hooks/usePortfolioLimit";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -15,16 +17,20 @@ import {
   Bell,
   User,
   LogOut,
-  Home
+  FolderOpen,
+  Plus,
+  Crown
 } from "lucide-react";
+import portfolioLogo from "@/assets/portfolio-logo.png";
 
 export default function AIDashboard() {
   const { user, loading, signOut } = useAuth();
   const navigate = useNavigate();
+  const { portfolios, loading: portfoliosLoading, FREE_PORTFOLIO_LIMIT } = useSavedPortfolios();
+  const { subscriptionPlan } = usePortfolioLimit();
 
   useEffect(() => {
     if (!loading && !user) {
-      // Store intended destination for post-auth redirect
       sessionStorage.setItem("redirectAfterAuth", "/dashboard");
       navigate("/signin");
     }
@@ -49,12 +55,18 @@ export default function AIDashboard() {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Animated Background Blobs */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 -left-32 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+      </div>
+
       {/* Header */}
-      <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
+      <header className="glass-nav border-b border-white/10 sticky top-0 z-50">
         <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-4 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <img 
-              src="/lovable-uploads/7695f634-65fb-45d3-801d-359be5d4a29b.png" 
+              src={portfolioLogo} 
               alt="PortfoliX" 
               className="h-6 sm:h-8 w-auto"
             />
@@ -75,7 +87,7 @@ export default function AIDashboard() {
         </div>
       </header>
 
-      <main className="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
+      <main className="container mx-auto px-3 sm:px-4 py-6 sm:py-8 relative z-10">
         {/* Welcome Section */}
         <div className="mb-6 sm:mb-8">
           <h1 className="text-2xl sm:text-3xl font-sans-bold text-foreground mb-2">
@@ -86,9 +98,89 @@ export default function AIDashboard() {
           </p>
         </div>
 
+        {/* Your Built Portfolios Section - Prominent Card */}
+        <Card className="glass-card p-4 sm:p-6 mb-6 sm:mb-8 border border-primary/20 hover:border-primary/40 transition-all">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-2xl bg-gradient-to-br from-primary/20 to-cyan-500/20 flex items-center justify-center">
+                <FolderOpen className="h-6 w-6 sm:h-7 sm:w-7 text-primary" />
+              </div>
+              <div>
+                <h2 className="text-lg sm:text-xl font-sans-bold text-foreground flex items-center gap-2">
+                  Your Built Portfolios
+                  {subscriptionPlan === "pro" && (
+                    <Badge className="bg-gradient-primary text-white text-xs">
+                      <Crown className="h-3 w-3 mr-1" />
+                      Pro
+                    </Badge>
+                  )}
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  {portfoliosLoading ? (
+                    "Loading..."
+                  ) : portfolios.length === 0 ? (
+                    "No portfolios yet. Create your first AI-powered portfolio!"
+                  ) : (
+                    <>
+                      {portfolios.length} portfolio{portfolios.length !== 1 ? 's' : ''} saved
+                      {subscriptionPlan !== "pro" && (
+                        <span className="text-muted-foreground"> • {FREE_PORTFOLIO_LIMIT - portfolios.length} remaining on Free plan</span>
+                      )}
+                    </>
+                  )}
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-2 w-full sm:w-auto">
+              <Button 
+                variant="outline" 
+                className="flex-1 sm:flex-none"
+                onClick={() => navigate("/my-portfolios")}
+              >
+                View All
+                <ArrowUpRight className="h-4 w-4 ml-1" />
+              </Button>
+              <Button 
+                className="flex-1 sm:flex-none bg-gradient-primary hover:opacity-90"
+                onClick={() => navigate("/?start=builder")}
+              >
+                <Plus className="h-4 w-4 mr-1" />
+                Create New
+              </Button>
+            </div>
+          </div>
+
+          {/* Quick Portfolio Preview */}
+          {!portfoliosLoading && portfolios.length > 0 && (
+            <div className="mt-4 pt-4 border-t border-white/10">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {portfolios.slice(0, 3).map((portfolio) => (
+                  <button
+                    key={portfolio.id}
+                    onClick={() => navigate("/my-portfolios")}
+                    className="glass-stat p-3 rounded-xl text-left hover:bg-white/15 transition-all group"
+                  >
+                    <div className="flex items-center gap-2 mb-1">
+                      <PieChart className="h-4 w-4 text-primary" />
+                      <span className="text-sm font-medium text-foreground truncate">
+                        {portfolio.portfolio_name}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <span>${portfolio.investment_amount.toLocaleString()}</span>
+                      <span>•</span>
+                      <span>{portfolio.timeline}</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </Card>
+
         {/* Key Metrics */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
-          <Card className="p-4 sm:p-6 bg-gradient-card border-border hover-lift">
+          <Card className="glass-stat p-4 sm:p-6 hover-lift">
             <div className="flex items-center justify-between mb-3 sm:mb-4">
               <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl bg-primary/20 flex items-center justify-center">
                 <DollarSign className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
@@ -99,7 +191,7 @@ export default function AIDashboard() {
             <p className="text-lg sm:text-2xl font-sans-bold text-foreground">$248,593</p>
           </Card>
 
-          <Card className="p-4 sm:p-6 bg-gradient-card border-border hover-lift">
+          <Card className="glass-stat p-4 sm:p-6 hover-lift">
             <div className="flex items-center justify-between mb-3 sm:mb-4">
               <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl bg-success/20 flex items-center justify-center">
                 <TrendingUp className="h-5 w-5 sm:h-6 sm:w-6 text-success" />
@@ -110,7 +202,7 @@ export default function AIDashboard() {
             <p className="text-lg sm:text-2xl font-sans-bold text-success">+$18,432</p>
           </Card>
 
-          <Card className="p-4 sm:p-6 bg-gradient-card border-border hover-lift">
+          <Card className="glass-stat p-4 sm:p-6 hover-lift">
             <div className="flex items-center justify-between mb-3 sm:mb-4">
               <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl bg-warning/20 flex items-center justify-center">
                 <Shield className="h-5 w-5 sm:h-6 sm:w-6 text-warning" />
@@ -121,7 +213,7 @@ export default function AIDashboard() {
             <p className="text-lg sm:text-2xl font-sans-bold text-foreground">6.2 / 10</p>
           </Card>
 
-          <Card className="p-4 sm:p-6 bg-gradient-card border-border hover-lift">
+          <Card className="glass-stat p-4 sm:p-6 hover-lift">
             <div className="flex items-center justify-between mb-3 sm:mb-4">
               <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl bg-primary/20 flex items-center justify-center">
                 <PieChart className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
@@ -129,14 +221,14 @@ export default function AIDashboard() {
               <Badge className="bg-primary/20 text-primary border-primary/30 text-xs">Optimized</Badge>
             </div>
             <p className="text-xs sm:text-sm text-muted-foreground mb-1">Active Portfolios</p>
-            <p className="text-lg sm:text-2xl font-sans-bold text-foreground">3</p>
+            <p className="text-lg sm:text-2xl font-sans-bold text-foreground">{portfolios.length}</p>
           </Card>
         </div>
 
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Portfolio Allocation */}
-          <Card className="lg:col-span-2 p-6 bg-gradient-card border-border">
+          <Card className="lg:col-span-2 glass-card p-6">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-sans-bold text-foreground">Portfolio Allocation</h2>
               <Button variant="ghost" size="sm" className="text-primary">
@@ -168,7 +260,7 @@ export default function AIDashboard() {
           </Card>
 
           {/* AI Insights */}
-          <Card className="p-6 bg-gradient-card border-border">
+          <Card className="glass-card p-6">
             <div className="flex items-center gap-2 mb-6">
               <BarChart3 className="h-5 w-5 text-primary" />
               <h2 className="text-xl font-sans-bold text-foreground">AI Insights</h2>
@@ -203,25 +295,32 @@ export default function AIDashboard() {
         <div className="mt-6 sm:mt-8 grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
           <Button 
             variant="outline" 
-            className="h-auto py-4 sm:py-6 flex flex-col gap-2"
-            onClick={() => navigate("/app/builder")}
+            className="glass-button h-auto py-4 sm:py-6 flex flex-col gap-2"
+            onClick={() => navigate("/?start=builder")}
           >
             <PieChart className="h-5 w-5 sm:h-6 sm:w-6" />
             <span className="text-xs sm:text-sm">Build Portfolio</span>
           </Button>
-          <Button variant="outline" className="h-auto py-4 sm:py-6 flex flex-col gap-2">
-            <BarChart3 className="h-5 w-5 sm:h-6 sm:w-6" />
-            <span className="text-xs sm:text-sm">Market Analysis</span>
+          <Button 
+            variant="outline" 
+            className="glass-button h-auto py-4 sm:py-6 flex flex-col gap-2"
+            onClick={() => navigate("/my-portfolios")}
+          >
+            <FolderOpen className="h-5 w-5 sm:h-6 sm:w-6" />
+            <span className="text-xs sm:text-sm">My Portfolios</span>
           </Button>
           <Button 
             variant="outline" 
-            className="h-auto py-4 sm:py-6 flex flex-col gap-2"
+            className="glass-button h-auto py-4 sm:py-6 flex flex-col gap-2"
             onClick={() => navigate("/referrals")}
           >
             <User className="h-5 w-5 sm:h-6 sm:w-6" />
             <span className="text-xs sm:text-sm">Referrals</span>
           </Button>
-          <Button variant="outline" className="h-auto py-4 sm:py-6 flex flex-col gap-2">
+          <Button 
+            variant="outline" 
+            className="glass-button h-auto py-4 sm:py-6 flex flex-col gap-2"
+          >
             <Settings className="h-5 w-5 sm:h-6 sm:w-6" />
             <span className="text-xs sm:text-sm">Settings</span>
           </Button>
