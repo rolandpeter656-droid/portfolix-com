@@ -140,7 +140,9 @@ export type Database = {
       institutional_api_keys: {
         Row: {
           api_key: string
+          api_key_hash: string | null
           api_secret: string
+          api_secret_encrypted: string | null
           created_at: string
           expires_at: string | null
           id: string
@@ -154,7 +156,9 @@ export type Database = {
         }
         Insert: {
           api_key: string
+          api_key_hash?: string | null
           api_secret: string
+          api_secret_encrypted?: string | null
           created_at?: string
           expires_at?: string | null
           id?: string
@@ -168,7 +172,9 @@ export type Database = {
         }
         Update: {
           api_key?: string
+          api_key_hash?: string | null
           api_secret?: string
+          api_secret_encrypted?: string | null
           created_at?: string
           expires_at?: string | null
           id?: string
@@ -602,6 +608,31 @@ export type Database = {
       }
       can_generate_portfolio: { Args: { user_uuid: string }; Returns: boolean }
       cleanup_expired_email_tokens: { Args: never; Returns: undefined }
+      create_institutional_api_key: {
+        Args: {
+          p_encryption_key?: string
+          p_expires_at?: string
+          p_key_name: string
+          p_permissions?: Json
+          p_rate_limit?: number
+          p_subscription_id: string
+        }
+        Returns: {
+          api_key: string
+          api_secret: string
+          created_at: string
+          id: string
+          key_name: string
+        }[]
+      }
+      decrypt_api_secret: {
+        Args: { encrypted_secret: string; encryption_key: string }
+        Returns: string
+      }
+      encrypt_api_secret: {
+        Args: { encryption_key: string; secret: string }
+        Returns: string
+      }
       generate_api_key: { Args: never; Returns: string }
       generate_unique_referral_code: { Args: never; Returns: string }
       get_auth_config: { Args: { config_name: string }; Returns: string }
@@ -616,6 +647,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      hash_api_key: { Args: { key: string }; Returns: string }
       increment_portfolio_count: {
         Args: { user_uuid: string }
         Returns: undefined
@@ -628,6 +660,19 @@ export type Database = {
       redeem_credits: {
         Args: { p_required_amount: number; p_user_id: string }
         Returns: string
+      }
+      validate_api_key: {
+        Args: { incoming_key: string }
+        Returns: {
+          expires_at: string
+          id: string
+          is_active: boolean
+          key_name: string
+          last_used_at: string
+          permissions: Json
+          rate_limit: number
+          subscription_id: string
+        }[]
       }
     }
     Enums: {

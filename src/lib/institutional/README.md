@@ -168,6 +168,29 @@ All tables have RLS policies ensuring:
 - Admin-only access for partner management
 - API key validation for programmatic access
 
+### API Key Security
+API keys are protected using industry-standard cryptographic practices:
+
+1. **Hashed Storage**: API keys are stored as SHA-256 hashes using `hash_api_key()` function
+   - Plaintext keys are only shown once at creation time
+   - Validation uses secure hash comparison via `validate_api_key()` SECURITY DEFINER function
+
+2. **Encrypted Secrets**: API secrets are encrypted at rest using pgcrypto's AES encryption
+   - `encrypt_api_secret()` and `decrypt_api_secret()` functions handle encryption/decryption
+   - Encryption key is managed server-side
+
+3. **Secure Key Creation**: Use `create_institutional_api_key()` function to generate new keys
+   ```sql
+   SELECT * FROM create_institutional_api_key(
+     'subscription-uuid',
+     'My API Key',
+     '["read", "write"]'::jsonb,
+     1000,  -- rate limit
+     NULL   -- expires_at
+   );
+   ```
+   Returns plaintext credentials only once - store them securely!
+
 ### Compliance
 All portfolios include educational disclaimers:
 > "PortfoliX Institutional Models are AI-generated frameworks inspired by historical corporate investment literature. They are provided for educational use by licensed financial institutions and do not constitute investment advice or portfolio management."
