@@ -1,5 +1,6 @@
 // PortfoliX Institutional v1.0 - API Endpoint for White-label Partners
 // RESTful API for portfolio generation and management (future licensing)
+// Security: API keys validated via hashed comparison, secrets encrypted at rest
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
@@ -14,6 +15,17 @@ interface APIRequest {
   params?: any;
 }
 
+interface ValidatedApiKey {
+  id: string;
+  subscription_id: string;
+  key_name: string;
+  permissions: string[];
+  rate_limit: number;
+  is_active: boolean;
+  expires_at: string | null;
+  last_used_at: string | null;
+}
+
 serve(async (req) => {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
@@ -24,6 +36,7 @@ serve(async (req) => {
     const apiKey = req.headers.get('x-api-key');
     
     if (!apiKey) {
+      console.log('API request rejected: No API key provided');
       return new Response(
         JSON.stringify({ error: 'API key required' }),
         { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -35,30 +48,38 @@ serve(async (req) => {
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Validate API key
+    // Validate API key using secure hash comparison function
+    // This uses the validate_api_key() SECURITY DEFINER function that compares hashed keys
     const { data: apiKeyData, error: keyError } = await supabase
-      .from('institutional_api_keys')
-      .select('*, institutional_subscriptions(*)')
-      .eq('api_key', apiKey)
-      .eq('is_active', true)
+      .rpc('validate_api_key', { incoming_key: apiKey })
       .maybeSingle();
 
-    if (keyError || !apiKeyData) {
-      console.error('Invalid API key:', keyError);
+    if (keyError) {
+      console.error('API key validation error:', keyError.message);
+      return new Response(
+        JSON.stringify({ error: 'API key validation failed' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    if (!apiKeyData) {
+      console.log('API request rejected: Invalid or inactive API key');
       return new Response(
         JSON.stringify({ error: 'Invalid or inactive API key' }),
         { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
+    const validatedKey = apiKeyData as ValidatedApiKey;
+
     // Check rate limit (basic implementation)
     const now = new Date();
-    const lastUsed = apiKeyData.last_used_at ? new Date(apiKeyData.last_used_at) : null;
+    const lastUsed = validatedKey.last_used_at ? new Date(validatedKey.last_used_at) : null;
     if (lastUsed) {
       const hoursSinceLastUse = (now.getTime() - lastUsed.getTime()) / (1000 * 60 * 60);
       if (hoursSinceLastUse < 24) {
-        // Simple rate limiting - in production, use Redis or similar
-        console.log('Rate limit check passed');
+        // Simple rate limiting check - in production, use Redis or similar
+        console.log('Rate limit check passed for key:', validatedKey.key_name);
       }
     }
 
@@ -66,20 +87,37 @@ serve(async (req) => {
     await supabase
       .from('institutional_api_keys')
       .update({ last_used_at: now.toISOString() })
-      .eq('id', apiKeyData.id);
+      .eq('id', validatedKey.id);
+
+    // Get subscription details for portfolio operations
+    const { data: subscriptionData, error: subError } = await supabase
+      .from('institutional_subscriptions')
+      .select('*')
+      .eq('id', validatedKey.subscription_id)
+      .single();
+
+    if (subError || !subscriptionData) {
+      console.error('Subscription lookup failed:', subError?.message);
+      return new Response(
+        JSON.stringify({ error: 'Invalid subscription' }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
 
     const { action, params }: APIRequest = await req.json();
+
+    console.log(`Processing API action: ${action} for subscription: ${validatedKey.subscription_id}`);
 
     // Route to appropriate handler
     switch (action) {
       case 'generate_portfolio':
-        return await handleGeneratePortfolio(supabase, apiKeyData, params);
+        return await handleGeneratePortfolio(supabase, validatedKey, subscriptionData, params);
       case 'list_portfolios':
-        return await handleListPortfolios(supabase, apiKeyData, params);
+        return await handleListPortfolios(supabase, validatedKey, params);
       case 'get_portfolio':
-        return await handleGetPortfolio(supabase, apiKeyData, params);
+        return await handleGetPortfolio(supabase, validatedKey, params);
       case 'delete_portfolio':
-        return await handleDeletePortfolio(supabase, apiKeyData, params);
+        return await handleDeletePortfolio(supabase, validatedKey, params);
       default:
         return new Response(
           JSON.stringify({ error: 'Invalid action' }),
@@ -88,14 +126,20 @@ serve(async (req) => {
     }
   } catch (error) {
     console.error('API Error:', error);
+    // Return generic error message to client (don't expose internal details)
     return new Response(
-      JSON.stringify({ error: 'Internal server error', message: error.message }),
+      JSON.stringify({ error: 'An unexpected error occurred' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
 });
 
-async function handleGeneratePortfolio(supabase: any, apiKeyData: any, params: any) {
+async function handleGeneratePortfolio(
+  supabase: any, 
+  apiKeyData: ValidatedApiKey, 
+  subscriptionData: any,
+  params: any
+) {
   const subscriptionId = apiKeyData.subscription_id;
   
   // Check if can generate portfolio
@@ -117,7 +161,7 @@ async function handleGeneratePortfolio(supabase: any, apiKeyData: any, params: a
     .from('institutional_portfolios')
     .insert({
       subscription_id: subscriptionId,
-      user_id: apiKeyData.institutional_subscriptions.user_id,
+      user_id: subscriptionData.user_id,
       portfolio_name: params.portfolio_name || 'API Generated Portfolio',
       portfolio_type: 'custom',
       investment_horizon: params.investment_horizon,
@@ -134,20 +178,21 @@ async function handleGeneratePortfolio(supabase: any, apiKeyData: any, params: a
     .single();
 
   if (error) {
-    console.error('Portfolio creation error:', error);
+    console.error('Portfolio creation error:', error.message);
     return new Response(
       JSON.stringify({ error: 'Failed to create portfolio' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
 
+  console.log('Portfolio created successfully:', data.id);
   return new Response(
     JSON.stringify({ success: true, portfolio: data }),
     { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
   );
 }
 
-async function handleListPortfolios(supabase: any, apiKeyData: any, params: any) {
+async function handleListPortfolios(supabase: any, apiKeyData: ValidatedApiKey, params: any) {
   const subscriptionId = apiKeyData.subscription_id;
   
   const { data, error } = await supabase
@@ -158,6 +203,7 @@ async function handleListPortfolios(supabase: any, apiKeyData: any, params: any)
     .limit(params?.limit || 50);
 
   if (error) {
+    console.error('Portfolio list error:', error.message);
     return new Response(
       JSON.stringify({ error: 'Failed to fetch portfolios' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -170,7 +216,7 @@ async function handleListPortfolios(supabase: any, apiKeyData: any, params: any)
   );
 }
 
-async function handleGetPortfolio(supabase: any, apiKeyData: any, params: any) {
+async function handleGetPortfolio(supabase: any, apiKeyData: ValidatedApiKey, params: any) {
   const { portfolio_id } = params;
   
   if (!portfolio_id) {
@@ -200,7 +246,7 @@ async function handleGetPortfolio(supabase: any, apiKeyData: any, params: any) {
   );
 }
 
-async function handleDeletePortfolio(supabase: any, apiKeyData: any, params: any) {
+async function handleDeletePortfolio(supabase: any, apiKeyData: ValidatedApiKey, params: any) {
   const { portfolio_id } = params;
   
   if (!portfolio_id) {
@@ -217,12 +263,14 @@ async function handleDeletePortfolio(supabase: any, apiKeyData: any, params: any
     .eq('subscription_id', apiKeyData.subscription_id);
 
   if (error) {
+    console.error('Portfolio delete error:', error.message);
     return new Response(
       JSON.stringify({ error: 'Failed to delete portfolio' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
 
+  console.log('Portfolio deleted:', portfolio_id);
   return new Response(
     JSON.stringify({ success: true }),
     { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
