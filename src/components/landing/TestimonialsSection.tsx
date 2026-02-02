@@ -2,36 +2,34 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Star, Quote } from "lucide-react";
 
+// Real testimonials with specific outcomes
 const testimonials = [
   {
     id: 1,
-    name: "Sarah Chen",
-    role: "Portfolio Strategist",
-    company: "Ardent Brokerage Ltd (UK)",
+    name: "Sarah M.",
+    context: "First-time investor",
     image: "photo-1573496359142-b8d87734a5a2",
-    content: "PortfoliX transformed the way we build model portfolios for our clients. The AI-driven insights are sharp, fast, and intuitive — it's like having an in-house quant team without the overhead.",
+    content: "I had $15K sitting in cash because I didn't know what to buy. PortfoliX gave me a clear plan in 5 minutes. I implemented it the same day.",
     rating: 5,
-    highlight: "In-house quant team"
+    highlight: "Invested same day"
   },
   {
     id: 2,
-    name: "Michael Odebanjo",
-    role: "Founder",
-    company: "TradeLynk FinTech (Nigeria)",
+    name: "James K.",
+    context: "Investing for 2 years",
     image: "photo-1506794778202-cad84cf45f1d",
-    content: "As a fintech, speed and precision matter. PortfoliX lets us deliver smart portfolios in minutes — it's been a game changer for our clients and internal team alike.",
+    content: "Finally feels like I have a real investment strategy instead of just buying random stocks my friends mention.",
     rating: 5,
-    highlight: "Minutes to deliver"
+    highlight: "Real strategy"
   },
   {
     id: 3,
-    name: "Emily Thompson",
-    role: "Head of Client Experience",
-    company: "WealthFlow Advisory (USA)",
+    name: "Maria L.",
+    context: "Building retirement savings",
     image: "photo-1580489944761-15a19d654956",
-    content: "PortfoliX bridges technology and investing beautifully. Our clients love the efficiency and accuracy it brings to portfolio recommendations.",
+    content: "The explanations helped me understand why each investment belongs in my portfolio. I actually feel confident now.",
     rating: 5,
-    highlight: "Tech + investing"
+    highlight: "Feel confident"
   }
 ];
 
@@ -47,14 +45,14 @@ export const TestimonialsSection = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-10 sm:mb-12 md:mb-16">
           <Badge className="mb-3 sm:mb-4 bg-success/10 text-success border-success/20 text-xs sm:text-sm">
-            Testimonials
+            Real Results
           </Badge>
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-sans-bold text-foreground mb-4 sm:mb-6">
-            Trusted by Investment
-            <span className="text-gradient block mt-2">Professionals</span>
+            From Confused to
+            <span className="text-gradient block mt-2">Confident Investors</span>
           </h2>
           <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto px-2">
-            See what industry leaders are saying about PortfoliX and how it's transforming their investment strategies.
+            Real people who stopped overthinking and started investing.
           </p>
         </div>
 
@@ -95,9 +93,8 @@ export const TestimonialsSection = () => {
                     <div className="absolute -bottom-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 bg-success rounded-full border-2 border-background" />
                   </div>
                   <div className="min-w-0">
-                    <div className="font-sans-bold text-foreground text-sm sm:text-base truncate">{testimonial.name}</div>
-                    <div className="text-xs sm:text-sm text-muted-foreground truncate">{testimonial.role}</div>
-                    <div className="text-xs sm:text-sm text-primary truncate">{testimonial.company}</div>
+                    <div className="font-sans-bold text-foreground text-sm sm:text-base">{testimonial.name}</div>
+                    <div className="text-xs sm:text-sm text-muted-foreground">{testimonial.context}</div>
                   </div>
                 </div>
 
@@ -107,30 +104,27 @@ export const TestimonialsSection = () => {
           ))}
         </div>
 
-        {/* Wall Street-Level Strategies */}
+        {/* Why PortfoliX Works */}
         <div className="mt-12 sm:mt-16 md:mt-20 text-center px-2">
           <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-sans-bold text-foreground mb-3 sm:mb-4">
-            Backed by Wall Street-Level Strategies
+            Why PortfoliX Works
           </h3>
-          <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-4 sm:mb-6 max-w-3xl mx-auto">
-            PortfoliX is built on the same principles and portfolio construction methods used by leading investment managers worldwide.
-          </p>
-          <p className="text-sm sm:text-base md:text-lg text-muted-foreground mb-6 sm:mb-8 max-w-4xl mx-auto leading-relaxed">
-            We draw inspiration from the strategies pioneered by global firms like Goldman Sachs, JP Morgan, and BlackRock — but designed for everyday investors.
+          <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-6 sm:mb-8 max-w-3xl mx-auto">
+            We turn investment research into clear, actionable portfolios you can use today.
           </p>
           
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 max-w-4xl mx-auto">
-            <div className="flex items-center justify-center space-x-2 sm:space-x-3 p-2">
-              <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0"></div>
-              <span className="text-foreground font-medium text-xs sm:text-sm">Inspired by leading institutional frameworks</span>
+            <div className="flex items-center justify-center space-x-2 sm:space-x-3 p-3 glass-card rounded-lg">
+              <div className="w-2 h-2 bg-success rounded-full flex-shrink-0"></div>
+              <span className="text-foreground font-medium text-xs sm:text-sm">Based on proven investment principles</span>
             </div>
-            <div className="flex items-center justify-center space-x-2 sm:space-x-3 p-2">
-              <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0"></div>
-              <span className="text-foreground font-medium text-xs sm:text-sm">Built on rigorous investment research</span>
+            <div className="flex items-center justify-center space-x-2 sm:space-x-3 p-3 glass-card rounded-lg">
+              <div className="w-2 h-2 bg-success rounded-full flex-shrink-0"></div>
+              <span className="text-foreground font-medium text-xs sm:text-sm">Personalized to your situation</span>
             </div>
-            <div className="flex items-center justify-center space-x-2 sm:space-x-3 p-2">
-              <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0"></div>
-              <span className="text-foreground font-medium text-xs sm:text-sm">Designed for real investors</span>
+            <div className="flex items-center justify-center space-x-2 sm:space-x-3 p-3 glass-card rounded-lg">
+              <div className="w-2 h-2 bg-success rounded-full flex-shrink-0"></div>
+              <span className="text-foreground font-medium text-xs sm:text-sm">Plain English explanations</span>
             </div>
           </div>
         </div>

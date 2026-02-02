@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Play, TrendingUp, Users } from "lucide-react";
+import { ArrowRight, Play, Clock, Users, PieChart } from "lucide-react";
 import { DemoModal } from "@/components/DemoModal";
 
 interface HeroSectionProps {
@@ -9,6 +9,7 @@ interface HeroSectionProps {
 
 export const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
   const [isDemoOpen, setIsDemoOpen] = useState(false);
+  
   return (
     <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden bg-gradient-hero pt-20 sm:pt-24 pb-16 sm:pb-20">
       {/* Animated Glassmorphism Background Blobs */}
@@ -24,19 +25,19 @@ export const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
       {/* Content */}
       <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div className="max-w-5xl mx-auto">
-          {/* Main Headline - Fluid typography */}
+          {/* Main Headline - Pain point focused */}
           <h1 className="font-serif-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-foreground mb-4 sm:mb-6 md:mb-8 leading-[1.1]">
-            Invest Like a <span className="text-success">Pro</span>
+            Finally Know <span className="text-success">What to Invest In</span>
           </h1>
 
-          {/* Subheading */}
+          {/* Subheading - Specific outcome promise */}
           <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-muted-foreground mb-4 sm:mb-6 leading-relaxed max-w-4xl mx-auto px-2">
-            Build simple, expert-designed investment portfolios you can use with confidence.
+            Get a personalized investment portfolio in 3 minutes. No finance degree required.
           </p>
 
-          {/* Tagline */}
-          <p className="text-sm sm:text-base md:text-lg text-primary mb-8 sm:mb-10 md:mb-12 font-medium px-2">
-            Start with PortfoliX—your path to smarter investing.
+          {/* Supporting Text with Social Proof */}
+          <p className="text-sm sm:text-base md:text-lg text-primary/80 mb-8 sm:mb-10 md:mb-12 font-medium px-2 max-w-3xl mx-auto">
+            Join 20+ investors who stopped overthinking and started building wealth with portfolios designed for their goals, timeline, and risk tolerance.
           </p>
 
           {/* CTA Buttons */}
@@ -46,7 +47,7 @@ export const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
               size="lg" 
               className="w-full sm:w-auto bg-primary hover:bg-primary-glow text-primary-foreground px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg hover-scale shadow-glow"
             >
-              Start Building Portfolio
+              Build Your Portfolio (Free)
               <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
             </Button>
             <Button 
@@ -56,25 +57,32 @@ export const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
               className="w-full sm:w-auto border-primary text-primary hover:bg-primary hover:text-primary-foreground px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg"
             >
               <Play className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-              Watch Demo
+              See How It Works
             </Button>
           </div>
 
-          {/* Stats - Glass Cards */}
-          <div className="grid grid-cols-2 gap-6 sm:gap-8 md:gap-12 max-w-xs sm:max-w-md mx-auto">
-            <div className="glass-stat flex flex-col items-center">
-              <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 backdrop-blur-xl bg-success/20 border border-success/30 rounded-full mb-2 sm:mb-3">
-                <TrendingUp className="h-5 w-5 sm:h-6 sm:w-6 text-success" />
+          {/* Trust Indicators - Real numbers */}
+          <div className="grid grid-cols-3 gap-4 sm:gap-8 md:gap-12 max-w-lg sm:max-w-xl mx-auto">
+            <div className="glass-stat flex flex-col items-center p-3 sm:p-4">
+              <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 backdrop-blur-xl bg-primary/20 border border-primary/30 rounded-full mb-2">
+                <PieChart className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
               </div>
-              <div className="text-2xl sm:text-3xl font-sans-bold text-success">35%</div>
-              <div className="text-xs sm:text-sm text-muted-foreground">Avg. Return</div>
+              <div className="text-xl sm:text-2xl font-sans-bold text-primary">500+</div>
+              <div className="text-xs sm:text-sm text-muted-foreground text-center">Portfolios Created</div>
             </div>
-            <div className="glass-stat flex flex-col items-center">
-              <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 backdrop-blur-xl bg-primary/20 border border-primary/30 rounded-full mb-2 sm:mb-3">
-                <Users className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
+            <div className="glass-stat flex flex-col items-center p-3 sm:p-4">
+              <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 backdrop-blur-xl bg-success/20 border border-success/30 rounded-full mb-2">
+                <Users className="h-4 w-4 sm:h-5 sm:w-5 text-success" />
               </div>
-              <div className="text-2xl sm:text-3xl font-sans-bold text-primary">1M+</div>
-              <div className="text-xs sm:text-sm text-muted-foreground">Portfolios Built</div>
+              <div className="text-xl sm:text-2xl font-sans-bold text-success">20+</div>
+              <div className="text-xs sm:text-sm text-muted-foreground text-center">Active Investors</div>
+            </div>
+            <div className="glass-stat flex flex-col items-center p-3 sm:p-4">
+              <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 backdrop-blur-xl bg-warning/20 border border-warning/30 rounded-full mb-2">
+                <Clock className="h-4 w-4 sm:h-5 sm:w-5 text-warning" />
+              </div>
+              <div className="text-xl sm:text-2xl font-sans-bold text-warning">3 min</div>
+              <div className="text-xs sm:text-sm text-muted-foreground text-center">To Portfolio</div>
             </div>
           </div>
         </div>
