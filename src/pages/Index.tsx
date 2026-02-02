@@ -7,9 +7,7 @@ import { TestimonialsSection } from "@/components/landing/TestimonialsSection";
 import { TeamSection } from "@/components/landing/TeamSection";
 import { Footer } from "@/components/landing/Footer";
 import { PricingPlans } from "@/components/PricingPlans";
-import { RiskAssessment } from "@/components/RiskAssessment";
-import { GoalSelection } from "@/components/GoalSelection";
-import { PortfolioRecommendation } from "@/components/PortfolioRecommendation";
+import { SimplifiedOnboarding, generatePortfolioFromAnswers } from "@/components/SimplifiedOnboarding";
 import { PortfolioWorkspace } from "@/components/PortfolioWorkspace";
 import PortfolioSummary from "@/pages/PortfolioSummary";
 import { AuthGuard } from "@/components/AuthGuard";
@@ -19,7 +17,7 @@ import { usePortfolioLimit } from "@/hooks/usePortfolioLimit";
 import { AdvisorHomepageBlock } from "@/components/advisors/AdvisorHomepageBlock";
 import { analytics } from "@/lib/analytics";
 
-type Step = "landing" | "assessment" | "goal" | "recommendation" | "summary" | "workspace";
+type Step = "landing" | "onboarding" | "summary" | "workspace";
 
 interface PortfolioAsset {
   id?: string;
@@ -37,7 +35,6 @@ const Index = () => {
   const [riskScore, setRiskScore] = useState<number>(0);
   const [experienceLevel, setExperienceLevel] = useState<"beginner" | "intermediate" | "advanced">("intermediate");
   const [timeline, setTimeline] = useState<string>("");
-  const [investmentGoal, setInvestmentGoal] = useState<string>("");
   const [generatedPortfolio, setGeneratedPortfolio] = useState<PortfolioAsset[]>([]);
   const [portfolioName, setPortfolioName] = useState<string>("");
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
@@ -53,7 +50,7 @@ const Index = () => {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get('start') === 'builder' && user) {
-      setCurrentStep("assessment");
+      setCurrentStep("onboarding");
     }
   }, [user]);
 
@@ -63,34 +60,30 @@ const Index = () => {
       return;
     }
     analytics.onboardingStarted();
-    setCurrentStep("assessment");
+    setCurrentStep("onboarding");
   };
 
-  const handleAssessmentComplete = (score: number, experience: "beginner" | "intermediate" | "advanced", timelineValue: string) => {
-    setRiskScore(score);
-    setExperienceLevel(experience);
-    setTimeline(timelineValue);
-    analytics.onboardingStepCompleted(1, "risk_assessment");
-    setCurrentStep("goal");
-  };
-
-  const handleGoalComplete = (goal: string) => {
-    setInvestmentGoal(goal);
-    analytics.onboardingStepCompleted(2, "goal_selection");
-    setCurrentStep("recommendation");
-  };
-
-  const handleStartInvesting = async () => {
-    if (!canGenerate) {
-      setShowUpgradeModal(true);
-      return;
-    }
-    
-    const success = await checkAndIncrementLimit();
-    if (success) {
-      setCurrentStep("summary");
-    } else {
-      setShowUpgradeModal(true);
+  const handleOnboardingComplete = async (answers: any) => {
+    try {
+      const portfolioData = generatePortfolioFromAnswers(answers);
+      setRiskScore(portfolioData.riskScore);
+      setExperienceLevel(portfolioData.experienceLevel);
+      setTimeline(portfolioData.timeline);
+      
+      // Check portfolio limit
+      if (!canGenerate) {
+        setShowUpgradeModal(true);
+        return;
+      }
+      
+      const success = await checkAndIncrementLimit();
+      if (success) {
+        setCurrentStep("summary");
+      } else {
+        setShowUpgradeModal(true);
+      }
+    } catch (error) {
+      console.error("Error generating portfolio:", error);
     }
   };
 
@@ -100,50 +93,25 @@ const Index = () => {
     setCurrentStep("workspace");
   };
 
-  const handleBackToRecommendation = () => {
-    setCurrentStep("recommendation");
-  };
-
   const handleBackToLanding = () => {
     setCurrentStep("landing");
   };
 
-  const handleBackToAssessment = () => {
-    setCurrentStep("assessment");
-  };
-
-  const handleBackToGoal = () => {
-    setCurrentStep("goal");
+  const handleBackToOnboarding = () => {
+    setCurrentStep("onboarding");
   };
 
   const handleBackToSummary = () => {
     setCurrentStep("summary");
   };
 
-  // Show the portfolio builder flow when user clicks get started
-  if (currentStep === "assessment") {
+  // Show simplified onboarding flow
+  if (currentStep === "onboarding") {
     return (
       <AuthGuard>
-        <RiskAssessment onComplete={handleAssessmentComplete} onBack={handleBackToLanding} />
-      </AuthGuard>
-    );
-  }
-
-  if (currentStep === "goal") {
-    return (
-      <AuthGuard>
-        <GoalSelection onComplete={handleGoalComplete} onBack={handleBackToAssessment} />
-      </AuthGuard>
-    );
-  }
-
-  if (currentStep === "recommendation") {
-    return (
-      <AuthGuard>
-        <PortfolioRecommendation 
-          riskScore={riskScore} 
-          onStartInvesting={handleStartInvesting}
-          onBack={handleBackToGoal}
+        <SimplifiedOnboarding 
+          onComplete={handleOnboardingComplete} 
+          onBack={handleBackToLanding} 
         />
       </AuthGuard>
     );
@@ -156,7 +124,7 @@ const Index = () => {
           riskScore={riskScore}
           experienceLevel={experienceLevel}
           timeline={timeline}
-          onBack={handleBackToRecommendation}
+          onBack={handleBackToOnboarding}
           onCustomize={handleStartWorkspace}
         />
       </AuthGuard>
