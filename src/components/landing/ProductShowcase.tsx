@@ -186,9 +186,12 @@ export const ProductShowcase = () => {
                       {/* App Content */}
                       <div className="relative h-48 sm:h-64 md:h-80 lg:h-96 bg-gradient-to-br from-background to-secondary/30">
                         <img 
-                          src={`https://images.unsplash.com/${activeItem.image}?auto=format&fit=crop&w=1200&q=80`}
+                          src={`https://images.unsplash.com/${activeItem.image}?auto=format&fit=crop&w=700&q=60`}
                           alt={activeItem.title}
+                          width={700}
+                          height={467}
                           className="w-full h-full object-cover opacity-20"
+                          loading="lazy"
                         />
                         
                         {/* Overlay UI Elements */}

@@ -86,9 +86,12 @@ export const TestimonialsSection = () => {
                 <div className="flex items-center gap-3 sm:gap-4">
                   <div className="relative flex-shrink-0">
                     <img
-                      src={`https://images.unsplash.com/${testimonial.image}?auto=format&fit=crop&w=64&q=80`}
+                      src={`https://images.unsplash.com/${testimonial.image}?auto=format&fit=crop&w=48&q=60`}
                       alt={testimonial.name}
+                      width={48}
+                      height={48}
                       className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-border"
+                      loading="lazy"
                     />
                     <div className="absolute -bottom-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 bg-success rounded-full border-2 border-background" />
                   </div>
