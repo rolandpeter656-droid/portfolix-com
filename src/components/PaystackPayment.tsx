@@ -10,6 +10,8 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, CreditCard, Globe, Shield, Smartphone, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { paymentFormSchema, validateForm } from "@/lib/validationSchemas";
+
 interface PricingPlan {
   id: string;
   name: string;
@@ -35,7 +37,10 @@ export const PaystackPayment = ({ plan, currency, onSuccess, onCancel }: Paystac
   });
   const [isProcessing, setIsProcessing] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
+  const [isValidatingCoupon, setIsValidatingCoupon] = useState(false);
   const [discount, setDiscount] = useState(0);
+  const [validatedCouponCode, setValidatedCouponCode] = useState<string | null>(null);
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -74,6 +79,16 @@ export const PaystackPayment = ({ plan, currency, onSuccess, onCancel }: Paystac
           display_name: "Team Size",
           variable_name: "team_size",
           value: customerData.teamSize.toString()
+        },
+        {
+          display_name: "Coupon Code",
+          variable_name: "coupon_code",
+          value: validatedCouponCode || ""
+        },
+        {
+          display_name: "Discount Applied",
+          variable_name: "discount_percent",
+          value: discount.toString()
         }
       ]
     }
@@ -81,39 +96,82 @@ export const PaystackPayment = ({ plan, currency, onSuccess, onCancel }: Paystac
 
   const initializePayment = usePaystackPayment(config);
 
-  const handleCouponApply = () => {
-    // Mock coupon validation - In real app, this would be an API call
-    const validCoupons: Record<string, number> = {
-      "EARLY20": 20,
-      "STUDENT15": 15,
-      "WELCOME10": 10
-    };
-
-    const couponDiscount = validCoupons[customerData.couponCode.toUpperCase()];
-    if (couponDiscount) {
-      setDiscount(couponDiscount);
+  const handleCouponApply = async () => {
+    if (!customerData.couponCode.trim()) {
       toast({
-        title: "Coupon Applied!",
-        description: `${couponDiscount}% discount applied to your order.`,
-      });
-    } else {
-      toast({
-        title: "Invalid Coupon",
-        description: "The coupon code you entered is not valid.",
-        variant: "destructive"
-      });
-    }
-  };
-
-  const handlePayment = () => {
-    if (!customerData.email || !customerData.firstName || !customerData.lastName) {
-      toast({
-        title: "Missing Information",
-        description: "Please fill in all required fields.",
+        title: "Enter Coupon Code",
+        description: "Please enter a coupon code to apply.",
         variant: "destructive"
       });
       return;
     }
+
+    setIsValidatingCoupon(true);
+    
+    try {
+      // Server-side coupon validation
+      const { data, error } = await supabase.functions.invoke('validate-coupon', {
+        body: { 
+          code: customerData.couponCode,
+          planId: plan.id,
+          originalPrice: basePrice
+        }
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      if (data.valid) {
+        setDiscount(data.discount);
+        setValidatedCouponCode(data.code);
+        toast({
+          title: "Coupon Applied!",
+          description: `${data.discount}% discount applied to your order.`,
+        });
+      } else {
+        toast({
+          title: "Invalid Coupon",
+          description: data.error || "The coupon code you entered is not valid.",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      console.error('Coupon validation error:', error);
+      toast({
+        title: "Validation Error",
+        description: "Unable to validate coupon. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsValidatingCoupon(false);
+    }
+  };
+
+  const handlePayment = () => {
+    // Validate form data with zod schema
+    const validation = validateForm(paymentFormSchema, {
+      firstName: customerData.firstName,
+      lastName: customerData.lastName,
+      email: customerData.email,
+      phone: customerData.phone || undefined,
+      teamSize: customerData.teamSize,
+      couponCode: customerData.couponCode || undefined,
+    });
+
+    if (validation.success === false) {
+      setFormErrors(validation.errors);
+      const errorMessages = Object.values(validation.errors);
+      const firstError = errorMessages.length > 0 ? errorMessages[0] : "Please check your input and try again.";
+      toast({
+        title: "Validation Error",
+        description: firstError,
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setFormErrors({});
 
     if (!paystackPublicKey) {
       toast({
@@ -264,7 +322,12 @@ export const PaystackPayment = ({ plan, currency, onSuccess, onCancel }: Paystac
                   value={customerData.firstName}
                   onChange={(e) => setCustomerData(prev => ({ ...prev, firstName: e.target.value }))}
                   placeholder="John"
+                  maxLength={50}
+                  className={formErrors.firstName ? "border-destructive" : ""}
                 />
+                {formErrors.firstName && (
+                  <p className="text-xs text-destructive mt-1">{formErrors.firstName}</p>
+                )}
               </div>
               <div>
                 <Label htmlFor="lastName">Last Name *</Label>
@@ -273,7 +336,12 @@ export const PaystackPayment = ({ plan, currency, onSuccess, onCancel }: Paystac
                   value={customerData.lastName}
                   onChange={(e) => setCustomerData(prev => ({ ...prev, lastName: e.target.value }))}
                   placeholder="Doe"
+                  maxLength={50}
+                  className={formErrors.lastName ? "border-destructive" : ""}
                 />
+                {formErrors.lastName && (
+                  <p className="text-xs text-destructive mt-1">{formErrors.lastName}</p>
+                )}
               </div>
             </div>
 
@@ -285,18 +353,28 @@ export const PaystackPayment = ({ plan, currency, onSuccess, onCancel }: Paystac
                 value={customerData.email}
                 onChange={(e) => setCustomerData(prev => ({ ...prev, email: e.target.value }))}
                 placeholder="john@example.com"
+                maxLength={255}
+                className={formErrors.email ? "border-destructive" : ""}
               />
+              {formErrors.email && (
+                <p className="text-xs text-destructive mt-1">{formErrors.email}</p>
+              )}
             </div>
 
             <div>
-              <Label htmlFor="phone">Phone Number</Label>
+              <Label htmlFor="phone">Phone Number (International format: +1234567890)</Label>
               <Input
                 id="phone"
                 type="tel"
                 value={customerData.phone}
                 onChange={(e) => setCustomerData(prev => ({ ...prev, phone: e.target.value }))}
-                placeholder="+234 800 000 0000"
+                placeholder="+1 234 567 8900"
+                maxLength={20}
+                className={formErrors.phone ? "border-destructive" : ""}
               />
+              {formErrors.phone && (
+                <p className="text-xs text-destructive mt-1">{formErrors.phone}</p>
+              )}
             </div>
 
             {plan.id === "institutional" && (
@@ -306,9 +384,20 @@ export const PaystackPayment = ({ plan, currency, onSuccess, onCancel }: Paystac
                   id="teamSize"
                   type="number"
                   min="1"
+                  max="10000"
                   value={customerData.teamSize}
-                  onChange={(e) => setCustomerData(prev => ({ ...prev, teamSize: parseInt(e.target.value) || 1 }))}
+                  onChange={(e) => {
+                    const value = parseInt(e.target.value) || 1;
+                    setCustomerData(prev => ({ 
+                      ...prev, 
+                      teamSize: Math.min(Math.max(value, 1), 10000) 
+                    }));
+                  }}
+                  className={formErrors.teamSize ? "border-destructive" : ""}
                 />
+                {formErrors.teamSize && (
+                  <p className="text-xs text-destructive mt-1">{formErrors.teamSize}</p>
+                )}
               </div>
             )}
           </div>
@@ -322,11 +411,29 @@ export const PaystackPayment = ({ plan, currency, onSuccess, onCancel }: Paystac
                 value={customerData.couponCode}
                 onChange={(e) => setCustomerData(prev => ({ ...prev, couponCode: e.target.value }))}
                 placeholder="Enter coupon code"
+                maxLength={50}
+                disabled={!!validatedCouponCode}
               />
-              <Button variant="outline" onClick={handleCouponApply} type="button">
-                Apply
+              <Button 
+                variant="outline" 
+                onClick={handleCouponApply} 
+                type="button"
+                disabled={isValidatingCoupon || !!validatedCouponCode}
+              >
+                {isValidatingCoupon ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : validatedCouponCode ? (
+                  "Applied"
+                ) : (
+                  "Apply"
+                )}
               </Button>
             </div>
+            {validatedCouponCode && (
+              <p className="text-xs text-green-600 mt-1">
+                Coupon {validatedCouponCode} applied ({discount}% off)
+              </p>
+            )}
           </div>
 
           {/* Payment Methods */}

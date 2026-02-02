@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Eye, EyeOff, ArrowLeft } from "lucide-react";
+import { signUpSchema, validateForm, referralCodeSchema } from "@/lib/validationSchemas";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -20,6 +21,7 @@ const SignUp = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [extraInfo, setExtraInfo] = useState("");
   const [referredBy, setReferredBy] = useState("");
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const { toast } = useToast();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -27,7 +29,11 @@ const SignUp = () => {
   useEffect(() => {
     const refCode = searchParams.get('ref');
     if (refCode) {
-      setReferredBy(refCode);
+      // Validate referral code format
+      const result = referralCodeSchema.safeParse(refCode.toUpperCase());
+      if (result.success) {
+        setReferredBy(refCode.toUpperCase());
+      }
     }
   }, [searchParams]);
 
@@ -42,6 +48,29 @@ const SignUp = () => {
       });
       return;
     }
+    
+    // Validate form with zod schema
+    const validation = validateForm(signUpSchema, {
+      firstName,
+      lastName,
+      email,
+      password,
+      phoneNumber: phoneNumber || '',
+    });
+
+    if (validation.success === false) {
+      setFormErrors(validation.errors);
+      const errorMessages = Object.values(validation.errors);
+      const firstError = errorMessages.length > 0 ? errorMessages[0] : "Please check your input.";
+      toast({
+        title: "Validation Error",
+        description: firstError,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setFormErrors({});
     
     if (!agreeToTerms) {
       toast({
@@ -141,8 +170,12 @@ const SignUp = () => {
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                     required
-                    className="h-10 sm:h-11 text-sm"
+                    maxLength={50}
+                    className={`h-10 sm:h-11 text-sm ${formErrors.firstName ? 'border-destructive' : ''}`}
                   />
+                  {formErrors.firstName && (
+                    <p className="text-xs text-destructive">{formErrors.firstName}</p>
+                  )}
                 </div>
                 <div className="space-y-1.5 sm:space-y-2">
                   <Label htmlFor="lastName" className="text-sm">Last Name</Label>
@@ -153,8 +186,12 @@ const SignUp = () => {
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
                     required
-                    className="h-10 sm:h-11 text-sm"
+                    maxLength={50}
+                    className={`h-10 sm:h-11 text-sm ${formErrors.lastName ? 'border-destructive' : ''}`}
                   />
+                  {formErrors.lastName && (
+                    <p className="text-xs text-destructive">{formErrors.lastName}</p>
+                  )}
                 </div>
               </div>
 
@@ -167,21 +204,29 @@ const SignUp = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="h-10 sm:h-11 text-sm"
+                  maxLength={255}
+                  className={`h-10 sm:h-11 text-sm ${formErrors.email ? 'border-destructive' : ''}`}
                 />
+                {formErrors.email && (
+                  <p className="text-xs text-destructive">{formErrors.email}</p>
+                )}
               </div>
 
               <div className="space-y-1.5 sm:space-y-2">
-                <Label htmlFor="phoneNumber" className="text-sm">Phone Number</Label>
+                <Label htmlFor="phoneNumber" className="text-sm">Phone Number (International: +1234567890)</Label>
                 <Input
                   id="phoneNumber"
                   type="tel"
-                  placeholder="Enter your phone number"
+                  placeholder="+1 234 567 8900"
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
                   required
-                  className="h-10 sm:h-11 text-sm"
+                  maxLength={20}
+                  className={`h-10 sm:h-11 text-sm ${formErrors.phoneNumber ? 'border-destructive' : ''}`}
                 />
+                {formErrors.phoneNumber && (
+                  <p className="text-xs text-destructive">{formErrors.phoneNumber}</p>
+                )}
               </div>
               
               <div className="space-y-1.5 sm:space-y-2">
@@ -194,8 +239,9 @@ const SignUp = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    minLength={6}
-                    className="h-10 sm:h-11 pr-10 text-sm"
+                    minLength={8}
+                    maxLength={128}
+                    className={`h-10 sm:h-11 pr-10 text-sm ${formErrors.password ? 'border-destructive' : ''}`}
                   />
                   <Button
                     type="button"
@@ -211,9 +257,13 @@ const SignUp = () => {
                     )}
                   </Button>
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  Password must be at least 6 characters long
-                </p>
+                {formErrors.password ? (
+                  <p className="text-xs text-destructive">{formErrors.password}</p>
+                ) : (
+                  <p className="text-xs text-muted-foreground">
+                    Password must be at least 8 characters long
+                  </p>
+                )}
               </div>
 
               <div className="space-y-1.5 sm:space-y-2">

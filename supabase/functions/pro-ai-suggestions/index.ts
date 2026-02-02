@@ -174,8 +174,10 @@ Provide: overall_score (1-100), risk_level (low/medium/high), and key risk facto
     });
 
   } catch (error) {
+    // Log full error server-side for debugging
     console.error("Error in pro-ai-suggestions:", error);
-    return new Response(JSON.stringify({ error: error.message || "Failed to generate suggestions" }), {
+    // Return generic error to client to prevent information leakage
+    return new Response(JSON.stringify({ error: "Failed to generate suggestions. Please try again later." }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });

@@ -263,10 +263,12 @@ const handler = async (req: Request): Promise<Response> => {
       headers: { "Content-Type": "application/json", ...corsHeaders },
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
+    // Log full error server-side for debugging
     console.error("Error in send-welcome-email function:", error);
+    // Return generic error to client to prevent information leakage
     return new Response(
-      JSON.stringify({ success: false, error: error.message }),
+      JSON.stringify({ success: false, error: "Failed to send email. Please try again later." }),
       {
         status: 500,
         headers: { "Content-Type": "application/json", ...corsHeaders },
