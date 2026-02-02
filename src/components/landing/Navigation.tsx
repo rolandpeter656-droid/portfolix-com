@@ -35,9 +35,6 @@ export const Navigation = () => {
             <a href="#pricing" className="text-sm xl:text-base text-muted-foreground hover:text-foreground transition-colors">
               Pricing
             </a>
-            <Link to="/institutions" className="text-sm xl:text-base text-muted-foreground hover:text-foreground transition-colors">
-              For Institutions
-            </Link>
             <Link to="/advisors" className="text-sm xl:text-base text-muted-foreground hover:text-foreground transition-colors">
               For Advisors
             </Link>
@@ -136,13 +133,6 @@ export const Navigation = () => {
               >
                 Pricing
               </a>
-              <Link 
-                to="/institutions" 
-                onClick={closeMenu}
-                className="block px-3 py-3 text-muted-foreground hover:text-foreground hover:bg-secondary/50 rounded-lg transition-colors"
-              >
-                For Institutions
-              </Link>
               <Link 
                 to="/advisors" 
                 onClick={closeMenu}

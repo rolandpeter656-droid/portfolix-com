@@ -6,9 +6,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Pricing from "./pages/Pricing";
 import Payment from "./pages/Payment";
-import Institutions from "./pages/Institutions";
-import InstitutionalDashboard from "./pages/InstitutionalDashboard";
-import InstitutionalDisclaimer from "./pages/InstitutionalDisclaimer";
 import PaymentMethod from "./pages/PaymentMethod";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
@@ -22,7 +19,6 @@ import MobileApp from "./pages/MobileApp";
 import Careers from "./pages/Careers";
 import Blog from "./pages/Blog";
 import Documentation from "./pages/Documentation";
-import AdminInstitutionalModels from "./pages/AdminInstitutionalModels";
 import PortfolioBuilderChoice from "./pages/PortfolioBuilderChoice";
 import ExpertBuilderPlaceholder from "./pages/ExpertBuilderPlaceholder";
 import ReferralDashboard from "./pages/ReferralDashboard";
@@ -50,9 +46,6 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/payment" element={<Payment />} />
-          <Route path="/institutions" element={<Institutions />} />
-          <Route path="/institutional-dashboard" element={<InstitutionalDashboard />} />
-          <Route path="/legal/institutional-disclaimer" element={<InstitutionalDisclaimer />} />
           <Route path="/payment-method" element={<PaymentMethod />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
@@ -66,7 +59,6 @@ const App = () => (
           <Route path="/careers" element={<Careers />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/documentation" element={<Documentation />} />
-          <Route path="/admin/institutional_models" element={<AdminInstitutionalModels />} />
           <Route path="/app/builder" element={<PortfolioBuilderChoice />} />
           <Route path="/app/builder/expert" element={<ExpertBuilderPlaceholder />} />
           <Route path="/referrals" element={<ReferralDashboard />} />
