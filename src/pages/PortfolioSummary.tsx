@@ -11,6 +11,11 @@ import { PortfolioPieChart } from "@/components/PortfolioPieChart";
 import { PortfolioSuccessAnimation } from "@/components/PortfolioSuccessAnimation";
 import { UpgradeModal } from "@/components/UpgradeModal";
 import { ImplementationGuide } from "@/components/ImplementationGuide";
+import { StrategyExplanation } from "@/components/StrategyExplanation";
+import { ExpectedOutcomes } from "@/components/ExpectedOutcomes";
+import { AlternativePortfolios } from "@/components/AlternativePortfolios";
+import { CostEstimate } from "@/components/CostEstimate";
+import { EducationalFooter } from "@/components/EducationalFooter";
 import { useToast } from "@/hooks/use-toast";
 import { usePortfolioLimit } from "@/hooks/usePortfolioLimit";
 import { useSavedPortfolios } from "@/hooks/useSavedPortfolios";
@@ -219,6 +224,7 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onBack, onCust
   const [portfolioName, setPortfolioName] = useState<string>("");
   const [showSuccessAnimation, setShowSuccessAnimation] = useState(true);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [adjustedRiskScore, setAdjustedRiskScore] = useState<number>(riskScore);
   const { toast } = useToast();
   const { subscriptionPlan, portfolioCount } = usePortfolioLimit();
   const { sendPortfolioWelcomeEmail } = useWelcomeEmail();
@@ -247,9 +253,29 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onBack, onCust
     setInvestmentAmount(getSuggestedAmount());
   }, [experienceLevel]);
 
-  // Generate portfolio using simplified 12-strategy system
-  const { portfolio, name } = selectPortfolioStrategy(riskScore, experienceLevel, timeline);
+  // Generate portfolio using simplified 12-strategy system with adjusted risk score
+  const { portfolio, name } = selectPortfolioStrategy(adjustedRiskScore, experienceLevel, timeline);
   const { savePortfolio } = useSavedPortfolios();
+
+  // Calculate stock/bond allocation for strategy explanation
+  const stockAllocation = portfolio.reduce((sum, asset) => {
+    const isStock = ["US Stocks", "International", "Growth", "Technology", "ESG Stocks", "ESG International", "Clean Energy", "Dividend", "Dividend Growth", "REITs", "Crypto"].includes(asset.assetClass);
+    return sum + (isStock ? asset.allocation : 0);
+  }, 0);
+  const bondAllocation = 100 - stockAllocation;
+
+  // Handler for alternative portfolio selection
+  const handleSelectAlternative = (direction: "conservative" | "aggressive") => {
+    if (direction === "conservative") {
+      setAdjustedRiskScore(Math.max(adjustedRiskScore - 25, 10));
+    } else {
+      setAdjustedRiskScore(Math.min(adjustedRiskScore + 25, 90));
+    }
+    toast({
+      title: "Portfolio Updated",
+      description: `Switched to a more ${direction} approach.`,
+    });
+  };
   const hasAutoSaved = useRef(false);
   
   useEffect(() => {
@@ -428,6 +454,15 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onBack, onCust
       </div>
 
       <div className="container mx-auto px-4 py-8 space-y-8">
+        {/* Strategy Explanation - Why This Portfolio Works */}
+        <StrategyExplanation
+          portfolioName={portfolioName}
+          riskScore={adjustedRiskScore}
+          experienceLevel={experienceLevel}
+          timeline={timeline}
+          stockAllocation={stockAllocation}
+          bondAllocation={bondAllocation}
+        />
         {/* Investment Amount */}
         <Card className="shadow-card">
           <CardHeader>
@@ -603,11 +638,34 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onBack, onCust
           </CardContent>
         </Card>
 
+        {/* Expected Outcomes */}
+        <ExpectedOutcomes
+          riskScore={adjustedRiskScore}
+          expectedReturn={expectedReturn}
+          volatility={volatility}
+          portfolioName={portfolioName}
+          experienceLevel={experienceLevel}
+          timeline={timeline}
+        />
+
+        {/* Cost Estimate */}
+        <CostEstimate 
+          portfolio={portfolio}
+          investmentAmount={investmentAmount}
+        />
+
         {/* Implementation Guide */}
         <ImplementationGuide 
           portfolio={portfolio}
           investmentAmount={investmentAmount}
           portfolioName={portfolioName}
+        />
+
+        {/* Alternative Portfolios */}
+        <AlternativePortfolios
+          currentRiskScore={adjustedRiskScore}
+          currentPortfolioName={portfolioName}
+          onSelectAlternative={handleSelectAlternative}
         />
 
         {/* Actions */}
@@ -627,6 +685,9 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onBack, onCust
             </Button>
           </Link>
         </div>
+
+        {/* Educational Footer */}
+        <EducationalFooter />
 
         {/* Disclaimer */}
         <Card className="bg-muted/30 border-warning/20">
