@@ -9,6 +9,7 @@ export const usePortfolioLimit = () => {
   const [portfolioCount, setPortfolioCount] = useState<number>(0);
   const [subscriptionPlan, setSubscriptionPlan] = useState<string>("free");
   const [loading, setLoading] = useState(true);
+  // With the new pricing model, all users can generate unlimited portfolios
   const [canGenerate, setCanGenerate] = useState(true);
 
   useEffect(() => {
@@ -35,13 +36,9 @@ export const usePortfolioLimit = () => {
         setPortfolioCount(count);
         setSubscriptionPlan(plan);
         
-        // Pro users can always generate
-        if (plan === "pro") {
-          setCanGenerate(true);
-        } else {
-          // Free users limited to 5
-          setCanGenerate(count < 5);
-        }
+        // New pricing model: ALL users can generate unlimited portfolios
+        // The free tier includes unlimited portfolio generation
+        setCanGenerate(true);
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
@@ -68,10 +65,6 @@ export const usePortfolioLimit = () => {
       // Update local state
       const newCount = portfolioCount + 1;
       setPortfolioCount(newCount);
-      
-      if (subscriptionPlan !== "pro") {
-        setCanGenerate(newCount < 5);
-      }
 
       return true;
     } catch (error) {
@@ -86,17 +79,23 @@ export const usePortfolioLimit = () => {
   };
 
   const checkAndIncrementLimit = async (): Promise<boolean> => {
-    if (!canGenerate && subscriptionPlan !== "pro") {
-      return false;
-    }
-
+    // With unlimited free tier, always allow generation
+    // Just track the count for analytics
     return await incrementPortfolioCount();
   };
+
+  // Check if user has Pro features (for gating AI analysis, rebalancing, etc.)
+  const hasProFeatures = subscriptionPlan === "pro" || subscriptionPlan === "elite";
+  
+  // Check if user has Elite features
+  const hasEliteFeatures = subscriptionPlan === "elite";
 
   return {
     portfolioCount,
     subscriptionPlan,
-    canGenerate,
+    canGenerate, // Always true with new pricing model
+    hasProFeatures,
+    hasEliteFeatures,
     loading,
     checkAndIncrementLimit,
     refreshUserData: fetchUserData,
