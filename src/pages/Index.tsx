@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Navigation } from "@/components/landing/Navigation";
 import { HeroSection } from "@/components/landing/HeroSection";
 import { FeaturesSection } from "@/components/landing/FeaturesSection";
@@ -17,6 +17,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { UpgradeModal } from "@/components/UpgradeModal";
 import { usePortfolioLimit } from "@/hooks/usePortfolioLimit";
 import { AdvisorHomepageBlock } from "@/components/advisors/AdvisorHomepageBlock";
+import { analytics } from "@/lib/analytics";
 
 type Step = "landing" | "assessment" | "goal" | "recommendation" | "summary" | "workspace";
 
@@ -43,19 +44,25 @@ const Index = () => {
   const { user } = useAuth();
   const { canGenerate, checkAndIncrementLimit } = usePortfolioLimit();
 
+  // Track page view on mount
+  useEffect(() => {
+    analytics.pageView("landing");
+  }, []);
+
   // Check if coming from builder choice
-  useState(() => {
+  useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get('start') === 'builder' && user) {
       setCurrentStep("assessment");
     }
-  });
+  }, [user]);
 
   const handleGetStarted = () => {
     if (!user) {
       window.location.href = '/signup';
       return;
     }
+    analytics.onboardingStarted();
     setCurrentStep("assessment");
   };
 
@@ -63,11 +70,13 @@ const Index = () => {
     setRiskScore(score);
     setExperienceLevel(experience);
     setTimeline(timelineValue);
+    analytics.onboardingStepCompleted(1, "risk_assessment");
     setCurrentStep("goal");
   };
 
   const handleGoalComplete = (goal: string) => {
     setInvestmentGoal(goal);
+    analytics.onboardingStepCompleted(2, "goal_selection");
     setCurrentStep("recommendation");
   };
 

@@ -38,11 +38,11 @@ export const Navigation = () => {
             <Link to="/advisors" className="text-sm xl:text-base text-muted-foreground hover:text-foreground transition-colors">
               For Advisors
             </Link>
+            <Link to="/learn" className="text-sm xl:text-base text-muted-foreground hover:text-foreground transition-colors">
+              Learn
+            </Link>
             <a href="#testimonials" className="text-sm xl:text-base text-muted-foreground hover:text-foreground transition-colors">
               Testimonials
-            </a>
-            <a href="#team" className="text-sm xl:text-base text-muted-foreground hover:text-foreground transition-colors">
-              Team
             </a>
           </div>
 
@@ -147,13 +147,13 @@ export const Navigation = () => {
               >
                 Testimonials
               </a>
-              <a 
-                href="#team" 
+              <Link 
+                to="/learn" 
                 onClick={closeMenu}
                 className="block px-3 py-3 text-muted-foreground hover:text-foreground hover:bg-secondary/50 rounded-lg transition-colors"
               >
-                Team
-              </a>
+                Learn
+              </Link>
               
               <div className="flex flex-col space-y-2 pt-4 border-t border-border mt-4">
                 {user ? (

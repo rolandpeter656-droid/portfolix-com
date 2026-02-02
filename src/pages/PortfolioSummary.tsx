@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { ArrowLeft, Download, ExternalLink, Settings, Zap, Crown } from "lucide-react";
+import { ArrowLeft, Download, Settings, Crown, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
@@ -7,16 +7,19 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Switch } from "@/components/ui/switch";
 import { PortfolioPieChart } from "@/components/PortfolioPieChart";
 import { PortfolioSuccessAnimation } from "@/components/PortfolioSuccessAnimation";
 import { UpgradeModal } from "@/components/UpgradeModal";
+import { ImplementationGuide } from "@/components/ImplementationGuide";
 import { useToast } from "@/hooks/use-toast";
 import { usePortfolioLimit } from "@/hooks/usePortfolioLimit";
 import { useSavedPortfolios } from "@/hooks/useSavedPortfolios";
+import { useWelcomeEmail } from "@/hooks/useWelcomeEmail";
+import { useAuth } from "@/hooks/useAuth";
 import { ProSuggestionsPanel, RiskScoreCard, RebalancingAlerts } from "@/components/pro";
+import { analytics } from "@/lib/analytics";
 import jsPDF from 'jspdf';
+import { Link } from "react-router-dom";
 
 interface Asset {
   symbol: string;
@@ -213,12 +216,13 @@ const selectPortfolioStrategy = (riskScore: number, experienceLevel: string, tim
 const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onBack, onCustomize }: PortfolioSummaryProps) => {
   const [investmentAmount, setInvestmentAmount] = useState<number>(1000);
   const [isInputMode, setIsInputMode] = useState(false);
-  const [isBrokerModalOpen, setIsBrokerModalOpen] = useState(false);
   const [portfolioName, setPortfolioName] = useState<string>("");
   const [showSuccessAnimation, setShowSuccessAnimation] = useState(true);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const { toast } = useToast();
   const { subscriptionPlan, portfolioCount } = usePortfolioLimit();
+  const { sendPortfolioWelcomeEmail } = useWelcomeEmail();
+  const { user } = useAuth();
 
   // Get suggested amounts based on experience
   const getSuggestedAmount = () => {
@@ -252,11 +256,14 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onBack, onCust
     setPortfolioName(name);
   }, [name]);
 
-  // Auto-save portfolio when component mounts
+  // Auto-save portfolio and track analytics when component mounts
   useEffect(() => {
     const autoSavePortfolio = async () => {
       if (hasAutoSaved.current || !portfolio.length || !name) return;
       hasAutoSaved.current = true;
+      
+      // Track portfolio generation
+      analytics.portfolioGenerated(name, riskScore);
       
       await savePortfolio({
         portfolio_name: name,
@@ -273,9 +280,22 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onBack, onCust
           color: asset.color,
         })),
       });
+      
+      // Track portfolio saved
+      analytics.portfolioSaved(name, name);
+      
+      // Send welcome email if user is authenticated
+      if (user?.email) {
+        sendPortfolioWelcomeEmail(
+          user.email,
+          undefined,
+          name,
+          portfolio.map(a => ({ symbol: a.symbol, name: a.name, allocation: a.allocation }))
+        );
+      }
     };
     autoSavePortfolio();
-  }, [portfolio, name, riskScore, experienceLevel, timeline, savePortfolio]);
+  }, [portfolio, name, riskScore, experienceLevel, timeline, savePortfolio, user]);
   
   const expectedReturn = 6 + (riskScore / 100) * 6;
   const volatility = 5 + (riskScore / 100) * 15;
@@ -583,34 +603,15 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onBack, onCust
           </CardContent>
         </Card>
 
+        {/* Implementation Guide */}
+        <ImplementationGuide 
+          portfolio={portfolio}
+          investmentAmount={investmentAmount}
+          portfolioName={portfolioName}
+        />
+
         {/* Actions */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Dialog open={isBrokerModalOpen} onOpenChange={setIsBrokerModalOpen}>
-            <DialogTrigger asChild>
-              <Button size="lg" className="flex items-center gap-2">
-                <ExternalLink className="h-4 w-4" />
-                Implement with Your Broker
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-md">
-              <DialogHeader>
-                <DialogTitle>How to Implement This Portfolio</DialogTitle>
-                <DialogDescription className="space-y-3 pt-4">
-                  <p>Copy this portfolio to your brokerage account:</p>
-                  <ol className="list-decimal pl-5 space-y-2 text-sm">
-                    <li>Open your brokerage (Fidelity, Vanguard, Schwab, etc.)</li>
-                    <li>Search for each ticker symbol listed above</li>
-                    <li>Purchase the dollar amount shown for each holding</li>
-                    <li>Review annually and rebalance if needed</li>
-                  </ol>
-                  <p className="text-xs text-muted-foreground">Most of these funds are commission-free at major brokerages.</p>
-                </DialogDescription>
-              </DialogHeader>
-              <div className="flex justify-end">
-                <Button onClick={() => setIsBrokerModalOpen(false)}>Got it</Button>
-              </div>
-            </DialogContent>
-          </Dialog>
           <Button variant="outline" size="lg" onClick={() => onCustomize(portfolio, portfolioName)} className="flex items-center gap-2">
             <Settings className="h-4 w-4" />
             Customize Portfolio
@@ -619,6 +620,12 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onBack, onCust
             <Download className="h-4 w-4" />
             Export as PDF
           </Button>
+          <Link to="/learn">
+            <Button variant="outline" size="lg" className="flex items-center gap-2 w-full">
+              <BookOpen className="h-4 w-4" />
+              Learn More
+            </Button>
+          </Link>
         </div>
 
         {/* Disclaimer */}
