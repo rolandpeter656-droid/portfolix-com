@@ -7,31 +7,43 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
+import { apiWaitlistSchema, validateForm } from "@/lib/validationSchemas";
 
 const Api = () => {
   const [email, setEmail] = useState("");
   const [company, setCompany] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!email) {
+    // Validate with zod schema
+    const validation = validateForm(apiWaitlistSchema, {
+      email,
+      company: company || undefined,
+    });
+
+    if (validation.success === false) {
+      setFormErrors(validation.errors);
+      const errorMessages = Object.values(validation.errors);
+      const firstError = errorMessages.length > 0 ? errorMessages[0] : "Please check your input.";
       toast({
-        title: "Email required",
-        description: "Please enter your email address.",
+        title: "Validation Error",
+        description: firstError,
         variant: "destructive",
       });
       return;
     }
 
+    setFormErrors({});
     setIsLoading(true);
 
     try {
       const { error } = await supabase
         .from("api_waitlist")
-        .insert({ email, company: company || null });
+        .insert({ email: validation.data.email, company: validation.data.company || null });
 
       if (error) {
         if (error.code === '23505') { // Unique constraint violation
@@ -106,7 +118,12 @@ const Api = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
+                    maxLength={255}
+                    className={formErrors.email ? "border-destructive" : ""}
                   />
+                  {formErrors.email && (
+                    <p className="text-xs text-destructive">{formErrors.email}</p>
+                  )}
                 </div>
                 
                 <div className="space-y-2">
@@ -117,7 +134,12 @@ const Api = () => {
                     placeholder="Your Company"
                     value={company}
                     onChange={(e) => setCompany(e.target.value)}
+                    maxLength={100}
+                    className={formErrors.company ? "border-destructive" : ""}
                   />
+                  {formErrors.company && (
+                    <p className="text-xs text-destructive">{formErrors.company}</p>
+                  )}
                 </div>
 
                 <Button 
