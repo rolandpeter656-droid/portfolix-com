@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
-import { Portfolio3DPieChart } from "@/components/Portfolio3DPieChart";
+import { PortfolioPieChart } from "@/components/PortfolioPieChart";
 
 interface Asset {
   id?: string;
@@ -151,7 +151,7 @@ export const AssetAllocationEditor = ({ assets, onAssetsChange }: AssetAllocatio
         {viewMode === "chart" && (
           <div className="space-y-4">
             <div className="h-64">
-              <Portfolio3DPieChart data={assets} className="h-full" />
+              <PortfolioPieChart data={assets} className="h-full" />
             </div>
             
             <div className="grid grid-cols-2 gap-2">

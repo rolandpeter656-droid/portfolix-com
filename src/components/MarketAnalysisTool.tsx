@@ -9,7 +9,7 @@ import { BarChart3, Loader2, Download, Save } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Portfolio3DPieChart } from "@/components/Portfolio3DPieChart";
+import { PortfolioPieChart } from "@/components/PortfolioPieChart";
 
 interface AnalysisResult {
   allocation: {
@@ -270,7 +270,7 @@ export const MarketAnalysisTool = ({ isOpen, onClose }: MarketAnalysisToolProps)
                       <CardTitle>Recommended Allocation</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <Portfolio3DPieChart data={chartData} className="h-[300px]" />
+                      <PortfolioPieChart data={chartData} className="h-[300px]" />
                     </CardContent>
                   </Card>
 

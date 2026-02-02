@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { Portfolio3DPieChart } from "@/components/Portfolio3DPieChart";
+import { PortfolioPieChart } from "@/components/PortfolioPieChart";
 import { SavedPortfolio } from "@/hooks/useSavedPortfolios";
 import { useSavedPortfolios } from "@/hooks/useSavedPortfolios";
 
@@ -260,7 +260,7 @@ export const SavedPortfolioView = ({ portfolio, onBack }: SavedPortfolioViewProp
             </CardHeader>
             <CardContent>
               <div className="h-[300px] w-full">
-                <Portfolio3DPieChart data={portfolio.assets} />
+                <PortfolioPieChart data={portfolio.assets} />
               </div>
             </CardContent>
           </Card>
