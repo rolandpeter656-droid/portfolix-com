@@ -111,11 +111,6 @@ export const useSavedPortfolios = () => {
       rationale?: string;
     }) => {
       if (!user) {
-        toast({
-          title: "Sign in required",
-          description: "Please sign in to save your portfolio.",
-          variant: "destructive",
-        });
         return null;
       }
 
