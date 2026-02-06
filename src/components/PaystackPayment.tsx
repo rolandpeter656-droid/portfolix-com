@@ -377,29 +377,6 @@ export const PaystackPayment = ({ plan, currency, onSuccess, onCancel }: Paystac
               )}
             </div>
 
-            {plan.id === "institutional" && (
-              <div>
-                <Label htmlFor="teamSize">Team Size</Label>
-                <Input
-                  id="teamSize"
-                  type="number"
-                  min="1"
-                  max="10000"
-                  value={customerData.teamSize}
-                  onChange={(e) => {
-                    const value = parseInt(e.target.value) || 1;
-                    setCustomerData(prev => ({ 
-                      ...prev, 
-                      teamSize: Math.min(Math.max(value, 1), 10000) 
-                    }));
-                  }}
-                  className={formErrors.teamSize ? "border-destructive" : ""}
-                />
-                {formErrors.teamSize && (
-                  <p className="text-xs text-destructive mt-1">{formErrors.teamSize}</p>
-                )}
-              </div>
-            )}
           </div>
 
           {/* Coupon Code */}

@@ -14,7 +14,7 @@ const webinars = [
     duration: "45 min",
     level: "Advanced",
     date: "Weekly Live",
-    description: "Learn how institutional investors diversify across asset classes"
+    description: "Learn how professional investors diversify across asset classes"
   },
   {
     title: "Risk Management for Volatile Markets",

@@ -103,9 +103,9 @@ const plans: PricingPlan[] = [
       { name: "Everything in Pro", description: "All Pro features plus advanced capabilities", included: true },
       { name: "Tax-Loss Harvesting Guidance", description: "Identify opportunities to reduce your tax burden", included: true, highlight: true },
       { name: "Multi-Account Coordination", description: "Optimize across 401(k), IRA, and taxable accounts", included: true, highlight: true },
-      { name: "Custom Portfolio Construction", description: "Work with advisors to build specialized strategies", included: true, highlight: true },
+      { name: "Custom Portfolio Construction", description: "Work with experts to build specialized strategies", included: true, highlight: true },
       { name: "Advanced Risk Analytics", description: "Factor exposure, correlation, scenario testing", included: true, highlight: true },
-      { name: "Direct Advisor Access", description: "Monthly video consultations with investment advisors", included: true, highlight: true },
+      { name: "Direct Expert Access", description: "Monthly video consultations with investment experts", included: true, highlight: true },
       { name: "White-Glove Onboarding", description: "Personalized portfolio setup and implementation", included: true },
       { name: "API Access", description: "Integrate PortfoliX with your own tools", included: true }
     ],
@@ -114,7 +114,7 @@ const plans: PricingPlan[] = [
     idealFor: [
       "Investors managing $50,000+ portfolios",
       "Anyone with complex tax optimization needs",
-      "Serious investors seeking advisor-level guidance"
+      "Serious investors seeking expert-level guidance"
     ]
   }
 ];
@@ -134,7 +134,7 @@ const faqs = [
   },
   {
     question: "What's the difference between Pro and Elite?",
-    answer: "Pro focuses on ongoing portfolio guidance and optimization for typical investors. Elite adds advanced features like tax-loss harvesting, multi-account coordination, and direct advisor access for investors with larger, more complex portfolios who need comprehensive wealth management support."
+    answer: "Pro focuses on ongoing portfolio guidance and optimization for typical investors. Elite adds advanced features like tax-loss harvesting, multi-account coordination, and direct expert access for investors with larger, more complex portfolios who need comprehensive wealth management support."
   }
 ];
 
@@ -344,7 +344,7 @@ export const PricingPlans = ({ currentPlan = "free", onPlanSelect }: PricingPlan
             </div>
             <h3 className="font-semibold mb-2">Consider Elite</h3>
             <p className="text-sm text-muted-foreground">
-              As your portfolio grows past $50K, access tax optimization, multi-account coordination, and advisor access.
+              As your portfolio grows past $50K, access tax optimization, multi-account coordination, and expert access.
             </p>
           </div>
         </div>

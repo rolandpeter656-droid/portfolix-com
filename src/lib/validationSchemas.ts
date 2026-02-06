@@ -48,31 +48,12 @@ export const paymentFormSchema = z.object({
     .regex(phoneRegex, 'Invalid phone number format')
     .or(z.literal(''))
     .optional(),
-  teamSize: z.number()
-    .min(1, 'Team size must be at least 1')
-    .max(10000, 'Team size exceeds maximum allowed')
-    .optional(),
   couponCode: z.string()
     .max(50, 'Coupon code is too long')
     .optional(),
 });
 
 export type PaymentFormData = z.infer<typeof paymentFormSchema>;
-
-// API waitlist form validation schema
-export const apiWaitlistSchema = z.object({
-  email: z.string()
-    .email('Invalid email address')
-    .max(255, 'Email must be less than 255 characters')
-    .trim()
-    .toLowerCase(),
-  company: z.string()
-    .max(100, 'Company name must be less than 100 characters')
-    .trim()
-    .optional(),
-});
-
-export type ApiWaitlistFormData = z.infer<typeof apiWaitlistSchema>;
 
 // Coupon code validation schema
 export const couponCodeSchema = z.object({
