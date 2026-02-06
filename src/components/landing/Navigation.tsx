@@ -1,9 +1,16 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu, X, ArrowRight } from "lucide-react";
+import { Menu, X, ArrowRight, PieChart, LogOut, User } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { SignupModal } from "@/components/SignupModal";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import portfolioLogo from "@/assets/portfolio-logo-optimized.webp";
 
 export const Navigation = () => {
@@ -13,6 +20,11 @@ export const Navigation = () => {
   const navigate = useNavigate();
 
   const closeMenu = () => setIsMenuOpen(false);
+
+  const handleBuildPortfolio = () => {
+    navigate("/?start=builder");
+    closeMenu();
+  };
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 glass-nav safe-area-inset">
@@ -56,29 +68,31 @@ export const Navigation = () => {
             {user ? (
               <div className="flex items-center space-x-3 xl:space-x-4">
                 <Button
-                  variant="ghost"
-                  className="text-muted-foreground hover:text-foreground text-sm"
-                  onClick={() => navigate('/dashboard')}
+                  className="bg-primary hover:bg-primary-glow text-primary-foreground text-sm"
+                  onClick={handleBuildPortfolio}
                 >
-                  Dashboard
+                  <PieChart className="mr-2 h-4 w-4" />
+                  Build Portfolio
                 </Button>
-                <Button
-                  variant="ghost"
-                  className="text-muted-foreground hover:text-foreground text-sm"
-                  onClick={() => navigate('/referrals')}
-                >
-                  Referrals
-                </Button>
-                <span className="text-muted-foreground text-xs xl:text-sm truncate max-w-[120px]">
-                  Welcome, {user.email?.split('@')[0]}
-                </span>
-                <Button 
-                  variant="ghost" 
-                  className="text-muted-foreground hover:text-foreground text-sm"
-                  onClick={() => signOut()}
-                >
-                  Sign Out
-                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="text-muted-foreground hover:text-foreground text-sm gap-2">
+                      <User className="h-4 w-4" />
+                      <span className="truncate max-w-[120px]">{user.email?.split('@')[0]}</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48">
+                    <DropdownMenuItem onClick={handleBuildPortfolio}>
+                      <PieChart className="mr-2 h-4 w-4" />
+                      Build Portfolio
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => signOut()}>
+                      <LogOut className="mr-2 h-4 w-4" />
+                      Sign Out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             ) : (
               <>
@@ -117,6 +131,17 @@ export const Navigation = () => {
         {isMenuOpen && (
           <div className="lg:hidden border-t border-white/10 backdrop-blur-2xl absolute left-0 right-0 top-full max-h-[calc(100vh-3.5rem)] overflow-y-auto" style={{ background: 'hsl(218 23% 8% / 0.95)' }}>
             <div className="px-4 py-4 space-y-1">
+              {/* Build Portfolio - Prominent at top for logged-in users */}
+              {user && (
+                <Button
+                  className="w-full bg-primary hover:bg-primary-glow text-primary-foreground mb-3"
+                  onClick={handleBuildPortfolio}
+                >
+                  <PieChart className="mr-2 h-4 w-4" />
+                  Build Portfolio
+                </Button>
+              )}
+
               <a 
                 href="#features" 
                 onClick={closeMenu}
@@ -156,20 +181,6 @@ export const Navigation = () => {
               <div className="flex flex-col space-y-2 pt-4 border-t border-border mt-4">
                 {user ? (
                   <>
-                    <Button
-                      variant="ghost"
-                      className="justify-start text-muted-foreground hover:text-foreground"
-                      onClick={() => { navigate('/dashboard'); closeMenu(); }}
-                    >
-                      Dashboard
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      className="justify-start text-muted-foreground hover:text-foreground"
-                      onClick={() => { navigate('/referrals'); closeMenu(); }}
-                    >
-                      Referrals
-                    </Button>
                     <span className="text-muted-foreground text-sm px-3 py-2">
                       Welcome, {user.email?.split('@')[0]}
                     </span>
@@ -178,6 +189,7 @@ export const Navigation = () => {
                       className="justify-start text-muted-foreground hover:text-foreground"
                       onClick={() => { signOut(); closeMenu(); }}
                     >
+                      <LogOut className="mr-2 h-4 w-4" />
                       Sign Out
                     </Button>
                   </>

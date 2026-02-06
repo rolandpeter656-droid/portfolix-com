@@ -360,7 +360,7 @@ const SignIn = () => {
                 await supabase.auth.signInWithOAuth({
                   provider: 'google',
                   options: {
-                    redirectTo: 'https://portfolixapps.com/dashboard'
+                    redirectTo: `${window.location.origin}/auth/callback`
                   }
                 });
               }}

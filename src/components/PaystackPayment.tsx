@@ -222,10 +222,10 @@ export const PaystackPayment = ({ plan, currency, onSuccess, onCancel }: Paystac
               setIsVerifying(false);
               toast({
                 title: "Subscription Activated!",
-                description: `Welcome to ${plan.name}! Redirecting to your dashboard...`,
+                description: `Welcome to ${plan.name}! You now have full access.`,
               });
               onSuccess();
-              navigate('/dashboard');
+              navigate('/');
               return true;
             }
 
@@ -240,7 +240,7 @@ export const PaystackPayment = ({ plan, currency, onSuccess, onCancel }: Paystac
                 description: `Your ${plan.name} subscription is being processed. You'll have full access shortly.`,
               });
               onSuccess();
-              navigate('/dashboard');
+              navigate('/');
             }
           } catch (error) {
             console.error("Error verifying subscription:", error);
