@@ -1,4 +1,2 @@
-export { SavedPortfoliosSection } from "./SavedPortfoliosSection";
-export { SavedPortfolioCard } from "./SavedPortfolioCard";
-export { SavedPortfolioView } from "./SavedPortfolioView";
-export { PortfolioLimitModal } from "./PortfolioLimitModal";
+// Portfolio display components removed - feature will be rebuilt later
+// Auto-save functionality is preserved in useSavedPortfolios hook

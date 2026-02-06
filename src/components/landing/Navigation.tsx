@@ -58,9 +58,9 @@ export const Navigation = () => {
                 <Button
                   variant="ghost"
                   className="text-muted-foreground hover:text-foreground text-sm"
-                  onClick={() => navigate('/my-portfolios')}
+                  onClick={() => navigate('/dashboard')}
                 >
-                  Your Built Portfolios
+                  Dashboard
                 </Button>
                 <Button
                   variant="ghost"
@@ -159,9 +159,9 @@ export const Navigation = () => {
                     <Button
                       variant="ghost"
                       className="justify-start text-muted-foreground hover:text-foreground"
-                      onClick={() => { navigate('/my-portfolios'); closeMenu(); }}
+                      onClick={() => { navigate('/dashboard'); closeMenu(); }}
                     >
-                      Your Built Portfolios
+                      Dashboard
                     </Button>
                     <Button
                       variant="ghost"
