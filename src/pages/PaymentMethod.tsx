@@ -2,7 +2,7 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, CreditCard, Shield, Smartphone, Globe, Building, Check } from "lucide-react";
+import { ArrowLeft, CreditCard, Shield, Smartphone, Globe, Building2, Check } from "lucide-react";
 
 const PaymentMethod = () => {
   const [searchParams] = useSearchParams();
@@ -10,36 +10,16 @@ const PaymentMethod = () => {
   
   const plan = searchParams.get("plan") || "pro";
   const currency = (searchParams.get("currency") || "USD") as "NGN" | "USD";
-  const type = searchParams.get("type") || "retail";
   
-  // Plan details for both retail and institutional
-  const allPlanDetails: Record<string, { name: string; price: { NGN: number; USD: number }; description: string }> = {
-    // Retail plans
+  const planDetails: Record<string, { name: string; price: { NGN: number; USD: number }; description: string }> = {
     pro: {
       name: "Pro Plan",
       price: { NGN: 12000, USD: 25 },
       description: "Advanced features for serious investors"
     },
-    // Institutional plans
-    "corporate-starter": {
-      name: "Corporate Starter",
-      price: { NGN: 240000, USD: 499 },
-      description: "Essential institutional portfolio frameworks for growing businesses"
-    },
-    "corporate-growth": {
-      name: "Corporate Growth",
-      price: { NGN: 720000, USD: 1499 },
-      description: "Advanced institutional frameworks with risk management tools"
-    },
-    "corporate-enterprise": {
-      name: "Corporate Enterprise",
-      price: { NGN: 1440000, USD: 2999 },
-      description: "Complete institutional portfolio suite with white-label capabilities"
-    }
   };
 
-  const planDetails = allPlanDetails[plan] || allPlanDetails.pro;
-  const isInstitutional = type === "institutional";
+  const currentPlan = planDetails[plan] || planDetails.pro;
 
   const formatPrice = (price: number, curr: "NGN" | "USD") => {
     const symbol = curr === "NGN" ? "₦" : "$";
@@ -58,18 +38,17 @@ const PaymentMethod = () => {
         <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-4">
           <Button
             variant="ghost"
-            onClick={() => navigate(isInstitutional ? "/institutions" : "/pricing")}
+            onClick={() => navigate("/pricing")}
             className="mb-3 sm:mb-4 text-sm"
           >
             <ArrowLeft className="h-4 w-4 mr-1 sm:mr-2" />
-            <span className="hidden sm:inline">Back to {isInstitutional ? "Institutions" : "Pricing"}</span>
+            <span className="hidden sm:inline">Back to Pricing</span>
             <span className="sm:hidden">Back</span>
           </Button>
           <div className="text-center px-2">
             <h1 className="text-2xl sm:text-3xl font-bold">Complete Your Purchase</h1>
             <p className="text-sm sm:text-base text-muted-foreground mt-1 sm:mt-2">
-              Secure payment processing for {planDetails.name}
-              {isInstitutional && " • 7-day free trial included"}
+              Secure payment processing for {currentPlan.name}
             </p>
           </div>
         </div>
@@ -86,12 +65,12 @@ const PaymentMethod = () => {
             <CardContent>
               <div className="flex justify-between items-center">
                 <div>
-                  <h3 className="font-semibold">{planDetails.name}</h3>
-                  <p className="text-sm text-muted-foreground">{planDetails.description}</p>
+                  <h3 className="font-semibold">{currentPlan.name}</h3>
+                  <p className="text-sm text-muted-foreground">{currentPlan.description}</p>
                 </div>
                 <div className="text-right">
                   <div className="text-2xl font-bold">
-                    {formatPrice(planDetails.price[currency], currency)}
+                    {formatPrice(currentPlan.price[currency], currency)}
                   </div>
                   <div className="text-sm text-muted-foreground">per month</div>
                 </div>
@@ -128,7 +107,7 @@ const PaymentMethod = () => {
                       <span>International Cards</span>
                     </div>
                     <div className="flex items-center gap-1">
-                      <Building className="h-3 w-3" />
+                      <Building2 className="h-3 w-3" />
                       <span>Bank Transfer</span>
                     </div>
                     <div className="flex items-center gap-1">

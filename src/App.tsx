@@ -18,7 +18,6 @@ const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const AuthCallback = lazy(() => import("./pages/AuthCallback"));
 const PortfolioSummary = lazy(() => import("./pages/PortfolioSummary"));
-const Api = lazy(() => import("./pages/Api"));
 const Integrations = lazy(() => import("./pages/Integrations"));
 const MobileApp = lazy(() => import("./pages/MobileApp"));
 const Careers = lazy(() => import("./pages/Careers"));
@@ -29,10 +28,6 @@ const ExpertBuilderPlaceholder = lazy(() => import("./pages/ExpertBuilderPlaceho
 const ReferralDashboard = lazy(() => import("./pages/ReferralDashboard"));
 const AIDashboard = lazy(() => import("./pages/AIDashboard"));
 const MyPortfolios = lazy(() => import("./pages/MyPortfolios"));
-const Advisors = lazy(() => import("./pages/Advisors"));
-const AdvisorOnboarding = lazy(() => import("./pages/AdvisorOnboarding"));
-const AdvisorPayment = lazy(() => import("./pages/AdvisorPayment"));
-const AdvisorDashboard = lazy(() => import("./pages/AdvisorDashboard"));
 const Terms = lazy(() => import("./pages/Terms"));
 const Privacy = lazy(() => import("./pages/Privacy"));
 const Disclaimers = lazy(() => import("./pages/legal/Disclaimers"));
@@ -67,7 +62,6 @@ const App = () => (
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/auth/callback" element={<AuthCallback />} />
             <Route path="/portfolio-summary" element={<PortfolioSummary riskScore={50} experienceLevel="intermediate" timeline="6-10 years" onBack={() => window.history.back()} onCustomize={() => {}} />} />
-            <Route path="/api" element={<Api />} />
             <Route path="/integrations" element={<Integrations />} />
             <Route path="/mobile-app" element={<MobileApp />} />
             <Route path="/careers" element={<Careers />} />
@@ -78,10 +72,6 @@ const App = () => (
             <Route path="/referrals" element={<ReferralDashboard />} />
             <Route path="/dashboard" element={<AIDashboard />} />
             <Route path="/my-portfolios" element={<MyPortfolios />} />
-            <Route path="/advisors" element={<Advisors />} />
-            <Route path="/advisors/onboarding" element={<AdvisorOnboarding />} />
-            <Route path="/advisors/payment" element={<AdvisorPayment />} />
-            <Route path="/advisors/dashboard" element={<AdvisorDashboard />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/legal/disclaimers" element={<Disclaimers />} />

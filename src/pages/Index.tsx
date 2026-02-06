@@ -14,7 +14,6 @@ import { AuthGuard } from "@/components/AuthGuard";
 import { useAuth } from "@/hooks/useAuth";
 import { UpgradeModal } from "@/components/UpgradeModal";
 import { usePortfolioLimit } from "@/hooks/usePortfolioLimit";
-import { AdvisorHomepageBlock } from "@/components/advisors/AdvisorHomepageBlock";
 import { analytics } from "@/lib/analytics";
 
 type Step = "landing" | "onboarding" | "summary" | "workspace";
@@ -153,7 +152,6 @@ const Index = () => {
         <Navigation />
         <HeroSection onGetStarted={handleGetStarted} />
         <FeaturesSection />
-        <AdvisorHomepageBlock />
         <ProductShowcase />
         <div id="pricing">
           <PricingPlans />
