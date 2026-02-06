@@ -1,11 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Monitor, Smartphone, Tablet, TrendingUp, PieChart, BarChart3, ArrowUpRight } from "lucide-react";
 import { MarketAnalysisTool } from "@/components/MarketAnalysisTool";
-import { AIDashboardModal } from "@/components/AIDashboardModal";
 
 interface ShowcaseItem {
   id: string;
@@ -19,16 +17,17 @@ interface ShowcaseItem {
 
 const showcaseItems: ShowcaseItem[] = [
   {
-    id: "dashboard",
-    title: "AI Dashboard",
-    description: "Real-time portfolio analytics with AI-powered insights",
-    icon: Monitor,
-    image: "photo-1461749280684-dccba630e2f6",
+    id: "builder",
+    title: "Portfolio Builder",
+    description: "Answer 3 questions and get a personalized portfolio in minutes",
+    icon: PieChart,
+    image: "photo-1518770660439-4636190af475",
     metrics: [
-      { label: "Portfolio Value", value: "$127,834", trend: "+12.3%" },
-      { label: "Monthly Return", value: "8.4%", trend: "+2.1%" },
-      { label: "Risk Score", value: "Moderate", trend: "Stable" }
-    ]
+      { label: "Asset Allocation", value: "Optimized", trend: "Updated" },
+      { label: "Diversification", value: "Excellent", trend: "+7.8%" },
+      { label: "Expected Return", value: "14.2%", trend: "+1.9%" }
+    ],
+    link: "/?start=builder"
   },
   {
     id: "analysis",
@@ -43,28 +42,15 @@ const showcaseItems: ShowcaseItem[] = [
     ]
   },
   {
-    id: "builder",
-    title: "Portfolio Builder",
-    description: "Guided templates & drag-and-drop portfolio construction",
-    icon: PieChart,
-    image: "photo-1518770660439-4636190af475",
-    metrics: [
-      { label: "Asset Allocation", value: "Optimized", trend: "Updated" },
-      { label: "Diversification", value: "Excellent", trend: "+7.8%" },
-      { label: "Expected Return", value: "14.2%", trend: "+1.9%" }
-    ],
-    link: "/app/builder"
-  },
-  {
     id: "portfolio",
-    title: "Portfolio Workspace",
-    description: "Advanced portfolio management with AI optimization",
+    title: "Portfolio Details",
+    description: "View your holdings, allocations, and implementation guide",
     icon: TrendingUp,
     image: "photo-1526374965328-7f61d4dc18c5",
     metrics: [
-      { label: "Active Portfolios", value: "12", trend: "+3 this month" },
-      { label: "Total Assets", value: "$847K", trend: "+15.2%" },
-      { label: "Performance", value: "Excellent", trend: "+9.4%" }
+      { label: "Holdings", value: "5 ETFs", trend: "Diversified" },
+      { label: "Risk Level", value: "Matched", trend: "Personalized" },
+      { label: "PDF Export", value: "Available", trend: "Download" }
     ]
   }
 ];
@@ -73,7 +59,6 @@ export const ProductShowcase = () => {
   const navigate = useNavigate();
   const [activeItem, setActiveItem] = useState(showcaseItems[0]);
   const [isMarketAnalysisOpen, setIsMarketAnalysisOpen] = useState(false);
-  const [isDashboardModalOpen, setIsDashboardModalOpen] = useState(false);
 
   const handleItemClick = (item: typeof showcaseItems[0]) => {
     if (item.link) {
@@ -85,14 +70,6 @@ export const ProductShowcase = () => {
     if (item.id === "analysis") {
       setIsMarketAnalysisOpen(true);
     }
-    if (item.id === "dashboard") {
-      setIsDashboardModalOpen(true);
-    }
-  };
-
-  const handleSignUpClick = () => {
-    setIsDashboardModalOpen(false);
-    navigate("/signup");
   };
 
   return (
@@ -100,11 +77,6 @@ export const ProductShowcase = () => {
       <MarketAnalysisTool 
         isOpen={isMarketAnalysisOpen} 
         onClose={() => setIsMarketAnalysisOpen(false)} 
-      />
-      <AIDashboardModal
-        isOpen={isDashboardModalOpen}
-        onClose={() => setIsDashboardModalOpen(false)}
-        onSignUpClick={handleSignUpClick}
       />
       <section id="product" className="py-12 sm:py-16 md:py-24 bg-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -117,7 +89,7 @@ export const ProductShowcase = () => {
             <span className="text-gradient block mt-2">Action</span>
           </h2>
           <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto px-2">
-            Experience the power of AI-driven portfolio management with our intuitive interface and advanced analytics.
+            Build personalized portfolios with AI-powered recommendations, then implement them in your own brokerage.
           </p>
         </div>
 

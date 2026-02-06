@@ -26,7 +26,6 @@ const Documentation = lazy(() => import("./pages/Documentation"));
 const PortfolioBuilderChoice = lazy(() => import("./pages/PortfolioBuilderChoice"));
 const ExpertBuilderPlaceholder = lazy(() => import("./pages/ExpertBuilderPlaceholder"));
 const ReferralDashboard = lazy(() => import("./pages/ReferralDashboard"));
-const AIDashboard = lazy(() => import("./pages/AIDashboard"));
 
 const Terms = lazy(() => import("./pages/Terms"));
 const Privacy = lazy(() => import("./pages/Privacy"));
@@ -70,7 +69,6 @@ const App = () => (
             <Route path="/app/builder" element={<PortfolioBuilderChoice />} />
             <Route path="/app/builder/expert" element={<ExpertBuilderPlaceholder />} />
             <Route path="/referrals" element={<ReferralDashboard />} />
-            <Route path="/dashboard" element={<AIDashboard />} />
             
             <Route path="/terms" element={<Terms />} />
             <Route path="/privacy" element={<Privacy />} />

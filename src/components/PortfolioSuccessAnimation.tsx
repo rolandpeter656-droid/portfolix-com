@@ -101,9 +101,9 @@ export const PortfolioSuccessAnimation = ({
             🎯 Your Personalized Portfolio is Ready!
           </h2>
           <p className="text-muted-foreground text-lg">
-            You've taken your first step toward smarter investing.
+            Your portfolio has been saved. Review your holdings,
             <br />
-            Explore your portfolio below.
+            download the PDF, and implement it in your brokerage.
           </p>
         </div>
 
@@ -119,7 +119,7 @@ export const PortfolioSuccessAnimation = ({
             size="lg"
             className="shadow-lg hover:shadow-xl transition-all duration-300"
           >
-            View My Portfolio
+            View Portfolio Details
           </Button>
           <Button
             onClick={onGenerateAnother}
@@ -127,7 +127,7 @@ export const PortfolioSuccessAnimation = ({
             size="lg"
             className="transition-all duration-300"
           >
-            Generate Another
+            Build Another Portfolio
           </Button>
         </div>
       </div>
