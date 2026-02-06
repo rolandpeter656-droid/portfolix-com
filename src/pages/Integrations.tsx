@@ -106,7 +106,7 @@ const Integrations = () => {
               <CardHeader>
                 <CardTitle>Need a Custom Integration?</CardTitle>
                 <CardDescription>
-                  Get in touch to discuss enterprise integrations and custom solutions
+                  Get in touch to discuss custom integrations and tailored solutions
                 </CardDescription>
               </CardHeader>
               <CardContent>
