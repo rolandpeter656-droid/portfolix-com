@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -7,14 +6,11 @@ import {
   Shield, 
   Zap, 
   PieChart, 
-  DollarSign, 
   BarChart3,
   CheckCircle,
   ArrowRight,
   ArrowLeft
 } from "lucide-react";
-import { usePortfolioLimit } from "@/hooks/usePortfolioLimit";
-import { PortfolioLimitModal } from "@/components/portfolios/PortfolioLimitModal";
 
 interface PortfolioRecommendationProps {
   riskScore: number;
@@ -116,16 +112,8 @@ const getPortfolioData = (riskScore: number) => {
 export const PortfolioRecommendation = ({ riskScore, onStartInvesting, onBack }: PortfolioRecommendationProps) => {
   const portfolioType = getPortfolioType(riskScore);
   const portfolio = getPortfolioData(riskScore);
-  const { canGenerate, subscriptionPlan, loading } = usePortfolioLimit();
-  const [showLimitModal, setShowLimitModal] = useState(false);
 
   const handleStartBuilding = () => {
-    // If free user has reached limit, show paywall immediately
-    if (!canGenerate && subscriptionPlan !== "pro") {
-      setShowLimitModal(true);
-      return;
-    }
-    // Otherwise proceed with portfolio creation
     onStartInvesting?.();
   };
 
@@ -243,7 +231,7 @@ export const PortfolioRecommendation = ({ riskScore, onStartInvesting, onBack }:
               <Button 
                 size="lg" 
                 onClick={handleStartBuilding}
-                disabled={loading}
+                disabled={false}
                 className="bg-gradient-primary text-white hover:opacity-90 px-8 py-4 text-lg group w-full sm:w-auto"
               >
                 Start Building Portfolio
@@ -256,12 +244,6 @@ export const PortfolioRecommendation = ({ riskScore, onStartInvesting, onBack }:
           </div>
         </div>
       </div>
-
-      {/* Portfolio Limit Paywall Modal */}
-      <PortfolioLimitModal 
-        open={showLimitModal} 
-        onClose={() => setShowLimitModal(false)} 
-      />
     </section>
   );
 };
