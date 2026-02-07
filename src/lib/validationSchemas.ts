@@ -64,11 +64,6 @@ export const couponCodeSchema = z.object({
     .toUpperCase(),
 });
 
-// Referral code validation
-export const referralCodeSchema = z.string()
-  .max(20, 'Referral code is too long')
-  .regex(/^[A-Z0-9-]*$/, 'Invalid referral code format')
-  .optional();
 
 // Helper function to validate and return errors
 export function validateForm<T>(

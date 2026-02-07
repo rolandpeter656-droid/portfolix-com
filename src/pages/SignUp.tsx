@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Eye, EyeOff, ArrowLeft } from "lucide-react";
-import { signUpSchema, validateForm, referralCodeSchema } from "@/lib/validationSchemas";
+import { signUpSchema, validateForm } from "@/lib/validationSchemas";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -20,22 +20,9 @@ const SignUp = () => {
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [extraInfo, setExtraInfo] = useState("");
-  const [referredBy, setReferredBy] = useState("");
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const { toast } = useToast();
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-
-  useEffect(() => {
-    const refCode = searchParams.get('ref');
-    if (refCode) {
-      // Validate referral code format
-      const result = referralCodeSchema.safeParse(refCode.toUpperCase());
-      if (result.success) {
-        setReferredBy(refCode.toUpperCase());
-      }
-    }
-  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -92,7 +79,6 @@ const SignUp = () => {
             first_name: firstName,
             last_name: lastName,
             phone_number: phoneNumber,
-            referred_by: referredBy || null,
           }
         }
       });
@@ -106,7 +92,7 @@ const SignUp = () => {
       } else if (data.user) {
         toast({
           title: "Account created successfully!",
-          description: "Please check your email to verify your account, then sign in. You've earned 5 credits!",
+          description: "Please check your email to verify your account, then sign in.",
         });
         navigate("/signin");
       }
@@ -152,12 +138,6 @@ const SignUp = () => {
                 style={{ display: 'none' }}
                 tabIndex={-1}
                 autoComplete="off"
-              />
-              
-              <input
-                type="hidden"
-                name="referred_by"
-                value={referredBy}
               />
               
               <div className="grid grid-cols-2 gap-3 sm:gap-4">
@@ -264,18 +244,6 @@ const SignUp = () => {
                     Password must be at least 8 characters long
                   </p>
                 )}
-              </div>
-
-              <div className="space-y-1.5 sm:space-y-2">
-                <Label htmlFor="referralCodeInput" className="text-sm">Referral Code (Optional)</Label>
-                <Input
-                  id="referralCodeInput"
-                  type="text"
-                  placeholder="Enter referral code if you have one"
-                  value={referredBy}
-                  onChange={(e) => setReferredBy(e.target.value.toUpperCase())}
-                  className="h-10 sm:h-11 text-sm"
-                />
               </div>
 
               <div className="flex items-start space-x-2">
