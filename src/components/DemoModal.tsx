@@ -19,7 +19,7 @@ export const DemoModal = ({ isOpen, onClose }: DemoModalProps) => {
           <iframe 
             width="100%" 
             height="100%" 
-            src="https://www.youtube.com/embed/Hir6wfzeKKo" 
+            src="https://www.youtube.com/embed/Ct1YHi9yfxs" 
             frameBorder="0" 
             allow="autoplay; fullscreen" 
             allowFullScreen
