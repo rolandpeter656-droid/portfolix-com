@@ -5,7 +5,6 @@ import {
   ExternalLink, 
   Copy, 
   ArrowRight,
-  Building2,
   Clock,
   DollarSign,
   RefreshCw
@@ -29,10 +28,11 @@ interface ImplementationGuideProps {
 }
 
 const BROKERAGES = [
-  { name: "Fidelity", url: "https://www.fidelity.com", commissionFree: true },
-  { name: "Vanguard", url: "https://www.vanguard.com", commissionFree: true },
-  { name: "Charles Schwab", url: "https://www.schwab.com", commissionFree: true },
-  { name: "TD Ameritrade", url: "https://www.tdameritrade.com", commissionFree: true },
+  { name: "Bamboo", url: "https://app.investbamboo.com/", description: "Access US stocks from Nigeria & Africa", region: "🌍" },
+  { name: "Trove Finance", url: "https://www.trovefinance.com/", description: "Commission-free US investing for Africans", region: "🌍" },
+  { name: "Fidelity", url: "https://www.fidelity.com/", description: "Commission-free ETF trading in the US", region: "🇺🇸" },
+  { name: "Vanguard", url: "https://www.vanguard.com/", description: "Low-cost index funds and ETFs", region: "🇺🇸" },
+  { name: "Tiger Brokers", url: "https://www.itiger.com/sg/", description: "Global investing for Asian markets", region: "🌏" },
 ];
 
 export const ImplementationGuide = ({ 
@@ -88,22 +88,34 @@ export const ImplementationGuide = ({
             <h4 className="font-semibold">Open Your Brokerage Account</h4>
           </div>
           <p className="text-sm text-muted-foreground ml-8">
-            These funds are available commission-free at major brokerages:
+            Implement this portfolio at any of these brokerages. We've included platforms for investors in Nigeria, Asia, and the United States:
           </p>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 ml-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 ml-8">
             {BROKERAGES.map((broker) => (
               <a
                 key={broker.name}
                 href={broker.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1 text-sm text-primary hover:underline"
+                className="flex items-start gap-3 p-3 rounded-lg border border-border/50 hover:border-primary/50 hover:bg-primary/5 transition-all group"
               >
-                <Building2 className="h-3 w-3" />
-                {broker.name}
-                <ExternalLink className="h-3 w-3" />
+                <span className="text-lg leading-none mt-0.5">{broker.region}</span>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
+                      {broker.name}
+                    </span>
+                    <ExternalLink className="h-3 w-3 text-muted-foreground shrink-0" />
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-0.5">{broker.description}</p>
+                </div>
               </a>
             ))}
+          </div>
+          <div className="ml-8 mt-3 space-y-1">
+            <p className="text-xs text-muted-foreground">📍 Nigerian investors: Use Bamboo or Trove Finance</p>
+            <p className="text-xs text-muted-foreground">📍 Asian investors: Use Tiger Brokers</p>
+            <p className="text-xs text-muted-foreground">📍 US investors: Use Fidelity or Vanguard</p>
           </div>
         </div>
 
@@ -202,11 +214,18 @@ export const ImplementationGuide = ({
           </div>
         </div>
 
-        {/* Disclaimer */}
+        {/* Pro tip */}
         <div className="mt-4 p-3 bg-muted/30 rounded-lg">
           <p className="text-xs text-muted-foreground">
             💡 <strong>Pro tip:</strong> Set a calendar reminder to review your portfolio every January. 
             Most investors who stick to their plan outperform those who trade frequently.
+          </p>
+        </div>
+
+        {/* Disclaimer */}
+        <div className="p-3 bg-muted/30 rounded-lg">
+          <p className="text-xs text-muted-foreground">
+            ⚠️ PortfoliX is not affiliated with any of these brokerages. We do not receive compensation for recommending these platforms. Always verify that your chosen brokerage is properly licensed in your jurisdiction before opening an account.
           </p>
         </div>
       </CardContent>
