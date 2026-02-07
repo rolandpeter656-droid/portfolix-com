@@ -21,7 +21,6 @@ export const SignupModal = ({ open, onOpenChange }: SignupModalProps) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [referralCode, setReferralCode] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [userId, setUserId] = useState<string>("");
@@ -41,7 +40,6 @@ export const SignupModal = ({ open, onOpenChange }: SignupModalProps) => {
     setFirstName("");
     setLastName("");
     setPhoneNumber("");
-    setReferralCode("");
     setShowPassword(false);
     setInvestmentExperience("");
     setRiskTolerance("");
@@ -81,7 +79,6 @@ export const SignupModal = ({ open, onOpenChange }: SignupModalProps) => {
             first_name: firstName,
             last_name: lastName,
             phone_number: phoneNumber,
-            referred_by: referralCode || null,
           }
         }
       });
@@ -141,7 +138,7 @@ export const SignupModal = ({ open, onOpenChange }: SignupModalProps) => {
       } else {
         toast({
           title: "Welcome to PortfoliX!",
-          description: "Your profile has been created. Please check your email to verify your account. You've earned 5 credits!",
+          description: "Your profile has been created. Please check your email to verify your account.",
         });
       }
       
@@ -269,18 +266,6 @@ export const SignupModal = ({ open, onOpenChange }: SignupModalProps) => {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
                   minLength={6}
-                  className="h-10 sm:h-11 text-sm"
-                />
-              </div>
-
-              <div className="space-y-1.5 sm:space-y-2">
-                <Label htmlFor="referralCode" className="text-sm">Referral Code (Optional)</Label>
-                <Input
-                  id="referralCode"
-                  type="text"
-                  placeholder="Enter referral code if you have one"
-                  value={referralCode}
-                  onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
                   className="h-10 sm:h-11 text-sm"
                 />
               </div>
