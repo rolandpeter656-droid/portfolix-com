@@ -38,30 +38,6 @@ export type Database = {
         }
         Relationships: []
       }
-      credit_transactions: {
-        Row: {
-          amount: number
-          created_at: string | null
-          id: string
-          reason: string
-          user_id: string
-        }
-        Insert: {
-          amount: number
-          created_at?: string | null
-          id?: string
-          reason: string
-          user_id: string
-        }
-        Update: {
-          amount?: number
-          created_at?: string | null
-          id?: string
-          reason?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
       mobile_waitlist: {
         Row: {
           created_at: string
@@ -101,30 +77,6 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id?: string
-        }
-        Relationships: []
-      }
-      referrals: {
-        Row: {
-          created_at: string | null
-          id: string
-          referee_email: string
-          referrer_code: string
-          status: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          id?: string
-          referee_email: string
-          referrer_code: string
-          status?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          id?: string
-          referee_email?: string
-          referrer_code?: string
-          status?: string | null
         }
         Relationships: []
       }
@@ -197,7 +149,6 @@ export type Database = {
       users: {
         Row: {
           created_at: string
-          credit_balance: number | null
           first_name: string | null
           id: number
           investment_experience: string | null
@@ -205,9 +156,6 @@ export type Database = {
           phone_number: string
           portfolio_count: number | null
           primary_goal: string | null
-          referral_code: string | null
-          referral_count: number | null
-          referred_by: string | null
           risk_tolerance: string | null
           subscription_plan: string | null
           time_horizon: string | null
@@ -215,7 +163,6 @@ export type Database = {
         }
         Insert: {
           created_at?: string
-          credit_balance?: number | null
           first_name?: string | null
           id?: number
           investment_experience?: string | null
@@ -223,9 +170,6 @@ export type Database = {
           phone_number: string
           portfolio_count?: number | null
           primary_goal?: string | null
-          referral_code?: string | null
-          referral_count?: number | null
-          referred_by?: string | null
           risk_tolerance?: string | null
           subscription_plan?: string | null
           time_horizon?: string | null
@@ -233,7 +177,6 @@ export type Database = {
         }
         Update: {
           created_at?: string
-          credit_balance?: number | null
           first_name?: string | null
           id?: number
           investment_experience?: string | null
@@ -241,9 +184,6 @@ export type Database = {
           phone_number?: string
           portfolio_count?: number | null
           primary_goal?: string | null
-          referral_code?: string | null
-          referral_count?: number | null
-          referred_by?: string | null
           risk_tolerance?: string | null
           subscription_plan?: string | null
           time_horizon?: string | null
@@ -258,7 +198,6 @@ export type Database = {
     Functions: {
       can_generate_portfolio: { Args: { user_uuid: string }; Returns: boolean }
       cleanup_expired_email_tokens: { Args: never; Returns: undefined }
-      generate_unique_referral_code: { Args: never; Returns: string }
       get_auth_config: { Args: { config_name: string }; Returns: string }
       has_role: {
         Args: {
@@ -275,10 +214,6 @@ export type Database = {
       is_email_verification_expired: {
         Args: { token_created_at: string; user_id: string }
         Returns: boolean
-      }
-      redeem_credits: {
-        Args: { p_required_amount: number; p_user_id: string }
-        Returns: string
       }
     }
     Enums: {
