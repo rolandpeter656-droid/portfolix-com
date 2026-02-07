@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, Target, TrendingUp, DollarSign, Shield, Zap, Clock, Rocket, HelpCircle, Scale } from "lucide-react";
 import { analytics } from "@/lib/analytics";
@@ -244,32 +243,41 @@ export const SimplifiedOnboarding = ({ onComplete, onBack }: SimplifiedOnboardin
                   const isSelected = answers[currentQuestion.id as keyof OnboardingAnswers]?.value === option.value;
                   
                   return (
-                    <Button
+                    <button
                       key={option.value}
-                      variant="outline"
-                      className={`h-auto p-4 sm:p-5 justify-start text-left transition-all ${
+                      className={`w-full text-left rounded-xl border p-4 sm:p-5 transition-all duration-200 ease-out cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
                         isSelected 
-                          ? "border-primary bg-primary/10 shadow-glow" 
-                          : "hover:bg-accent hover:border-primary/50"
+                          ? "bg-primary border-primary shadow-glow scale-[1.02]" 
+                          : "glass-card border-border hover:border-primary/50 hover:scale-[1.01]"
                       }`}
                       onClick={() => handleOptionSelect(currentQuestion.id, option)}
                     >
                       <div className="flex items-start gap-3 sm:gap-4 w-full">
-                        <div className={`flex-shrink-0 p-2 sm:p-3 rounded-full ${
-                          isSelected ? "bg-primary/20 text-primary" : "bg-primary/10 text-primary"
+                        <div className={`flex-shrink-0 p-2.5 sm:p-3 rounded-full ${
+                          isSelected 
+                            ? "bg-primary-foreground/20 text-primary-foreground" 
+                            : "bg-primary/10 text-primary"
                         }`}>
                           {option.icon}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <span className="text-sm sm:text-base md:text-lg font-medium block mb-1">
+                          <span className={`text-[15px] sm:text-base md:text-lg leading-snug block mb-1 ${
+                            isSelected 
+                              ? "font-semibold text-primary-foreground" 
+                              : "font-medium text-foreground"
+                          }`}>
                             {option.label}
                           </span>
-                          <span className="text-xs sm:text-sm text-muted-foreground block">
+                          <span className={`text-xs sm:text-sm leading-relaxed block ${
+                            isSelected 
+                              ? "text-primary-foreground/90" 
+                              : "text-muted-foreground"
+                          }`}>
                             {option.preview}
                           </span>
                         </div>
                       </div>
-                    </Button>
+                    </button>
                   );
                 })}
               </div>
@@ -278,26 +286,26 @@ export const SimplifiedOnboarding = ({ onComplete, onBack }: SimplifiedOnboardin
 
           {/* Live Portfolio Preview - shown after first answer */}
           {Object.keys(answers).length > 0 && (
-            <Card className="shadow-soft border-0 bg-card/50 backdrop-blur-sm animate-fade-in">
-              <CardContent className="p-4 sm:p-6">
+            <Card className="shadow-soft border-0 bg-card/50 backdrop-blur-sm animate-fade-in mt-2">
+              <CardContent className="p-5 sm:p-6">
                 <h3 className="text-sm sm:text-base font-semibold text-foreground mb-4 flex items-center gap-2">
                   <TrendingUp className="h-4 w-4 text-primary" />
                   Your Portfolio is Taking Shape
                 </h3>
                 
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {/* Show selected answers */}
                   <div className="flex flex-wrap gap-2">
                     {answers.goal && (
                       <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs sm:text-sm">
                         {answers.goal.icon}
-                        {answers.goal.label}
+                        <span className="truncate max-w-[200px]">{answers.goal.label}</span>
                       </span>
                     )}
                     {answers.timeline && (
                       <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-secondary text-secondary-foreground text-xs sm:text-sm">
                         {answers.timeline.icon}
-                        {answers.timeline.label}
+                        <span className="truncate max-w-[200px]">{answers.timeline.label}</span>
                       </span>
                     )}
                   </div>
@@ -305,7 +313,7 @@ export const SimplifiedOnboarding = ({ onComplete, onBack }: SimplifiedOnboardin
                   {/* Allocation Preview Bar */}
                   <div className="space-y-2">
                     <p className="text-xs sm:text-sm text-muted-foreground">Suggested Allocation:</p>
-                    <div className="h-8 sm:h-10 rounded-lg overflow-hidden flex">
+                    <div className="h-9 sm:h-10 rounded-lg overflow-hidden flex">
                       <div 
                         className="bg-primary flex items-center justify-center text-primary-foreground text-xs sm:text-sm font-medium transition-all duration-500"
                         style={{ width: `${allocation.stocks}%` }}

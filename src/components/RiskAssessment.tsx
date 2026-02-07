@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { TrendingUp, Shield, Zap, Target, ArrowLeft } from "lucide-react";
@@ -126,21 +125,20 @@ export const RiskAssessment = ({ onComplete, onBack }: RiskAssessmentProps) => {
               </CardTitle>
             </CardHeader>
             <CardContent className="px-4 sm:px-6 pb-6">
-              <div className="grid gap-2 sm:gap-3">
+              <div className="grid gap-3 sm:gap-4">
                 {questions[currentQuestion].options.map((option) => (
-                  <Button
+                  <button
                     key={option.value}
-                    variant="outline"
-                    className="h-auto p-4 sm:p-6 justify-start text-left hover:bg-accent hover:border-primary transition-all"
+                    className="w-full text-left rounded-xl border border-border glass-card p-4 sm:p-5 transition-all duration-200 ease-out cursor-pointer hover:border-primary/50 hover:scale-[1.01] focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                     onClick={() => handleAnswer(option.value)}
                   >
                     <div className="flex items-center gap-3 sm:gap-4">
-                      <div className="flex-shrink-0 p-1.5 sm:p-2 bg-primary/10 rounded-full">
+                      <div className="flex-shrink-0 p-2 sm:p-2.5 bg-primary/10 rounded-full text-primary">
                         {option.icon}
                       </div>
-                      <span className="text-sm sm:text-base md:text-lg font-medium">{option.label}</span>
+                      <span className="text-[15px] sm:text-base md:text-lg font-medium text-foreground">{option.label}</span>
                     </div>
-                  </Button>
+                  </button>
                 ))}
               </div>
             </CardContent>

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Target, TrendingUp, DollarSign, Zap, ArrowLeft } from "lucide-react";
 
 interface GoalSelectionProps {
@@ -76,33 +75,41 @@ export const GoalSelection = ({ onComplete, onBack }: GoalSelectionProps) => {
             {goalOptions.map((option) => {
               const Icon = option.icon;
               return (
-                <Card
+                <button
                   key={option.value}
-                  className={`cursor-pointer transition-all hover:shadow-lg ${
+                  className={`w-full text-left rounded-xl border p-4 sm:p-6 transition-all duration-200 ease-out cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
                     selectedGoal === option.value
-                      ? "border-primary bg-primary/5 shadow-glow"
-                      : "hover:border-primary/50"
+                      ? "bg-primary border-primary shadow-glow scale-[1.02]"
+                      : "glass-card border-border hover:border-primary/50 hover:scale-[1.01]"
                   }`}
                   onClick={() => handleGoalSelect(option.value)}
                 >
-                  <CardHeader className="p-4 sm:p-6">
-                    <div className="flex items-start gap-3 sm:gap-4">
-                      <div className={`p-2 sm:p-3 rounded-full flex-shrink-0 ${
-                        selectedGoal === option.value 
-                          ? "bg-primary/20" 
-                          : "bg-primary/10"
-                      }`}>
-                        <Icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <CardTitle className="text-base sm:text-lg mb-1 sm:mb-2">{option.label}</CardTitle>
-                        <p className="text-xs sm:text-sm text-muted-foreground">
-                          {option.description}
-                        </p>
-                      </div>
+                  <div className="flex items-start gap-3 sm:gap-4">
+                    <div className={`p-2.5 sm:p-3 rounded-full flex-shrink-0 ${
+                      selectedGoal === option.value 
+                        ? "bg-primary-foreground/20" 
+                        : "bg-primary/10"
+                    }`}>
+                      <Icon className={`h-5 w-5 sm:h-6 sm:w-6 ${
+                        selectedGoal === option.value ? "text-primary-foreground" : "text-primary"
+                      }`} />
                     </div>
-                  </CardHeader>
-                </Card>
+                    <div className="flex-1 min-w-0">
+                      <span className={`text-base sm:text-lg block mb-1 leading-snug ${
+                        selectedGoal === option.value 
+                          ? "font-semibold text-primary-foreground" 
+                          : "font-medium text-foreground"
+                      }`}>{option.label}</span>
+                      <p className={`text-xs sm:text-sm leading-relaxed ${
+                        selectedGoal === option.value 
+                          ? "text-primary-foreground/90" 
+                          : "text-muted-foreground"
+                      }`}>
+                        {option.description}
+                      </p>
+                    </div>
+                  </div>
+                </button>
               );
             })}
           </div>
