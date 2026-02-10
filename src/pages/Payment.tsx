@@ -45,7 +45,7 @@ const Payment = () => {
   // Plan details
   const planDetails = {
     name: "Pro Plan",
-    price: { NGN: 12000, USD: 25 },
+    price: { NGN: 12000, USD: 15 },
     description: "Advanced features for serious investors",
     features: [
       "Unlimited AI-generated portfolios",
