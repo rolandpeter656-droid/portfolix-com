@@ -27,12 +27,12 @@ export const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
         <div className="max-w-5xl mx-auto">
           {/* Main Headline - Pain point focused */}
           <h1 className="font-serif-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-foreground mb-4 sm:mb-6 md:mb-8 leading-[1.1]">
-            Finally Know <span className="text-success">What to Invest In</span>
+            Build Portfolios <span className="text-success">in Minutes</span>
           </h1>
 
           {/* Subheading - Specific outcome promise */}
           <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-muted-foreground mb-4 sm:mb-6 leading-relaxed max-w-4xl mx-auto px-2">
-            Get a personalized investment portfolio in 3 minutes. No finance degree required.
+            Answer 3 questions, get personalized investment recommendations matched to your goals and risk tolerance.
           </p>
 
           {/* Supporting Text with Social Proof */}
