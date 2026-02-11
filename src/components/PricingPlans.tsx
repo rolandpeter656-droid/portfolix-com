@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Check, X, Crown, Gem, Sparkles, ArrowRight, HelpCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { analytics } from "@/lib/analytics/index";
 
 export type PlanType = "free" | "pro" | "elite";
 export type BillingPeriod = "monthly" | "annual";
@@ -160,6 +161,7 @@ export const PricingPlans = ({ currentPlan = "free", onPlanSelect }: PricingPlan
     }
 
     if (planId === "pro") {
+      analytics.upgradeInitiated(planId);
       navigate(`/payment-method?plan=${planId}&billing=${billingPeriod}`);
       return;
     }

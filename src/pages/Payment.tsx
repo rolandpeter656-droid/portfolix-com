@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Check, CreditCard, Building, Shield } from "lucide-react";
 import { usePaystackPayment } from "react-paystack";
 import { useToast } from "@/hooks/use-toast";
-
+import { analytics } from "@/lib/analytics/index";
 
 interface PaymentConfig {
   reference: string;
@@ -61,6 +61,7 @@ const Payment = () => {
   const publicKey = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY || "pk_test_placeholder";
 
   const handlePaymentSuccess = (reference: any) => {
+    analytics.upgradeCompleted("pro", planDetails.price[currency]);
     toast({
       title: "Payment Successful!",
       description: "Welcome to Pro Plan! Your subscription is now active.",

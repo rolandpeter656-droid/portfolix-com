@@ -1,13 +1,11 @@
 import { Navigation } from "@/components/landing/Navigation";
 import { Footer } from "@/components/landing/Footer";
 import { EducationalGlossary } from "@/components/EducationalGlossary";
-import { analytics } from "@/lib/analytics";
 import { useEffect } from "react";
 
 const Learn = () => {
   useEffect(() => {
-    analytics.pageView("learn");
-    analytics.glossaryViewed();
+    // Page loaded
   }, []);
 
   return (

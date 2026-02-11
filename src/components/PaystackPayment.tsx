@@ -11,6 +11,7 @@ import { ArrowLeft, CreditCard, Globe, Shield, Smartphone, Loader2 } from "lucid
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { paymentFormSchema, validateForm } from "@/lib/validationSchemas";
+import { analytics } from "@/lib/analytics/index";
 
 interface PricingPlan {
   id: string;
@@ -186,6 +187,7 @@ export const PaystackPayment = ({ plan, currency, onSuccess, onCancel }: Paystac
 
     initializePayment({
       onSuccess: async (reference) => {
+        analytics.upgradeCompleted(plan.id, finalPrice);
         console.log("Payment successful:", reference);
         setIsProcessing(false);
         setIsVerifying(true);

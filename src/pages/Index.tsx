@@ -14,7 +14,7 @@ import { AuthGuard } from "@/components/AuthGuard";
 import { useAuth } from "@/hooks/useAuth";
 import { UpgradeModal } from "@/components/UpgradeModal";
 import { usePortfolioLimit } from "@/hooks/usePortfolioLimit";
-import { analytics } from "@/lib/analytics";
+import { analytics } from "@/lib/analytics/index";
 
 type Step = "landing" | "onboarding" | "summary" | "workspace";
 
@@ -40,9 +40,23 @@ const Index = () => {
   const { user } = useAuth();
   const { canGenerate, checkAndIncrementLimit } = usePortfolioLimit();
 
-  // Track page view on mount
+  // Track returning users on mount
   useEffect(() => {
-    analytics.pageView("landing");
+    const checkReturningUser = async () => {
+      const { data: { user: authUser } } = await (await import("@/integrations/supabase/client")).supabase.auth.getUser();
+      if (authUser) {
+        const lastVisitKey = `last_visit_${authUser.id}`;
+        const lastVisit = localStorage.getItem(lastVisitKey);
+        if (lastVisit) {
+          const daysSince = Math.floor((Date.now() - parseInt(lastVisit)) / (1000 * 60 * 60 * 24));
+          if (daysSince >= 1) {
+            analytics.userReturned(daysSince);
+          }
+        }
+        localStorage.setItem(lastVisitKey, Date.now().toString());
+      }
+    };
+    checkReturningUser();
   }, []);
 
   // Check if coming from builder choice
@@ -58,7 +72,7 @@ const Index = () => {
       window.location.href = '/signup';
       return;
     }
-    analytics.onboardingStarted();
+    analytics.signupStarted();
     setCurrentStep("onboarding");
   };
 

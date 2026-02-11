@@ -25,6 +25,7 @@ const Blog = lazy(() => import("./pages/Blog"));
 const Documentation = lazy(() => import("./pages/Documentation"));
 const PortfolioBuilderChoice = lazy(() => import("./pages/PortfolioBuilderChoice"));
 const ExpertBuilderPlaceholder = lazy(() => import("./pages/ExpertBuilderPlaceholder"));
+const Analytics = lazy(() => import("./pages/Analytics"));
 
 const Terms = lazy(() => import("./pages/Terms"));
 const Privacy = lazy(() => import("./pages/Privacy"));
@@ -67,6 +68,7 @@ const App = () => (
             <Route path="/documentation" element={<Documentation />} />
             <Route path="/app/builder" element={<PortfolioBuilderChoice />} />
             <Route path="/app/builder/expert" element={<ExpertBuilderPlaceholder />} />
+            <Route path="/analytics" element={<Analytics />} />
             
             <Route path="/terms" element={<Terms />} />
             <Route path="/privacy" element={<Privacy />} />
