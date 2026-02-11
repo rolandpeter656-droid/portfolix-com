@@ -94,7 +94,7 @@ const PortfolioBuilder = () => {
 
   return (
     <section className="relative py-12 sm:py-16 md:py-24 px-4 sm:px-6 lg:px-8">
-      <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-10">
+      <div className="absolute top-4 left-4 sm:top-6 sm:left-6 z-10">
         <Button
           variant="outline"
           size="icon"
