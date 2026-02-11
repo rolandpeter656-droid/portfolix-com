@@ -37,7 +37,7 @@ export const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
 
           {/* Supporting Text with Social Proof */}
           <p className="text-sm sm:text-base md:text-lg text-primary/80 mb-8 sm:mb-10 md:mb-12 font-medium px-2 max-w-3xl mx-auto">
-            Join 20+ investors who stopped overthinking and started building wealth with portfolios designed for their goals, timeline, and risk tolerance.
+            Join 2,000+ investors who stopped overthinking and started building wealth with portfolios designed for their goals, timeline, and risk tolerance.
           </p>
 
           {/* CTA Buttons */}
@@ -74,7 +74,7 @@ export const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
               <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 backdrop-blur-xl bg-success/20 border border-success/30 rounded-full mb-2">
                 <Users className="h-4 w-4 sm:h-5 sm:w-5 text-success" />
               </div>
-              <div className="text-xl sm:text-2xl font-sans-bold text-success">20+</div>
+              <div className="text-xl sm:text-2xl font-sans-bold text-success">2,000+</div>
               <div className="text-xs sm:text-sm text-muted-foreground text-center">Active Investors</div>
             </div>
             <div className="glass-stat flex flex-col items-center p-3 sm:p-4">
