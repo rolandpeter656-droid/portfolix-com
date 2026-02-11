@@ -22,7 +22,7 @@ import { useSavedPortfolios } from "@/hooks/useSavedPortfolios";
 import { useWelcomeEmail } from "@/hooks/useWelcomeEmail";
 import { useAuth } from "@/hooks/useAuth";
 import { ProSuggestionsPanel, RiskScoreCard, RebalancingAlerts } from "@/components/pro";
-import { analytics } from "@/lib/analytics";
+import { analytics } from "@/lib/analytics/index";
 import jsPDF from 'jspdf';
 import { Link } from "react-router-dom";
 
@@ -289,7 +289,7 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onBack, onCust
       hasAutoSaved.current = true;
       
       // Track portfolio generation
-      analytics.portfolioGenerated(name, riskScore);
+      analytics.portfolioGenerated(name);
       
       await savePortfolio({
         portfolio_name: name,

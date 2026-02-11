@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, Target, TrendingUp, DollarSign, Shield, Zap, Clock, Rocket, HelpCircle, Scale } from "lucide-react";
-import { analytics } from "@/lib/analytics";
+import { analytics } from "@/lib/analytics/index";
 
 interface OnboardingOption {
   value: string;
@@ -154,8 +154,10 @@ export const SimplifiedOnboarding = ({ onComplete, onBack }: SimplifiedOnboardin
     };
     setAnswers(newAnswers);
 
-    // Track step completion
-    analytics.onboardingStepCompleted(currentStep + 1, questionId);
+    // Track onboarding step completion
+    if (currentStep === 0) analytics.onboardingStep1Completed(option.value);
+    else if (currentStep === 1) analytics.onboardingStep2Completed(option.value);
+    else if (currentStep === 2) analytics.onboardingStep3Completed(option.value);
 
     // Auto-advance to next question after brief delay
     setTimeout(() => {
