@@ -2,7 +2,9 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
-import { TrendingUp, Shield, Zap } from "lucide-react";
+import { TrendingUp, Shield, Zap, ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 interface CategoryConfig {
   id: string;
@@ -61,6 +63,7 @@ const categories: CategoryConfig[] = [
 ];
 
 const PortfolioBuilder = () => {
+  const navigate = useNavigate();
   const [amounts, setAmounts] = useState<Record<string, number>>({
     beginner: 100,
     experienced: 5000,
@@ -90,7 +93,18 @@ const PortfolioBuilder = () => {
   };
 
   return (
-    <section className="py-12 sm:py-16 md:py-24 px-4 sm:px-6 lg:px-8">
+    <section className="relative py-12 sm:py-16 md:py-24 px-4 sm:px-6 lg:px-8">
+      <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-10">
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => navigate("/")}
+          className="bg-card/50 backdrop-blur-sm border-border hover:bg-card"
+          aria-label="Back to home"
+        >
+          <ArrowLeft className="h-4 w-4" />
+        </Button>
+      </div>
       <div className="container mx-auto max-w-6xl">
         <div className="text-center mb-10 sm:mb-12 md:mb-16">
           <h2 className="text-headline mb-3 sm:mb-4">
