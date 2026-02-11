@@ -67,12 +67,14 @@ const Index = () => {
     }
   }, [user]);
 
-  const handleGetStarted = () => {
+  const handleGetStarted = async () => {
+    // Track signup started before any navigation
+    await analytics.signupStarted();
+    
     if (!user) {
       window.location.href = '/signup';
       return;
     }
-    analytics.signupStarted();
     setCurrentStep("onboarding");
   };
 
