@@ -32,7 +32,9 @@ export const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
 
           {/* Subheading - Specific outcome promise */}
           <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-muted-foreground mb-4 sm:mb-6 leading-relaxed max-w-4xl mx-auto px-2">
-            Answer 3 questions, get personalized investment recommendations matched to your goals and risk tolerance.
+            Get a personalized investment portfolio in 3 minutes.
+            <br />
+            No finance degree required.
           </p>
 
           {/* Supporting Text with Social Proof */}
