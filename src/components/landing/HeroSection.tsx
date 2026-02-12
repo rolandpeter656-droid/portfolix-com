@@ -33,7 +33,7 @@ export const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
 
             {/* Subheadline */}
             <p className="text-lg sm:text-xl text-muted-foreground mb-4 leading-relaxed animate-fade-in-up-delay-2">
-              Get a personalized investment portfolio in 3 minutes.
+              Get a personalized investment portfolio in 3 minutes.{" "}
               <br className="hidden sm:block" />
               No finance degree required.
             </p>

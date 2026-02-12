@@ -39,7 +39,7 @@ export const Navigation = () => {
               height={36}
               className="h-9 w-auto"
               loading="eager"
-              fetchPriority="high"
+              {...{ fetchpriority: "high" } as any}
             />
             <span className="text-xl font-bold text-gradient">PortfoliX</span>
           </Link>
