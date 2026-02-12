@@ -56,7 +56,7 @@ const plans: PricingPlan[] = [
       { name: "Portfolio Optimization", description: "Continuous suggestions to improve your strategy", included: false, upsellMessage: "Unlock with Pro" }
     ],
     buttonText: "Get Started Free",
-    icon: <Sparkles className="h-6 w-6" />,
+    icon: <Sparkles className="h-5 w-5" />,
     idealFor: [
       "First-time investors building their strategy",
       "Anyone exploring different portfolio approaches",
@@ -83,7 +83,7 @@ const plans: PricingPlan[] = [
     ],
     buttonText: "Try Pro Free for 14 Days",
     popular: true,
-    icon: <Crown className="h-6 w-6" />,
+    icon: <Crown className="h-5 w-5" />,
     idealFor: [
       "Investors who have implemented their first portfolio",
       "Anyone wanting ongoing guidance and optimization",
@@ -111,7 +111,7 @@ const plans: PricingPlan[] = [
       { name: "API Access", description: "Integrate PortfoliX with your own tools", included: true }
     ],
     buttonText: "Schedule Consultation",
-    icon: <Gem className="h-6 w-6" />,
+    icon: <Gem className="h-5 w-5" />,
     idealFor: [
       "Investors managing $50,000+ portfolios",
       "Anyone with complex tax optimization needs",
@@ -154,12 +154,10 @@ export const PricingPlans = ({ currentPlan = "free", onPlanSelect }: PricingPlan
       onPlanSelect?.(planId);
       return;
     }
-
     if (planId === "elite") {
       window.open("mailto:peter@portfolixapps.com?subject=Elite Plan Consultation Request", "_blank");
       return;
     }
-
     if (planId === "pro") {
       analytics.upgradeInitiated(planId);
       navigate(`/payment-method?plan=${planId}&billing=${billingPeriod}`);
@@ -169,9 +167,7 @@ export const PricingPlans = ({ currentPlan = "free", onPlanSelect }: PricingPlan
 
   const formatPrice = (plan: PricingPlan) => {
     if (plan.price === 0) return "$0";
-    if (billingPeriod === "annual") {
-      return `$${Math.round(plan.annualPrice / 12)}`;
-    }
+    if (billingPeriod === "annual") return `$${Math.round(plan.annualPrice / 12)}`;
     return `$${plan.price}`;
   };
 
@@ -181,29 +177,23 @@ export const PricingPlans = ({ currentPlan = "free", onPlanSelect }: PricingPlan
   };
 
   return (
-    <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 overflow-hidden">
-      {/* Background Blobs */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="glass-blob glass-blob-cyan w-[400px] h-[400px] -top-40 -left-40 animate-blob-float opacity-10" />
-        <div className="glass-blob glass-blob-purple w-[350px] h-[350px] -bottom-40 -right-40 animate-blob-float-delayed opacity-10" />
-      </div>
-
+    <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-24 md:py-32 overflow-hidden">
       {/* Header */}
-      <div className="text-center mb-10 sm:mb-14 relative z-10">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
+      <div className="text-center mb-14 relative z-10">
+        <h2 className="text-foreground mb-4">
           Choose Your Investment Journey
-        </h1>
-        <p className="text-base sm:text-lg text-muted-foreground mb-8 px-2">
+        </h2>
+        <p className="text-lg text-muted-foreground mb-10">
           Start free and upgrade when you're ready for ongoing guidance
         </p>
 
         {/* Billing Toggle */}
-        <div className="inline-flex items-center gap-1 p-1 bg-muted rounded-lg">
+        <div className="inline-flex items-center gap-1 p-1 rounded-lg border border-border bg-card">
           <button
             onClick={() => setBillingPeriod("monthly")}
-            className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+            className={`px-5 py-2 rounded-md text-sm font-medium transition-all ${
               billingPeriod === "monthly"
-                ? "bg-background text-foreground shadow-sm"
+                ? "bg-primary text-primary-foreground"
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
@@ -211,14 +201,14 @@ export const PricingPlans = ({ currentPlan = "free", onPlanSelect }: PricingPlan
           </button>
           <button
             onClick={() => setBillingPeriod("annual")}
-            className={`px-4 py-2 rounded-md text-sm font-medium transition-all flex items-center gap-2 ${
+            className={`px-5 py-2 rounded-md text-sm font-medium transition-all flex items-center gap-2 ${
               billingPeriod === "annual"
-                ? "bg-background text-foreground shadow-sm"
+                ? "bg-primary text-primary-foreground"
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
             Annual
-            <Badge variant="secondary" className="text-xs bg-primary/10 text-primary">
+            <Badge variant="secondary" className="text-[10px] bg-success/10 text-success border-success/20">
               Save 20%
             </Badge>
           </button>
@@ -228,54 +218,54 @@ export const PricingPlans = ({ currentPlan = "free", onPlanSelect }: PricingPlan
       {/* Pricing Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto relative z-10">
         {plans.map((plan) => (
-          <Card
+          <div
             key={plan.id}
-            className={`relative glass-card glass-glow-hover flex flex-col ${
-              plan.popular ? "border-primary/50 shadow-lg md:scale-105 z-10" : ""
+            className={`relative rounded-xl border bg-card flex flex-col transition-all duration-300 hover-lift ${
+              plan.popular
+                ? "border-primary/50 md:scale-105 z-10 shadow-lg shadow-primary/10"
+                : "border-border hover:border-primary/20"
             } ${currentPlan === plan.id ? "ring-2 ring-primary" : ""}`}
           >
             {plan.popular && (
-              <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-primary text-primary-foreground">
+              <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-primary to-success text-primary-foreground font-semibold px-4">
                 MOST POPULAR
               </Badge>
             )}
 
-            <CardHeader className="text-center pb-4 p-6">
+            <div className="text-center p-6 pb-4">
               <div className="flex justify-center mb-4 text-primary">
                 {plan.icon}
               </div>
-              <CardTitle className="text-xl md:text-2xl">{plan.name}</CardTitle>
+              <h3 className="text-xl font-bold text-foreground">{plan.name}</h3>
               <div className="mt-4">
-                <span className="text-4xl font-bold">{formatPrice(plan)}</span>
+                <span className="text-4xl font-extrabold text-foreground">{formatPrice(plan)}</span>
                 <span className="text-sm text-muted-foreground">{getPeriodLabel(plan)}</span>
               </div>
               {plan.annualSavings > 0 && billingPeriod === "annual" && (
-                <p className="text-xs text-success mt-1">
+                <p className="text-xs text-success mt-1 font-medium">
                   Save ${plan.annualSavings} per year
                 </p>
               )}
-              <p className="text-sm font-medium mt-3">{plan.headline}</p>
-              <CardDescription className="mt-2 text-xs">{plan.description}</CardDescription>
-            </CardHeader>
+              <p className="text-sm font-medium text-foreground mt-3">{plan.headline}</p>
+              <p className="text-xs text-muted-foreground mt-1">{plan.description}</p>
+            </div>
 
-            <CardContent className="flex-1 flex flex-col p-6 pt-0">
+            <div className="flex-1 flex flex-col px-6 pb-6">
               {/* Features */}
-              <ul className="space-y-3 flex-1">
+              <ul className="space-y-2.5 flex-1">
                 {plan.features.map((feature, index) => (
-                  <li key={index} className="flex items-start gap-3">
+                  <li key={index} className="flex items-start gap-2.5">
                     {feature.included ? (
                       <Check className={`h-4 w-4 mt-0.5 flex-shrink-0 ${feature.highlight ? "text-primary" : "text-success"}`} />
                     ) : (
-                      <X className="h-4 w-4 mt-0.5 flex-shrink-0 text-muted-foreground/50" />
+                      <X className="h-4 w-4 mt-0.5 flex-shrink-0 text-muted-foreground/30" />
                     )}
                     <div className="flex-1">
-                      <span className={`text-sm ${!feature.included ? "text-muted-foreground/70" : feature.highlight ? "font-medium" : ""}`}>
+                      <span className={`text-sm ${!feature.included ? "text-muted-foreground/50" : feature.highlight ? "font-medium text-foreground" : "text-muted-foreground"}`}>
                         {feature.name}
                       </span>
                       {!feature.included && feature.upsellMessage && (
-                        <span className="text-xs text-primary block mt-0.5">
-                          {feature.upsellMessage}
-                        </span>
+                        <span className="text-xs text-primary block mt-0.5">{feature.upsellMessage}</span>
                       )}
                     </div>
                   </li>
@@ -284,8 +274,8 @@ export const PricingPlans = ({ currentPlan = "free", onPlanSelect }: PricingPlan
 
               {/* Ideal For */}
               <div className="mt-6 pt-4 border-t border-border">
-                <h4 className="text-xs font-semibold text-muted-foreground mb-2">IDEAL FOR:</h4>
-                <ul className="space-y-1">
+                <h4 className="text-xs font-semibold text-muted-foreground mb-2 tracking-wide">IDEAL FOR:</h4>
+                <ul className="space-y-1.5">
                   {plan.idealFor.map((use, index) => (
                     <li key={index} className="text-xs text-muted-foreground flex items-start gap-2">
                       <ArrowRight className="h-3 w-3 mt-0.5 flex-shrink-0 text-primary" />
@@ -298,7 +288,13 @@ export const PricingPlans = ({ currentPlan = "free", onPlanSelect }: PricingPlan
               {/* CTA */}
               <div className="mt-6">
                 <Button
-                  className="w-full"
+                  className={`w-full font-semibold ${
+                    plan.popular
+                      ? "bg-primary hover:bg-primary-glow text-primary-foreground shadow-lg shadow-primary/20"
+                      : currentPlan === plan.id
+                      ? ""
+                      : "bg-card border border-border hover:border-primary/30 text-foreground hover:bg-card"
+                  }`}
                   variant={currentPlan === plan.id ? "secondary" : plan.popular ? "default" : "outline"}
                   onClick={() => handlePlanSelect(plan.id)}
                   disabled={currentPlan === plan.id}
@@ -306,65 +302,49 @@ export const PricingPlans = ({ currentPlan = "free", onPlanSelect }: PricingPlan
                   {currentPlan === plan.id ? "Current Plan" : plan.buttonText}
                 </Button>
                 {plan.trialTerms && (
-                  <p className="text-xs text-muted-foreground text-center mt-2">
-                    {plan.trialTerms}
-                  </p>
+                  <p className="text-xs text-muted-foreground text-center mt-2">{plan.trialTerms}</p>
                 )}
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         ))}
       </div>
 
       {/* Journey Section */}
-      <div className="mt-16 sm:mt-20 max-w-4xl mx-auto relative z-10">
-        <h2 className="text-xl sm:text-2xl font-bold text-center mb-8">
+      <div className="mt-20 sm:mt-24 max-w-4xl mx-auto relative z-10">
+        <h3 className="text-foreground text-center mb-10">
           Your Typical Journey with PortfoliX
-        </h2>
+        </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="text-center p-6 bg-card rounded-lg border">
-            <div className="w-10 h-10 rounded-full bg-primary/10 text-primary font-bold flex items-center justify-center mx-auto mb-4">
-              1
+          {[
+            { step: 1, title: "Start Free", desc: "Build unlimited portfolios, explore strategies, and implement in your brokerage account." },
+            { step: 2, title: "Upgrade to Pro", desc: "After implementing, get ongoing market insights, rebalancing alerts, and optimization recommendations." },
+            { step: 3, title: "Consider Elite", desc: "As your portfolio grows past $50K, access tax optimization, multi-account coordination, and expert access." },
+          ].map((item) => (
+            <div key={item.step} className="text-center p-6 rounded-xl bg-card border border-border">
+              <div className="w-10 h-10 rounded-full bg-primary/10 text-primary font-bold flex items-center justify-center mx-auto mb-4">
+                {item.step}
+              </div>
+              <h4 className="font-semibold text-foreground mb-2">{item.title}</h4>
+              <p className="text-sm text-muted-foreground">{item.desc}</p>
             </div>
-            <h3 className="font-semibold mb-2">Start Free</h3>
-            <p className="text-sm text-muted-foreground">
-              Build unlimited portfolios, explore strategies, and implement in your brokerage account.
-            </p>
-          </div>
-          <div className="text-center p-6 bg-card rounded-lg border">
-            <div className="w-10 h-10 rounded-full bg-primary/10 text-primary font-bold flex items-center justify-center mx-auto mb-4">
-              2
-            </div>
-            <h3 className="font-semibold mb-2">Upgrade to Pro</h3>
-            <p className="text-sm text-muted-foreground">
-              After implementing, get ongoing market insights, rebalancing alerts, and optimization recommendations.
-            </p>
-          </div>
-          <div className="text-center p-6 bg-card rounded-lg border">
-            <div className="w-10 h-10 rounded-full bg-primary/10 text-primary font-bold flex items-center justify-center mx-auto mb-4">
-              3
-            </div>
-            <h3 className="font-semibold mb-2">Consider Elite</h3>
-            <p className="text-sm text-muted-foreground">
-              As your portfolio grows past $50K, access tax optimization, multi-account coordination, and expert access.
-            </p>
-          </div>
+          ))}
         </div>
       </div>
 
-      {/* FAQ Section */}
-      <div className="mt-16 sm:mt-20 max-w-3xl mx-auto relative z-10">
-        <div className="flex items-center justify-center gap-2 mb-8">
+      {/* FAQ */}
+      <div className="mt-20 sm:mt-24 max-w-3xl mx-auto relative z-10">
+        <div className="flex items-center justify-center gap-2 mb-10">
           <HelpCircle className="h-5 w-5 text-primary" />
-          <h2 className="text-xl sm:text-2xl font-bold">Common Questions</h2>
+          <h3 className="text-foreground">Common Questions</h3>
         </div>
         <Accordion type="single" collapsible className="w-full">
           {faqs.map((faq, index) => (
-            <AccordionItem key={index} value={`faq-${index}`}>
-              <AccordionTrigger className="text-left text-sm sm:text-base">
+            <AccordionItem key={index} value={`faq-${index}`} className="border-border">
+              <AccordionTrigger className="text-left text-sm sm:text-base text-foreground hover:text-primary">
                 {faq.question}
               </AccordionTrigger>
-              <AccordionContent className="text-sm text-muted-foreground">
+              <AccordionContent className="text-sm text-muted-foreground leading-relaxed">
                 {faq.answer}
               </AccordionContent>
             </AccordionItem>
@@ -373,10 +353,13 @@ export const PricingPlans = ({ currentPlan = "free", onPlanSelect }: PricingPlan
       </div>
 
       {/* Footer Note */}
-      <div className="text-center mt-12 text-xs sm:text-sm text-muted-foreground px-4 relative z-10">
+      <div className="text-center mt-12 text-sm text-muted-foreground relative z-10">
         <p>All plans include secure payment processing and email support.</p>
         <p className="mt-2">
-          Questions? Contact us at <a href="mailto:peter@portfolixapps.com" className="text-primary hover:underline">peter@portfolixapps.com</a>
+          Questions? Contact us at{" "}
+          <a href="mailto:peter@portfolixapps.com" className="text-primary hover:underline">
+            peter@portfolixapps.com
+          </a>
         </p>
       </div>
     </div>
