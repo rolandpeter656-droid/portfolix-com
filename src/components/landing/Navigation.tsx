@@ -27,48 +27,45 @@ export const Navigation = () => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 glass-nav safe-area-inset">
+    <nav className="fixed top-0 left-0 right-0 z-50 safe-area-inset border-b border-white/5" style={{ background: 'hsl(0 0% 4% / 0.9)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-14 sm:h-16">
+        <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="flex-shrink-0 flex items-center gap-2 hover:opacity-80 transition-opacity">
-            <img 
-              src={portfolioLogo} 
-              alt="PortfoliX" 
-              width={40} 
-              height={40} 
-              className="h-8 sm:h-10 w-auto" 
+          <Link to="/" className="flex-shrink-0 flex items-center gap-2.5 hover:opacity-80 transition-opacity">
+            <img
+              src={portfolioLogo}
+              alt="PortfoliX"
+              width={36}
+              height={36}
+              className="h-9 w-auto"
               loading="eager"
               fetchPriority="high"
             />
-            <span className="text-xl sm:text-2xl font-sans-bold text-gradient">PortfoliX</span>
+            <span className="text-xl font-bold text-gradient">PortfoliX</span>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-6 xl:space-x-8">
-            <a href="#features" className="text-sm xl:text-base text-muted-foreground hover:text-foreground transition-colors">
-              Features
-            </a>
-            <a href="#product" className="text-sm xl:text-base text-muted-foreground hover:text-foreground transition-colors">
-              Product
-            </a>
-            <a href="#pricing" className="text-sm xl:text-base text-muted-foreground hover:text-foreground transition-colors">
-              Pricing
-            </a>
-            <Link to="/learn" className="text-sm xl:text-base text-muted-foreground hover:text-foreground transition-colors">
+          <div className="hidden lg:flex items-center space-x-8">
+            {["Features", "Product", "Pricing", "Testimonials"].map((item) => (
+              <a
+                key={item}
+                href={`#${item.toLowerCase()}`}
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors font-medium"
+              >
+                {item}
+              </a>
+            ))}
+            <Link to="/learn" className="text-sm text-muted-foreground hover:text-foreground transition-colors font-medium">
               Learn
             </Link>
-            <a href="#testimonials" className="text-sm xl:text-base text-muted-foreground hover:text-foreground transition-colors">
-              Testimonials
-            </a>
           </div>
 
           {/* Desktop CTA */}
-          <div className="hidden lg:flex items-center space-x-3 xl:space-x-4">
+          <div className="hidden lg:flex items-center space-x-3">
             {user ? (
-              <div className="flex items-center space-x-3 xl:space-x-4">
+              <div className="flex items-center space-x-3">
                 <Button
-                  className="bg-primary hover:bg-primary-glow text-primary-foreground text-sm"
+                  className="bg-primary hover:bg-primary-glow text-primary-foreground text-sm font-medium"
                   onClick={handleBuildPortfolio}
                 >
                   <PieChart className="mr-2 h-4 w-4" />
@@ -96,15 +93,15 @@ export const Navigation = () => {
               </div>
             ) : (
               <>
-                <Button 
-                  variant="ghost" 
-                  className="text-muted-foreground hover:text-foreground text-sm"
+                <Button
+                  variant="ghost"
+                  className="text-muted-foreground hover:text-foreground text-sm font-medium"
                   onClick={() => navigate('/signin')}
                 >
                   Sign In
                 </Button>
-                <Button 
-                  className="bg-primary hover:bg-primary-glow text-primary-foreground text-sm"
+                <Button
+                  className="bg-primary hover:bg-primary-glow text-primary-foreground text-sm font-medium"
                   onClick={() => setShowSignupModal(true)}
                 >
                   Get Started
@@ -116,96 +113,54 @@ export const Navigation = () => {
 
           {/* Mobile menu button */}
           <div className="lg:hidden">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-2"
-            >
-              {isMenuOpen ? <X className="h-5 w-5 sm:h-6 sm:w-6" /> : <Menu className="h-5 w-5 sm:h-6 sm:w-6" />}
+            <Button variant="ghost" size="sm" onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2">
+              {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
           </div>
         </div>
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="lg:hidden border-t border-white/10 backdrop-blur-2xl absolute left-0 right-0 top-full max-h-[calc(100vh-3.5rem)] overflow-y-auto" style={{ background: 'hsl(218 23% 8% / 0.95)' }}>
+          <div className="lg:hidden border-t border-white/5 absolute left-0 right-0 top-full max-h-[calc(100vh-4rem)] overflow-y-auto" style={{ background: 'hsl(0 0% 4% / 0.97)', backdropFilter: 'blur(20px)' }}>
             <div className="px-4 py-4 space-y-1">
-              {/* Build Portfolio - Prominent at top for logged-in users */}
               {user && (
-                <Button
-                  className="w-full bg-primary hover:bg-primary-glow text-primary-foreground mb-3"
-                  onClick={handleBuildPortfolio}
-                >
+                <Button className="w-full bg-primary hover:bg-primary-glow text-primary-foreground mb-3 font-medium" onClick={handleBuildPortfolio}>
                   <PieChart className="mr-2 h-4 w-4" />
                   Build Portfolio
                 </Button>
               )}
 
-              <a 
-                href="#features" 
-                onClick={closeMenu}
-                className="block px-3 py-3 text-muted-foreground hover:text-foreground hover:bg-secondary/50 rounded-lg transition-colors"
-              >
-                Features
-              </a>
-              <a 
-                href="#product" 
-                onClick={closeMenu}
-                className="block px-3 py-3 text-muted-foreground hover:text-foreground hover:bg-secondary/50 rounded-lg transition-colors"
-              >
-                Product
-              </a>
-              <a 
-                href="#pricing" 
-                onClick={closeMenu}
-                className="block px-3 py-3 text-muted-foreground hover:text-foreground hover:bg-secondary/50 rounded-lg transition-colors"
-              >
-                Pricing
-              </a>
-              <a 
-                href="#testimonials" 
-                onClick={closeMenu}
-                className="block px-3 py-3 text-muted-foreground hover:text-foreground hover:bg-secondary/50 rounded-lg transition-colors"
-              >
-                Testimonials
-              </a>
-              <Link 
-                to="/learn" 
-                onClick={closeMenu}
-                className="block px-3 py-3 text-muted-foreground hover:text-foreground hover:bg-secondary/50 rounded-lg transition-colors"
-              >
+              {["Features", "Product", "Pricing", "Testimonials"].map((item) => (
+                <a
+                  key={item}
+                  href={`#${item.toLowerCase()}`}
+                  onClick={closeMenu}
+                  className="block px-3 py-3 text-muted-foreground hover:text-foreground hover:bg-card rounded-lg transition-colors text-sm"
+                >
+                  {item}
+                </a>
+              ))}
+              <Link to="/learn" onClick={closeMenu} className="block px-3 py-3 text-muted-foreground hover:text-foreground hover:bg-card rounded-lg transition-colors text-sm">
                 Learn
               </Link>
-              
+
               <div className="flex flex-col space-y-2 pt-4 border-t border-border mt-4">
                 {user ? (
                   <>
                     <span className="text-muted-foreground text-sm px-3 py-2">
                       Welcome, {user.email?.split('@')[0]}
                     </span>
-                    <Button 
-                      variant="ghost" 
-                      className="justify-start text-muted-foreground hover:text-foreground"
-                      onClick={() => { signOut(); closeMenu(); }}
-                    >
+                    <Button variant="ghost" className="justify-start text-muted-foreground hover:text-foreground" onClick={() => { signOut(); closeMenu(); }}>
                       <LogOut className="mr-2 h-4 w-4" />
                       Sign Out
                     </Button>
                   </>
                 ) : (
                   <>
-                    <Button 
-                      variant="ghost" 
-                      className="justify-start text-muted-foreground hover:text-foreground"
-                      onClick={() => { navigate('/signin'); closeMenu(); }}
-                    >
+                    <Button variant="ghost" className="justify-start text-muted-foreground hover:text-foreground" onClick={() => { navigate('/signin'); closeMenu(); }}>
                       Sign In
                     </Button>
-                    <Button 
-                      className="bg-primary hover:bg-primary-glow text-primary-foreground"
-                      onClick={() => { setShowSignupModal(true); closeMenu(); }}
-                    >
+                    <Button className="bg-primary hover:bg-primary-glow text-primary-foreground font-medium" onClick={() => { setShowSignupModal(true); closeMenu(); }}>
                       Get Started
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
@@ -216,7 +171,7 @@ export const Navigation = () => {
           </div>
         )}
       </div>
-      
+
       <SignupModal open={showSignupModal} onOpenChange={setShowSignupModal} />
     </nav>
   );
