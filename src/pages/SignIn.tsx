@@ -6,9 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, EyeOff, ArrowLeft, Phone, Mail } from "lucide-react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
+import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 const SignIn = () => {
@@ -17,10 +15,7 @@ const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [honeypot, setHoneypot] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [otp, setOtp] = useState("");
-  const [otpSent, setOtpSent] = useState(false);
-  const { signIn, signInWithPhone, verifyOtp } = useAuth();
+  const { signIn } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -67,80 +62,6 @@ const SignIn = () => {
     }
   };
 
-  const handlePhoneSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (honeypot.trim() !== "") {
-      toast({
-        title: "Something went wrong. Please try again.",
-        description: "",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsLoading(true);
-
-    try {
-      const { error } = await signInWithPhone(phoneNumber);
-      
-      if (error) {
-        toast({
-          title: "Failed to send OTP",
-          description: error.message,
-          variant: "destructive",
-        });
-      } else {
-        setOtpSent(true);
-        toast({
-          title: "OTP sent!",
-          description: "Check your phone for the verification code.",
-        });
-      }
-    } catch (error) {
-      toast({
-        title: "Failed to send OTP",
-        description: "An unexpected error occurred. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleOtpVerify = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    try {
-      const { data, error } = await verifyOtp(phoneNumber, otp);
-      
-      if (error) {
-        toast({
-          title: "Verification failed",
-          description: error.message,
-          variant: "destructive",
-        });
-      } else if (data.user) {
-        toast({
-          title: "Welcome back!",
-          description: "You've successfully signed in.",
-        });
-        const redirectTo = sessionStorage.getItem("redirectAfterAuth") || "/";
-        sessionStorage.removeItem("redirectAfterAuth");
-        navigate(redirectTo);
-      }
-    } catch (error) {
-      toast({
-        title: "Verification failed",
-        description: "An unexpected error occurred. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   return (
     <div className="min-h-[100svh] bg-background flex items-center justify-center p-4 py-8 sm:py-12 relative overflow-hidden">
       {/* Background Blobs */}
@@ -169,20 +90,7 @@ const SignIn = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="px-4 sm:px-6">
-            <Tabs defaultValue="email" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 mb-4 sm:mb-6">
-                <TabsTrigger value="email" className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm">
-                  <Mail className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                  Email
-                </TabsTrigger>
-                <TabsTrigger value="phone" className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm">
-                  <Phone className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                  Phone
-                </TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="email">
-                <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
                   <input
                     type="text"
                     name="website_url"
@@ -251,93 +159,6 @@ const SignIn = () => {
                     Forgot your password?
                   </Link>
                 </div>
-              </TabsContent>
-
-              <TabsContent value="phone">
-                {!otpSent ? (
-                  <form onSubmit={handlePhoneSubmit} className="space-y-3 sm:space-y-4">
-                    <input
-                      type="text"
-                      name="website_url"
-                      value={honeypot}
-                      onChange={(e) => setHoneypot(e.target.value)}
-                      style={{ display: 'none' }}
-                      tabIndex={-1}
-                      autoComplete="off"
-                    />
-                    
-                    <div className="space-y-1.5 sm:space-y-2">
-                      <Label htmlFor="phone" className="text-sm">Phone Number</Label>
-                      <Input
-                        id="phone"
-                        type="tel"
-                        placeholder="+1234567890"
-                        value={phoneNumber}
-                        onChange={(e) => setPhoneNumber(e.target.value)}
-                        required
-                        className="h-10 sm:h-11 text-sm"
-                      />
-                      <p className="text-xs text-muted-foreground">
-                        Include country code (e.g., +1 for US)
-                      </p>
-                    </div>
-
-                    <Button
-                      type="submit"
-                      className="w-full h-10 sm:h-11 text-sm sm:text-base"
-                      disabled={isLoading}
-                    >
-                      {isLoading ? "Sending OTP..." : "Send OTP"}
-                    </Button>
-                  </form>
-                ) : (
-                  <form onSubmit={handleOtpVerify} className="space-y-3 sm:space-y-4">
-                    <div className="space-y-1.5 sm:space-y-2">
-                      <Label htmlFor="otp" className="text-sm">Enter Verification Code</Label>
-                      <div className="flex justify-center">
-                        <InputOTP
-                          maxLength={6}
-                          value={otp}
-                          onChange={(value) => setOtp(value)}
-                        >
-                          <InputOTPGroup>
-                            <InputOTPSlot index={0} />
-                            <InputOTPSlot index={1} />
-                            <InputOTPSlot index={2} />
-                            <InputOTPSlot index={3} />
-                            <InputOTPSlot index={4} />
-                            <InputOTPSlot index={5} />
-                          </InputOTPGroup>
-                        </InputOTP>
-                      </div>
-                      <p className="text-xs text-muted-foreground text-center animate-fade-in">
-                        Code sent to {phoneNumber}
-                      </p>
-                    </div>
-
-                    <Button
-                      type="submit"
-                      className="w-full h-10 sm:h-11 text-sm sm:text-base"
-                      disabled={isLoading || otp.length !== 6}
-                    >
-                      {isLoading ? "Verifying..." : "Verify & Sign In"}
-                    </Button>
-
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      className="w-full text-sm"
-                      onClick={() => {
-                        setOtpSent(false);
-                        setOtp("");
-                      }}
-                    >
-                      Use a different number
-                    </Button>
-                  </form>
-                )}
-              </TabsContent>
-            </Tabs>
 
             {/* Divider */}
             <div className="relative my-4 sm:my-6">
