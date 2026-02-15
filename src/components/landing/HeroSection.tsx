@@ -19,12 +19,6 @@ export const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center max-w-7xl mx-auto">
           {/* Left: Text content */}
           <div className="text-center lg:text-left max-w-2xl mx-auto lg:mx-0">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/20 bg-primary/5 text-primary text-sm font-medium mb-6 animate-fade-in-up">
-              <Zap className="h-3.5 w-3.5" />
-              AI-Powered Portfolio Builder
-            </div>
-
             {/* Headline */}
             <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-foreground mb-6 leading-[1.08] animate-fade-in-up-delay-1">
               Build Portfolios{" "}
