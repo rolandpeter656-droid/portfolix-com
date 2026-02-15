@@ -2,10 +2,12 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useWelcomeEmail } from "@/hooks/useWelcomeEmail";
 
 export default function AuthCallback() {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { sendWelcomeEmail } = useWelcomeEmail();
 
   useEffect(() => {
     const handleAuthCallback = async () => {
@@ -39,6 +41,9 @@ export default function AuthCallback() {
               title: "Email Confirmed!",
               description: "Welcome to PortfoliX. Your account is now active.",
             });
+            // Send welcome email on first signup confirmation
+            const firstName = data.session.user?.user_metadata?.first_name;
+            sendWelcomeEmail(firstName);
             // Redirect to stored destination or home
             const redirectTo = sessionStorage.getItem("redirectAfterAuth") || "/";
             sessionStorage.removeItem("redirectAfterAuth");
