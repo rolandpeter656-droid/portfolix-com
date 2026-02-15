@@ -10,6 +10,7 @@ import { ArrowLeft, Check, CreditCard, Building, Shield } from "lucide-react";
 import { usePaystackPayment } from "react-paystack";
 import { useToast } from "@/hooks/use-toast";
 import { analytics } from "@/lib/analytics/index";
+import { useWelcomeEmail } from "@/hooks/useWelcomeEmail";
 
 interface PaymentConfig {
   reference: string;
@@ -28,7 +29,7 @@ const Payment = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  
+  const { sendProWelcomeEmail, sendEliteWelcomeEmail } = useWelcomeEmail();
   const plan = searchParams.get("plan") || "pro";
   const currency = (searchParams.get("currency") || "USD") as "NGN" | "USD";
   
@@ -66,8 +67,13 @@ const Payment = () => {
       title: "Payment Successful!",
       description: "Welcome to Pro Plan! Your subscription is now active.",
     });
+    // Send plan welcome email
+    if (plan === "elite") {
+      sendEliteWelcomeEmail(customerData.firstName);
+    } else {
+      sendProWelcomeEmail(customerData.firstName);
+    }
     setIsProcessing(false);
-    // In a real app, you'd verify the payment on your backend
     setTimeout(() => {
       navigate("/", { state: { plan: "pro" } });
     }, 2000);

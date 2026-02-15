@@ -10,136 +10,234 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-interface WelcomeEmailRequest {
-  email: string;
-  firstName?: string;
-  portfolioName?: string;
-  portfolioAssets?: Array<{ symbol: string; name: string; allocation: number }>;
-  emailType: "welcome" | "day3_followup" | "day7_context";
-}
+const ADMIN_EMAIL = "peter@portfolixapps.com";
+const FROM_EMAIL = "PortfoliX <noreply@resend.dev>";
 
-const getWelcomeEmailHtml = (firstName: string, portfolioName?: string, assets?: Array<{ symbol: string; name: string; allocation: number }>) => `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Welcome to PortfoliX</title>
-</head>
-<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f5f5f5; margin: 0; padding: 20px;">
-  <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 12px; overflow: hidden;">
-    <div style="background: linear-gradient(135deg, #8B5CF6 0%, #06B6D4 100%); padding: 40px 30px; text-align: center;">
-      <h1 style="color: white; margin: 0; font-size: 28px;">🎉 Your Portfolio is Ready!</h1>
+// ── Sanitization helpers ──
+const esc = (s: string | undefined | null) =>
+  String(s || "").replace(/[<>&"']/g, "").substring(0, 100);
+
+const sanitizeAssets = (
+  arr?: Array<{ symbol: string; name: string; allocation: number }>
+) =>
+  (arr || []).slice(0, 10).map((a) => ({
+    symbol: esc(a.symbol).substring(0, 10),
+    name: esc(a.name).substring(0, 50),
+    allocation: Math.min(Math.max(Number(a.allocation) || 0, 0), 100),
+  }));
+
+// ── Shared style tokens ──
+const TEAL = "#14B8A6";
+const DARK = "#0A0A0A";
+const CARD_BG = "#1A1A1A";
+const GRAY = "#9CA3AF";
+
+const baseWrapper = (content: string) => `<!DOCTYPE html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background-color:#f5f5f5;margin:0;padding:20px;">
+<div style="max-width:600px;margin:0 auto;background:${DARK};border-radius:12px;overflow:hidden;">
+${content}
+<div style="padding:20px 30px;text-align:center;border-top:1px solid #2A2A2A;">
+  <p style="color:${GRAY};font-size:12px;margin:0;">
+    PortfoliX · Built for smarter investing<br>
+    <a href="https://portfolix-com.lovable.app/terms" style="color:${TEAL};text-decoration:none;">Terms</a> · 
+    <a href="https://portfolix-com.lovable.app/privacy" style="color:${TEAL};text-decoration:none;">Privacy</a>
+  </p>
+  <p style="color:#4B5563;font-size:11px;margin:8px 0 0;">
+    PortfoliX provides educational research tools, not personalized financial advice.
+  </p>
+</div>
+</div>
+</body></html>`;
+
+const ctaButton = (text: string, href: string) =>
+  `<div style="text-align:center;margin:30px 0;">
+    <a href="${href}" style="background:${TEAL};color:white;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:600;display:inline-block;">${text}</a>
+  </div>`;
+
+const founderSig = `
+<p style="color:#d1d5db;font-size:14px;margin-top:24px;">
+  Cheers,<br><strong>Roland Peter</strong><br>
+  <span style="color:${GRAY};font-size:13px;">Founder, PortfoliX</span>
+</p>`;
+
+// ── Email Templates ──
+
+function welcomeEmail(name: string) {
+  return baseWrapper(`
+    <div style="background:linear-gradient(135deg,${TEAL} 0%,#059669 100%);padding:40px 30px;text-align:center;">
+      <h1 style="color:white;margin:0;font-size:28px;">Welcome to PortfoliX 🎉</h1>
     </div>
-    <div style="padding: 30px;">
-      <p style="color: #333; font-size: 16px; line-height: 1.6;">Hi ${firstName || "there"},</p>
-      <p style="color: #333; font-size: 16px; line-height: 1.6;">
-        Congratulations on creating your personalized investment portfolio${portfolioName ? `: <strong>${portfolioName}</strong>` : ""}! You've taken an important step toward building long-term wealth.
+    <div style="padding:30px;color:#e5e7eb;">
+      <p style="font-size:16px;line-height:1.6;">Hi ${name},</p>
+      <p style="font-size:16px;line-height:1.6;">
+        Thanks for joining PortfoliX! You're about to build your first investment portfolio in just 3 minutes — no finance degree required.
       </p>
-      ${assets && assets.length > 0 ? `
-      <div style="background: #f8f9fa; border-radius: 8px; padding: 20px; margin: 20px 0;">
-        <h3 style="color: #333; margin-top: 0;">Your Portfolio Summary</h3>
-        <table style="width: 100%; border-collapse: collapse;">
-          ${assets.map(a => `
-          <tr>
-            <td style="padding: 8px 0; border-bottom: 1px solid #eee;">
-              <strong style="color: #8B5CF6;">${a.symbol}</strong>
-              <span style="color: #666; font-size: 14px;"> ${a.name}</span>
-            </td>
-            <td style="text-align: right; padding: 8px 0; border-bottom: 1px solid #eee; color: #333;">${a.allocation}%</td>
-          </tr>`).join("")}
-        </table>
-      </div>` : ""}
-      <div style="background: #f0fdf4; border-left: 4px solid #10B981; padding: 20px; margin: 20px 0;">
-        <h3 style="color: #166534; margin-top: 0;">📋 Implementation Checklist</h3>
-        <ul style="color: #333; padding-left: 20px; margin: 0;">
-          <li style="margin: 8px 0;">Open your brokerage account (Fidelity, Vanguard, or Schwab)</li>
-          <li style="margin: 8px 0;">Search for each ticker symbol</li>
-          <li style="margin: 8px 0;">Purchase the exact dollar amounts shown</li>
-          <li style="margin: 8px 0;">Set a calendar reminder to review annually</li>
+      <h3 style="color:white;margin-top:24px;">Here's how it works:</h3>
+      <div style="margin:16px 0;">
+        <div style="display:flex;align-items:flex-start;margin-bottom:16px;">
+          <span style="background:${TEAL};color:white;border-radius:50%;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;font-weight:700;margin-right:12px;flex-shrink:0;">1</span>
+          <div><strong style="color:white;">Tell us your goals</strong><br><span style="color:${GRAY};font-size:14px;">Answer 3 simple questions about your risk tolerance and timeline</span></div>
+        </div>
+        <div style="display:flex;align-items:flex-start;margin-bottom:16px;">
+          <span style="background:${TEAL};color:white;border-radius:50%;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;font-weight:700;margin-right:12px;flex-shrink:0;">2</span>
+          <div><strong style="color:white;">Get your portfolio</strong><br><span style="color:${GRAY};font-size:14px;">Our AI builds a diversified portfolio matched to you</span></div>
+        </div>
+        <div style="display:flex;align-items:flex-start;">
+          <span style="background:${TEAL};color:white;border-radius:50%;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;font-weight:700;margin-right:12px;flex-shrink:0;">3</span>
+          <div><strong style="color:white;">Start investing</strong><br><span style="color:${GRAY};font-size:14px;">Follow your personalized implementation guide</span></div>
+        </div>
+      </div>
+      ${ctaButton("Build Your First Portfolio", "https://portfolix-com.lovable.app/portfolio-builder")}
+      <div style="background:${CARD_BG};border-radius:8px;padding:20px;margin:20px 0;border-left:4px solid ${TEAL};">
+        <h4 style="color:white;margin-top:0;">What makes PortfoliX different?</h4>
+        <ul style="color:${GRAY};padding-left:20px;margin:0;">
+          <li style="margin:6px 0;">AI-powered portfolio recommendations</li>
+          <li style="margin:6px 0;">Clear implementation guides</li>
+          <li style="margin:6px 0;">Educational resources for every level</li>
+          <li style="margin:6px 0;">Free to get started — no credit card needed</li>
         </ul>
       </div>
-      <p style="color: #333; font-size: 16px; line-height: 1.6;">
-        <strong>Need help?</strong> Visit your PortfoliX dashboard anytime to view your portfolio, get AI-powered suggestions, and track your progress.
-      </p>
-      <div style="text-align: center; margin: 30px 0;">
-        <a href="https://portfolix-com.lovable.app/my-portfolios" style="background: linear-gradient(135deg, #8B5CF6 0%, #06B6D4 100%); color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600; display: inline-block;">View My Portfolio</a>
-      </div>
-    </div>
-    <div style="background: #f8f9fa; padding: 20px 30px; text-align: center; border-top: 1px solid #eee;">
-      <p style="color: #666; font-size: 12px; margin: 0;">
-        PortfoliX provides educational research tools, not personalized financial advice.<br>
-        You are solely responsible for your investment decisions.
+      ${founderSig}
+      <p style="color:#6B7280;font-size:13px;margin-top:16px;font-style:italic;">
+        P.S. Have questions? Just reply to this email — I read every message personally.
       </p>
     </div>
-  </div>
-</body>
-</html>`;
+  `);
+}
 
-const getDay3FollowupHtml = (firstName: string) => `
-<!DOCTYPE html>
-<html>
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
-<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f5f5f5; margin: 0; padding: 20px;">
-  <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 12px; overflow: hidden;">
-    <div style="background: linear-gradient(135deg, #8B5CF6 0%, #06B6D4 100%); padding: 40px 30px; text-align: center;">
-      <h1 style="color: white; margin: 0; font-size: 24px;">Have you implemented your portfolio yet?</h1>
+function proWelcomeEmail(name: string, nextBillingDate: string) {
+  const features = [
+    { icon: "🤖", title: "AI-Powered Market Analysis", desc: "Real-time insights and trend detection powered by advanced algorithms" },
+    { icon: "🔔", title: "Portfolio Rebalancing Alerts", desc: "Get notified when your portfolio drifts from optimal allocation" },
+    { icon: "📊", title: "Performance Tracking", desc: "Detailed recommendations to optimize your returns" },
+    { icon: "📋", title: "Quarterly Portfolio Reviews", desc: "In-depth analysis of your portfolio performance every quarter" },
+    { icon: "⚡", title: "Priority Email Support", desc: "Get answers faster with priority support" },
+    { icon: "💡", title: "Tax Optimization Guidance", desc: "Strategies to minimize your tax burden" },
+  ];
+  return baseWrapper(`
+    <div style="background:linear-gradient(135deg,${TEAL} 0%,#0D9488 50%,#059669 100%);padding:40px 30px;text-align:center;">
+      <p style="color:rgba(255,255,255,0.8);margin:0 0 8px;font-size:14px;text-transform:uppercase;letter-spacing:2px;">Welcome to</p>
+      <h1 style="color:white;margin:0;font-size:32px;">PortfoliX Pro ⚡</h1>
+      <p style="color:rgba(255,255,255,0.9);margin:8px 0 0;font-size:16px;">Your investing just got smarter</p>
     </div>
-    <div style="padding: 30px;">
-      <p style="color: #333; font-size: 16px; line-height: 1.6;">Hi ${firstName || "there"},</p>
-      <p style="color: #333; font-size: 16px; line-height: 1.6;">We noticed you created a portfolio 3 days ago. If you haven't implemented it yet, here are some common questions that might be holding you back:</p>
-      <div style="margin: 24px 0;">
-        <div style="border-bottom: 1px solid #eee; padding: 16px 0;">
-          <h4 style="color: #8B5CF6; margin: 0 0 8px 0;">❓ "Which brokerage should I use?"</h4>
-          <p style="color: #666; margin: 0; font-size: 14px;">Fidelity, Vanguard, and Charles Schwab all offer commission-free trading for ETFs.</p>
+    <div style="padding:30px;color:#e5e7eb;">
+      <p style="font-size:16px;line-height:1.6;">Hi ${name},</p>
+      <p style="font-size:16px;line-height:1.6;">
+        Welcome to the Pro family! You now have access to powerful tools that will help you make smarter investment decisions.
+      </p>
+      <h3 style="color:white;">Your Pro Features:</h3>
+      ${features.map(f => `
+        <div style="background:${CARD_BG};border-radius:8px;padding:16px;margin:12px 0;border:1px solid #2A2A2A;">
+          <div style="font-size:16px;"><span style="margin-right:8px;">${f.icon}</span><strong style="color:white;">${f.title}</strong></div>
+          <p style="color:${GRAY};font-size:14px;margin:6px 0 0;">${f.desc}</p>
         </div>
-        <div style="border-bottom: 1px solid #eee; padding: 16px 0;">
-          <h4 style="color: #8B5CF6; margin: 0 0 8px 0;">❓ "Is now a good time to invest?"</h4>
-          <p style="color: #666; margin: 0; font-size: 14px;">Time in the market beats timing the market.</p>
-        </div>
-        <div style="padding: 16px 0;">
-          <h4 style="color: #8B5CF6; margin: 0 0 8px 0;">❓ "What if I make a mistake?"</h4>
-          <p style="color: #666; margin: 0; font-size: 14px;">ETFs are flexible—you can sell anytime. Start small to build confidence.</p>
-        </div>
+      `).join("")}
+      ${ctaButton("Access Pro Features", "https://portfolix-com.lovable.app/portfolio-builder")}
+      <div style="background:${CARD_BG};border-radius:8px;padding:16px;margin:20px 0;border:1px solid #2A2A2A;">
+        <p style="color:${GRAY};font-size:13px;margin:0;">
+          <strong style="color:white;">Billing:</strong> $15/month · Next billing: ${nextBillingDate}<br>
+          <a href="https://portfolix-com.lovable.app/pricing" style="color:${TEAL};text-decoration:none;">Manage subscription →</a>
+        </p>
       </div>
-      <div style="text-align: center; margin: 30px 0;">
-        <a href="https://portfolix-com.lovable.app/my-portfolios" style="background: linear-gradient(135deg, #8B5CF6 0%, #06B6D4 100%); color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600; display: inline-block;">Review My Portfolio</a>
-      </div>
+      ${founderSig}
     </div>
-  </div>
-</body>
-</html>`;
+  `);
+}
 
-const getDay7ContextHtml = (firstName: string) => `
-<!DOCTYPE html>
-<html>
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
-<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f5f5f5; margin: 0; padding: 20px;">
-  <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 12px; overflow: hidden;">
-    <div style="background: linear-gradient(135deg, #8B5CF6 0%, #06B6D4 100%); padding: 40px 30px; text-align: center;">
-      <h1 style="color: white; margin: 0; font-size: 24px;">📈 Your Weekly Portfolio Check-In</h1>
+function eliteWelcomeEmail(name: string, nextBillingDate: string) {
+  const features = [
+    { icon: "🧠", title: "Advanced AI Market Intelligence", desc: "Institutional-grade analysis and predictive insights" },
+    { icon: "📉", title: "Tax-Loss Harvesting Strategies", desc: "Automated strategies to offset gains and reduce taxes" },
+    { icon: "🔗", title: "Multi-Account Portfolio Coordination", desc: "Optimize across all your investment accounts" },
+    { icon: "⚙️", title: "Advanced Rebalancing Algorithms", desc: "Sophisticated algorithms for optimal portfolio maintenance" },
+    { icon: "👤", title: "Direct Advisor Access", desc: "Schedule consultations with investment professionals" },
+    { icon: "🎯", title: "White-Glove Support", desc: "Dedicated support with priority response times" },
+    { icon: "📈", title: "Institutional-Grade Analytics", desc: "The same tools used by professional portfolio managers" },
+  ];
+  return baseWrapper(`
+    <div style="background:linear-gradient(135deg,#1a1a2e 0%,${DARK} 50%,#0D9488 100%);padding:48px 30px;text-align:center;border-bottom:2px solid ${TEAL};">
+      <p style="color:${TEAL};margin:0 0 8px;font-size:13px;text-transform:uppercase;letter-spacing:3px;">Exclusive Access</p>
+      <h1 style="color:white;margin:0;font-size:34px;">PortfoliX Elite 👑</h1>
+      <p style="color:rgba(255,255,255,0.8);margin:8px 0 0;font-size:16px;">Premium investing starts now</p>
     </div>
-    <div style="padding: 30px;">
-      <p style="color: #333; font-size: 16px; line-height: 1.6;">Hi ${firstName || "there"},</p>
-      <p style="color: #333; font-size: 16px; line-height: 1.6;">It's been a week since you created your portfolio. Here's what you should know about long-term investing:</p>
-      <div style="background: #fef3c7; border-radius: 8px; padding: 20px; margin: 20px 0;">
-        <h3 style="color: #92400e; margin-top: 0;">🎯 Remember: This is a Marathon, Not a Sprint</h3>
-        <p style="color: #78350f; margin: 0; font-size: 14px;">Daily or weekly market movements are normal. Your portfolio is designed for your specific timeline and goals.</p>
+    <div style="padding:30px;color:#e5e7eb;">
+      <p style="font-size:16px;line-height:1.6;">Hi ${name},</p>
+      <p style="font-size:16px;line-height:1.6;">
+        Welcome to the most exclusive tier of PortfoliX. You now have access to institutional-grade tools designed for serious investors like you.
+      </p>
+      <h3 style="color:white;">Your Elite Arsenal:</h3>
+      ${features.map(f => `
+        <div style="background:${CARD_BG};border-radius:8px;padding:16px;margin:12px 0;border:1px solid #2A2A2A;">
+          <div style="font-size:16px;"><span style="margin-right:8px;">${f.icon}</span><strong style="color:white;">${f.title}</strong></div>
+          <p style="color:${GRAY};font-size:14px;margin:6px 0 0;">${f.desc}</p>
+        </div>
+      `).join("")}
+      ${ctaButton("Access Elite Dashboard", "https://portfolix-com.lovable.app/portfolio-builder")}
+      <div style="background:${CARD_BG};border-radius:8px;padding:16px;margin:20px 0;border:1px solid #2A2A2A;">
+        <p style="color:${GRAY};font-size:13px;margin:0;">
+          <strong style="color:white;">Billing:</strong> $49/month · Next billing: ${nextBillingDate}<br>
+          <a href="https://portfolix-com.lovable.app/pricing" style="color:${TEAL};text-decoration:none;">Manage subscription →</a><br>
+          <strong style="color:white;">Elite Support:</strong> <a href="mailto:elite@portfolixapps.com" style="color:${TEAL};text-decoration:none;">elite@portfolixapps.com</a>
+        </p>
       </div>
-      <h3 style="color: #333;">What Successful Investors Do:</h3>
-      <ul style="color: #666; line-height: 1.8;">
-        <li><strong>Check monthly, not daily</strong> — Less stress, better decisions</li>
-        <li><strong>Keep contributing</strong> — Regular investments smooth out volatility</li>
-        <li><strong>Stay the course</strong> — The biggest gains come from patience</li>
-        <li><strong>Rebalance annually</strong> — We'll remind you when it's time</li>
-      </ul>
-      <div style="text-align: center; margin: 30px 0;">
-        <a href="https://portfolix-com.lovable.app/my-portfolios" style="background: linear-gradient(135deg, #8B5CF6 0%, #06B6D4 100%); color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600; display: inline-block;">View My Portfolio</a>
-      </div>
+      ${founderSig}
     </div>
-  </div>
-</body>
-</html>`;
+  `);
+}
+
+function internalNotificationEmail(data: {
+  userEmail: string;
+  portfolioName: string;
+  riskScore: number;
+  timeline: string;
+  experienceLevel: string;
+  investmentAmount: number;
+  assetCount: number;
+  userPlan: string;
+  userCreatedAt: string;
+  totalPortfolios: number;
+}) {
+  return `<!DOCTYPE html>
+<html><head><meta charset="utf-8"></head>
+<body style="font-family:monospace;background:#f5f5f5;padding:20px;">
+<div style="max-width:600px;margin:0 auto;background:white;border-radius:8px;padding:24px;border-left:4px solid ${TEAL};">
+  <h2 style="margin-top:0;">🎯 New Portfolio Created</h2>
+  <table style="width:100%;border-collapse:collapse;">
+    <tr><td style="padding:6px 0;font-weight:bold;">User</td><td>${data.userEmail}</td></tr>
+    <tr><td style="padding:6px 0;font-weight:bold;">Portfolio</td><td>${data.portfolioName}</td></tr>
+    <tr><td style="padding:6px 0;font-weight:bold;">Risk Score</td><td>${data.riskScore}/100</td></tr>
+    <tr><td style="padding:6px 0;font-weight:bold;">Timeline</td><td>${data.timeline}</td></tr>
+    <tr><td style="padding:6px 0;font-weight:bold;">Experience</td><td>${data.experienceLevel}</td></tr>
+    <tr><td style="padding:6px 0;font-weight:bold;">Amount</td><td>$${data.investmentAmount.toLocaleString()}</td></tr>
+    <tr><td style="padding:6px 0;font-weight:bold;">Assets</td><td>${data.assetCount} holdings</td></tr>
+    <tr><td style="padding:6px 0;font-weight:bold;">Plan</td><td>${data.userPlan}</td></tr>
+    <tr><td style="padding:6px 0;font-weight:bold;">Joined</td><td>${data.userCreatedAt}</td></tr>
+    <tr><td style="padding:6px 0;font-weight:bold;">Total Portfolios</td><td>${data.totalPortfolios}</td></tr>
+  </table>
+  <p style="margin-top:16px;"><a href="https://portfolix-com.lovable.app/analytics" style="color:${TEAL};">Open Admin Dashboard →</a></p>
+</div>
+</body></html>`;
+}
+
+// ── Handler ──
+
+interface EmailRequest {
+  emailType: "welcome" | "pro_welcome" | "elite_welcome" | "internal_notification";
+  firstName?: string;
+  // For plan welcome emails
+  nextBillingDate?: string;
+  // For internal notification
+  portfolioName?: string;
+  riskScore?: number;
+  timeline?: string;
+  experienceLevel?: string;
+  investmentAmount?: number;
+  assetCount?: number;
+  userPlan?: string;
+  userCreatedAt?: string;
+  totalPortfolios?: number;
+}
 
 const handler = async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") {
@@ -147,7 +245,6 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    // Authenticate the user
     const authHeader = req.headers.get("Authorization");
     if (!authHeader?.startsWith("Bearer ")) {
       return new Response(
@@ -162,39 +259,21 @@ const handler = async (req: Request): Promise<Response> => {
       { global: { headers: { Authorization: authHeader } } }
     );
 
-    const token = authHeader.replace("Bearer ", "");
-    const { data: claimsData, error: claimsError } = await supabase.auth.getClaims(token);
-    if (claimsError || !claimsData?.claims) {
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
       return new Response(
         JSON.stringify({ success: false, error: "Invalid or expired session" }),
         { status: 401, headers: { "Content-Type": "application/json", ...corsHeaders } }
       );
     }
 
-    const userEmail = claimsData.claims.email as string;
-    const userId = claimsData.claims.sub;
-    console.log("Authenticated email request from user:", userId);
+    const userEmail = user.email;
+    console.log("Authenticated email request from user:", user.id);
 
-    const { email, firstName, portfolioName, portfolioAssets, emailType }: WelcomeEmailRequest = await req.json();
+    const body: EmailRequest = await req.json();
+    const { emailType } = body;
 
-    if (!email) {
-      return new Response(
-        JSON.stringify({ success: false, error: "Email is required" }),
-        { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
-      );
-    }
-
-    // Verify the user is sending the email to their own address
-    if (email.toLowerCase() !== userEmail?.toLowerCase()) {
-      console.warn(`User ${userId} attempted to send email to ${email} but their email is ${userEmail}`);
-      return new Response(
-        JSON.stringify({ success: false, error: "You can only send emails to your own address" }),
-        { status: 403, headers: { "Content-Type": "application/json", ...corsHeaders } }
-      );
-    }
-
-    // Validate emailType
-    const validTypes = ["welcome", "day3_followup", "day7_context"];
+    const validTypes = ["welcome", "pro_welcome", "elite_welcome", "internal_notification"];
     if (!validTypes.includes(emailType)) {
       return new Response(
         JSON.stringify({ success: false, error: "Invalid email type" }),
@@ -202,34 +281,46 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
+    const safeName = esc(body.firstName) || "there";
     let subject: string;
     let html: string;
-
-    // Sanitize firstName to prevent HTML injection in email templates
-    const safeName = (firstName || "").replace(/[<>&"']/g, "");
-    const safePortfolioName = (portfolioName || "").replace(/[<>&"']/g, "");
-
-    // Sanitize portfolio assets
-    const safeAssets = portfolioAssets?.slice(0, 5).map(a => ({
-      symbol: String(a.symbol || "").replace(/[<>&"']/g, "").substring(0, 10),
-      name: String(a.name || "").replace(/[<>&"']/g, "").substring(0, 50),
-      allocation: Math.min(Math.max(Number(a.allocation) || 0, 0), 100),
-    }));
+    let to: string[];
 
     switch (emailType) {
       case "welcome":
-        subject = safePortfolioName
-          ? `Your ${safePortfolioName} is Ready! 🎉`
-          : "Your PortfoliX Portfolio is Ready! 🎉";
-        html = getWelcomeEmailHtml(safeName, safePortfolioName, safeAssets);
+        subject = "Welcome to PortfoliX – Build Your First Portfolio in 3 Minutes";
+        html = welcomeEmail(safeName);
+        to = [userEmail!];
         break;
-      case "day3_followup":
-        subject = "Have you implemented your portfolio yet?";
-        html = getDay3FollowupHtml(safeName);
+      case "pro_welcome": {
+        const nextDate = esc(body.nextBillingDate) || new Date(Date.now() + 30 * 86400000).toLocaleDateString();
+        subject = "Welcome to PortfoliX Pro – Your Investing Just Got Smarter ⚡";
+        html = proWelcomeEmail(safeName, nextDate);
+        to = [userEmail!];
         break;
-      case "day7_context":
-        subject = "📈 Your Weekly Portfolio Check-In";
-        html = getDay7ContextHtml(safeName);
+      }
+      case "elite_welcome": {
+        const nextDate = esc(body.nextBillingDate) || new Date(Date.now() + 30 * 86400000).toLocaleDateString();
+        subject = "Welcome to PortfoliX Elite – Premium Investing Starts Now 👑";
+        html = eliteWelcomeEmail(safeName, nextDate);
+        to = [userEmail!];
+        break;
+      }
+      case "internal_notification":
+        subject = "🎯 New Portfolio Created on PortfoliX";
+        html = internalNotificationEmail({
+          userEmail: userEmail || "unknown",
+          portfolioName: esc(body.portfolioName) || "Unnamed",
+          riskScore: Math.min(Math.max(Number(body.riskScore) || 0, 0), 100),
+          timeline: esc(body.timeline) || "N/A",
+          experienceLevel: esc(body.experienceLevel) || "N/A",
+          investmentAmount: Number(body.investmentAmount) || 0,
+          assetCount: Number(body.assetCount) || 0,
+          userPlan: esc(body.userPlan) || "free",
+          userCreatedAt: esc(body.userCreatedAt) || "N/A",
+          totalPortfolios: Number(body.totalPortfolios) || 0,
+        });
+        to = [ADMIN_EMAIL];
         break;
       default:
         return new Response(
@@ -238,11 +329,11 @@ const handler = async (req: Request): Promise<Response> => {
         );
     }
 
-    console.log(`Sending ${emailType} email to authenticated user ${userId}`);
+    console.log(`Sending ${emailType} email to ${to.join(", ")}`);
 
     const emailResponse = await resend.emails.send({
-      from: "PortfoliX <noreply@resend.dev>",
-      to: [email],
+      from: FROM_EMAIL,
+      to,
       subject,
       html,
     });
@@ -253,7 +344,6 @@ const handler = async (req: Request): Promise<Response> => {
       status: 200,
       headers: { "Content-Type": "application/json", ...corsHeaders },
     });
-
   } catch (error: unknown) {
     console.error("Error in send-welcome-email function:", error);
     return new Response(

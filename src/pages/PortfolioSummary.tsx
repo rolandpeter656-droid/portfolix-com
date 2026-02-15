@@ -227,7 +227,7 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onBack, onCust
   const [adjustedRiskScore, setAdjustedRiskScore] = useState<number>(riskScore);
   const { toast } = useToast();
   const { subscriptionPlan, portfolioCount } = usePortfolioLimit();
-  const { sendPortfolioWelcomeEmail } = useWelcomeEmail();
+  const { sendPortfolioNotification } = useWelcomeEmail();
   const { user } = useAuth();
 
   // Get suggested amounts based on experience
@@ -310,14 +310,19 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onBack, onCust
       // Track portfolio saved
       analytics.portfolioSaved(name, name);
       
-      // Send welcome email if user is authenticated
+      // Send internal notification email
       if (user?.email) {
-        sendPortfolioWelcomeEmail(
-          user.email,
-          undefined,
-          name,
-          portfolio.map(a => ({ symbol: a.symbol, name: a.name, allocation: a.allocation }))
-        );
+        sendPortfolioNotification({
+          portfolioName: name,
+          riskScore,
+          timeline,
+          experienceLevel,
+          investmentAmount: 1000,
+          assetCount: portfolio.length,
+          userPlan: subscriptionPlan || "free",
+          userCreatedAt: user.created_at || "N/A",
+          totalPortfolios: (portfolioCount || 0) + 1,
+        });
       }
     };
     autoSavePortfolio();
