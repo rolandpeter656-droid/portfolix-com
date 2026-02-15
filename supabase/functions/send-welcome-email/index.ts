@@ -11,7 +11,7 @@ const corsHeaders = {
 };
 
 const ADMIN_EMAIL = "peter@portfolixapps.com";
-const FROM_EMAIL = "PortfoliX <noreply@resend.dev>";
+const FROM_EMAIL = "Roland from PortfoliX <noreply@portfolixapps.com>";
 
 // ── Sanitization helpers ──
 const esc = (s: string | undefined | null) =>
