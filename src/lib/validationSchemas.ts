@@ -21,10 +21,6 @@ export const signUpSchema = z.object({
   password: z.string()
     .min(8, 'Password must be at least 8 characters')
     .max(128, 'Password must be less than 128 characters'),
-  phoneNumber: z.string()
-    .min(1, 'Phone number is required')
-    .regex(phoneRegex, 'Invalid phone number format (use international format: +1234567890)')
-    .or(z.literal('')), // Allow empty for optional
 });
 
 export type SignUpFormData = z.infer<typeof signUpSchema>;

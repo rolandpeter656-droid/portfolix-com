@@ -15,7 +15,7 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
+  
   const [showPassword, setShowPassword] = useState(false);
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -42,7 +42,6 @@ const SignUp = () => {
       lastName,
       email,
       password,
-      phoneNumber: phoneNumber || '',
     });
 
     if (validation.success === false) {
@@ -78,7 +77,6 @@ const SignUp = () => {
           data: {
             first_name: firstName,
             last_name: lastName,
-            phone_number: phoneNumber,
           }
         }
       });
@@ -192,22 +190,6 @@ const SignUp = () => {
                 )}
               </div>
 
-              <div className="space-y-1.5 sm:space-y-2">
-                <Label htmlFor="phoneNumber" className="text-sm">Phone Number (International: +1234567890)</Label>
-                <Input
-                  id="phoneNumber"
-                  type="tel"
-                  placeholder="+1 234 567 8900"
-                  value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
-                  required
-                  maxLength={20}
-                  className={`h-10 sm:h-11 text-sm ${formErrors.phoneNumber ? 'border-destructive' : ''}`}
-                />
-                {formErrors.phoneNumber && (
-                  <p className="text-xs text-destructive">{formErrors.phoneNumber}</p>
-                )}
-              </div>
               
               <div className="space-y-1.5 sm:space-y-2">
                 <Label htmlFor="password" className="text-sm">Password</Label>
