@@ -52,21 +52,9 @@ export const ProductShowcase = () => {
               </Button>
             </div>
 
-            {/* Right: 3D elevated monitor mockup */}
-            <div className="relative flex flex-col items-center" style={{ perspective: '1200px' }}>
-              {/* Monitor screen */}
-              <div
-                className="relative rounded-xl overflow-hidden border border-white/10 shadow-2xl shadow-black/60"
-                style={{
-                  transform: 'rotateY(-4deg) rotateX(2deg)',
-                  transformStyle: 'preserve-3d',
-                  background: 'linear-gradient(145deg, hsl(0 0% 12%), hsl(0 0% 6%))',
-                }}
-              >
-                {/* Screen bezel highlight */}
-                <div className="absolute inset-0 rounded-xl pointer-events-none" style={{ boxShadow: 'inset 0 1px 0 0 rgba(255,255,255,0.08), inset 0 0 0 1px rgba(255,255,255,0.03)' }} />
-                
-                {/* Top bar */}
+            {/* Right: Laptop mockup with market data */}
+            <div className="relative">
+              <div className="device-frame">
                 <div className="device-frame-bar">
                   <div className="device-frame-dot bg-red-500/60" />
                   <div className="device-frame-dot bg-yellow-500/60" />
@@ -77,8 +65,6 @@ export const ProductShowcase = () => {
                     </div>
                   </div>
                 </div>
-
-                {/* Screen content */}
                 <div className="p-6 space-y-4" style={{ background: 'hsl(0 0% 6%)' }}>
                   {/* Market header */}
                   <div className="flex items-center justify-between">
@@ -118,35 +104,8 @@ export const ProductShowcase = () => {
                     </div>
                   </div>
                 </div>
-
-                {/* Screen glare / reflection */}
-                <div
-                  className="absolute inset-0 pointer-events-none"
-                  style={{
-                    background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 50%, rgba(255,255,255,0.01) 100%)',
-                  }}
-                />
               </div>
-
-              {/* Monitor stand neck */}
-              <div
-                className="w-16 h-10 mx-auto"
-                style={{
-                  background: 'linear-gradient(180deg, hsl(0 0% 14%), hsl(0 0% 10%))',
-                  clipPath: 'polygon(20% 0%, 80% 0%, 65% 100%, 35% 100%)',
-                }}
-              />
-              {/* Monitor stand base */}
-              <div
-                className="w-28 h-2 mx-auto rounded-full"
-                style={{
-                  background: 'linear-gradient(180deg, hsl(0 0% 16%), hsl(0 0% 10%))',
-                  boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
-                }}
-              />
-
-              {/* Ambient glow behind monitor */}
-              <div className="absolute -inset-12 -z-10 rounded-3xl blur-3xl" style={{ background: 'radial-gradient(circle, hsl(168 76% 42% / 0.06), transparent 70%)' }} />
+              <div className="absolute -inset-8 -z-10 rounded-3xl blur-3xl" style={{ background: 'radial-gradient(circle, hsl(168 76% 42% / 0.04), transparent 70%)' }} />
             </div>
           </div>
         </div>
