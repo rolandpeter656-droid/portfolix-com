@@ -67,11 +67,21 @@ export default function AuthCallback() {
         }
 
         if (data.session) {
+          // Check if this is a new user (created_at ≈ last_sign_in_at within 10s)
+          const user = data.session.user;
+          const createdAt = new Date(user.created_at).getTime();
+          const lastSignIn = new Date(user.last_sign_in_at || "").getTime();
+          const isNewUser = Math.abs(lastSignIn - createdAt) < 10000;
+
+          if (isNewUser) {
+            const firstName = user.user_metadata?.full_name?.split(" ")[0] || user.user_metadata?.first_name;
+            sendWelcomeEmail(firstName);
+          }
+
           toast({
             title: "Welcome!",
             description: "Successfully signed in to PortfoliX.",
           });
-          // Redirect to stored destination or home
           const redirectTo = sessionStorage.getItem("redirectAfterAuth") || "/";
           sessionStorage.removeItem("redirectAfterAuth");
           navigate(redirectTo);
