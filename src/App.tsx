@@ -22,6 +22,7 @@ const Integrations = lazy(() => import("./pages/Integrations"));
 const MobileApp = lazy(() => import("./pages/MobileApp"));
 const Careers = lazy(() => import("./pages/Careers"));
 const Blog = lazy(() => import("./pages/Blog"));
+const BlogPost = lazy(() => import("./pages/BlogPost"));
 const Documentation = lazy(() => import("./pages/Documentation"));
 const PortfolioBuilderChoice = lazy(() => import("./pages/PortfolioBuilderChoice"));
 const ExpertBuilderPlaceholder = lazy(() => import("./pages/ExpertBuilderPlaceholder"));
@@ -65,6 +66,7 @@ const App = () => (
             <Route path="/mobile-app" element={<MobileApp />} />
             <Route path="/careers" element={<Careers />} />
             <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:slug" element={<BlogPost />} />
             <Route path="/documentation" element={<Documentation />} />
             <Route path="/app/builder" element={<PortfolioBuilderChoice />} />
             <Route path="/app/builder/expert" element={<ExpertBuilderPlaceholder />} />

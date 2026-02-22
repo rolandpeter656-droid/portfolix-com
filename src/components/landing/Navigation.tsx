@@ -58,6 +58,9 @@ export const Navigation = () => {
             <Link to="/learn" className="text-sm text-muted-foreground hover:text-foreground transition-colors font-medium">
               Learn
             </Link>
+            <Link to="/blog" className="text-sm text-muted-foreground hover:text-foreground transition-colors font-medium">
+              Blog
+            </Link>
           </div>
 
           {/* Desktop CTA */}
@@ -142,6 +145,9 @@ export const Navigation = () => {
               ))}
               <Link to="/learn" onClick={closeMenu} className="block px-3 py-3 text-muted-foreground hover:text-foreground hover:bg-card rounded-lg transition-colors text-sm">
                 Learn
+              </Link>
+              <Link to="/blog" onClick={closeMenu} className="block px-3 py-3 text-muted-foreground hover:text-foreground hover:bg-card rounded-lg transition-colors text-sm">
+                Blog
               </Link>
 
               <div className="flex flex-col space-y-2 pt-4 border-t border-border mt-4">
