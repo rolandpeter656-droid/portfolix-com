@@ -1,41 +1,48 @@
 import { Navigation } from "@/components/landing/Navigation";
 import { Footer } from "@/components/landing/Footer";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { BlogPostCard } from "@/components/BlogPostCard";
+import { blogPosts } from "@/data/blogPosts";
+import { useEffect } from "react";
 
 const Blog = () => {
-  const navigate = useNavigate();
+  useEffect(() => {
+    document.title = "Blog — PortfoliX";
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
-      
-      <main className="container mx-auto px-4 py-24">
-        <div className="mb-6">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => navigate("/")}
-            className="bg-card/50 backdrop-blur-sm border-border hover:bg-card"
-            aria-label="Back to home"
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-        </div>
-        <div className="max-w-2xl mx-auto text-center space-y-8">
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground">
-            PortfoliX Blog
+
+      {/* Header */}
+      <header className="pt-28 pb-12 border-b border-border">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
+          <p className="text-xs font-mono uppercase tracking-[0.2em] text-primary mb-4">
+            PortfoliX Journal
+          </p>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground leading-tight mb-4">
+            Ideas, Stories & Insights from the Team
           </h1>
-          
-          <div className="bg-card/50 backdrop-blur-sm rounded-lg border border-border p-8">
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              Insights, investing principles, and company updates. First post coming soon.
-            </p>
-          </div>
+          <p className="text-lg text-muted-foreground max-w-xl">
+            We build in public. Here's what we're learning.
+          </p>
         </div>
+      </header>
+
+      {/* Article Grid */}
+      <main className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl py-12">
+        {blogPosts.length === 0 ? (
+          <p className="text-center text-muted-foreground py-20">
+            No posts yet. Check back soon.
+          </p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {blogPosts.map((post) => (
+              <BlogPostCard key={post.id} post={post} />
+            ))}
+          </div>
+        )}
       </main>
-      
+
       <Footer />
     </div>
   );
