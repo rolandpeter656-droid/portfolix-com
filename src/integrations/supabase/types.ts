@@ -83,6 +83,74 @@ export type Database = {
         }
         Relationships: []
       }
+      portfolio_holdings: {
+        Row: {
+          asset_class: string
+          current_pct: number
+          id: string
+          last_updated: string | null
+          target_id: string
+          user_id: string
+        }
+        Insert: {
+          asset_class: string
+          current_pct: number
+          id?: string
+          last_updated?: string | null
+          target_id: string
+          user_id: string
+        }
+        Update: {
+          asset_class?: string
+          current_pct?: number
+          id?: string
+          last_updated?: string | null
+          target_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "portfolio_holdings_target_id_fkey"
+            columns: ["target_id"]
+            isOneToOne: false
+            referencedRelation: "portfolio_targets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      portfolio_targets: {
+        Row: {
+          allocations: Json
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          portfolio_id: string | null
+          portfolio_name: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          allocations: Json
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          portfolio_id?: string | null
+          portfolio_name?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          allocations?: Json
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          portfolio_id?: string | null
+          portfolio_name?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -106,6 +174,44 @@ export type Database = {
           id?: string
         }
         Relationships: []
+      }
+      rebalance_alerts: {
+        Row: {
+          created_at: string | null
+          drift_details: Json
+          email_sent: boolean | null
+          email_sent_at: string | null
+          id: string
+          target_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          drift_details: Json
+          email_sent?: boolean | null
+          email_sent_at?: string | null
+          id?: string
+          target_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          drift_details?: Json
+          email_sent?: boolean | null
+          email_sent_at?: string | null
+          id?: string
+          target_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rebalance_alerts_target_id_fkey"
+            columns: ["target_id"]
+            isOneToOne: false
+            referencedRelation: "portfolio_targets"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_portfolios: {
         Row: {

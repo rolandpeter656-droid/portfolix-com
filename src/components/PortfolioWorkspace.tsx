@@ -238,6 +238,7 @@ export const PortfolioWorkspace = ({
             <AssetAllocationEditor 
               assets={assets}
               onAssetsChange={setAssets}
+              portfolioName={portfolioName}
             />
           </div>
 
