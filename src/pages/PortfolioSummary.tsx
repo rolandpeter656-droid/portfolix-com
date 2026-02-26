@@ -21,7 +21,7 @@ import { usePortfolioLimit } from "@/hooks/usePortfolioLimit";
 import { useSavedPortfolios } from "@/hooks/useSavedPortfolios";
 import { useWelcomeEmail } from "@/hooks/useWelcomeEmail";
 import { useAuth } from "@/hooks/useAuth";
-import { ProSuggestionsPanel, RiskScoreCard, RebalancingAlerts } from "@/components/pro";
+import { ProSuggestionsPanel, RiskScoreCard, RebalancingAlerts, PortfolioHealthCheck } from "@/components/pro";
 import { analytics } from "@/lib/analytics/index";
 import jsPDF from 'jspdf';
 import { Link } from "react-router-dom";
@@ -573,8 +573,22 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onBack, onCust
           </Card>
         </div>
 
+        {/* Portfolio Health Check Widget */}
+        <div className="mt-6">
+          <PortfolioHealthCheck
+            isPro={subscriptionPlan === "pro"}
+            onUpgrade={() => setShowUpgradeModal(true)}
+            onScrollToEditor={() => {
+              document.getElementById("pro-features-section")?.scrollIntoView({ behavior: "smooth" });
+            }}
+            onScrollToProSection={() => {
+              document.getElementById("pro-features-section")?.scrollIntoView({ behavior: "smooth" });
+            }}
+          />
+        </div>
+
         {/* Pro Features */}
-        <div className="mt-8">
+        <div className="mt-8" id="pro-features-section">
           <div className="flex items-center gap-2 mb-4">
             <Crown className="h-5 w-5 text-primary" />
             <h2 className="text-xl font-semibold">Pro Features</h2>
