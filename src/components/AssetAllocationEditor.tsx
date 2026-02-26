@@ -15,11 +15,16 @@ import {
   AlertTriangle,
   TrendingUp,
   RotateCcw,
-  Info
+  Info,
+  Save,
+  Crown,
+  Lock
 } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 import { PortfolioPieChart } from "@/components/PortfolioPieChart";
+import { usePortfolioTargets } from "@/hooks/usePortfolioTargets";
+import { usePortfolioLimit } from "@/hooks/usePortfolioLimit";
 
 interface Asset {
   id?: string;
@@ -34,6 +39,7 @@ interface Asset {
 interface AssetAllocationEditorProps {
   assets: Asset[];
   onAssetsChange: (assets: Asset[]) => void;
+  portfolioName?: string;
 }
 
 const COLORS = [
@@ -47,10 +53,12 @@ const RISK_COLORS = {
   High: "#ef4444"
 };
 
-export const AssetAllocationEditor = ({ assets, onAssetsChange }: AssetAllocationEditorProps) => {
+export const AssetAllocationEditor = ({ assets, onAssetsChange, portfolioName = "My Portfolio" }: AssetAllocationEditorProps) => {
   const [viewMode, setViewMode] = useState<"chart" | "sliders">("chart");
   const [newAsset, setNewAsset] = useState({ symbol: "", name: "", allocation: 0 });
-
+  const [currentHoldings, setCurrentHoldings] = useState<Record<string, number>>({});
+  const { saving, saveAllocations } = usePortfolioTargets();
+  const { hasProFeatures } = usePortfolioLimit();
   const totalAllocation = assets.reduce((sum, asset) => sum + asset.allocation, 0);
   const isBalanced = Math.abs(totalAllocation - 100) < 0.01;
 
@@ -336,6 +344,85 @@ export const AssetAllocationEditor = ({ assets, onAssetsChange }: AssetAllocatio
             <div className="metric-secondary text-black">Moderate</div>
           </div>
         </div>
+
+        <Separator />
+
+        {/* Pro: Save & Current Holdings */}
+        {hasProFeatures ? (
+          <div className="space-y-6">
+            {/* Current Holdings Section */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <TrendingUp className="h-4 w-4 text-primary" />
+                <Label className="text-sm font-semibold">Your Current Holdings</Label>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Enter what percentage you currently hold in each asset class to enable drift detection.
+              </p>
+              <div className="space-y-2">
+                {assets.map((asset) => (
+                  <div key={`holding-${asset.id}`} className="flex items-center gap-3">
+                    <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: asset.color }} />
+                    <span className="text-sm font-medium w-16 truncate">{asset.symbol}</span>
+                    <Input
+                      type="number"
+                      min={0}
+                      max={100}
+                      step={0.1}
+                      placeholder="0"
+                      value={currentHoldings[asset.name] ?? ""}
+                      onChange={(e) =>
+                        setCurrentHoldings((prev) => ({
+                          ...prev,
+                          [asset.name]: Math.max(0, Math.min(100, Number(e.target.value))),
+                        }))
+                      }
+                      className="w-20 h-8 text-sm"
+                    />
+                    <span className="text-sm text-muted-foreground">%</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Save Button */}
+            <Button
+              onClick={async () => {
+                const allocations: Record<string, number> = {};
+                assets.forEach((a) => {
+                  allocations[a.name] = a.allocation;
+                });
+                await saveAllocations(portfolioName, allocations, currentHoldings);
+              }}
+              disabled={saving || !isBalanced}
+              className="w-full flex items-center justify-center gap-2"
+            >
+              <Save className="h-4 w-4" />
+              {saving ? "Saving..." : "Save Allocations & Holdings"}
+            </Button>
+            {!isBalanced && (
+              <p className="text-xs text-muted-foreground text-center">
+                Allocations must total 100% before saving.
+              </p>
+            )}
+          </div>
+        ) : (
+          <div className="border border-dashed border-muted rounded-xl p-6 text-center space-y-3">
+            <div className="flex justify-center">
+              <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+                <Lock className="h-5 w-5 text-primary" />
+              </div>
+            </div>
+            <div>
+              <p className="font-semibold text-sm flex items-center justify-center gap-1">
+                <Crown className="h-4 w-4 text-primary" /> Pro Feature
+              </p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Upgrade to Pro to save target allocations, track current holdings, and get drift alerts.
+              </p>
+            </div>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
