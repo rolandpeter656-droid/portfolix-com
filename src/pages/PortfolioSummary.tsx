@@ -40,6 +40,9 @@ interface PortfolioSummaryProps {
   riskScore: number;
   experienceLevel: "beginner" | "intermediate" | "advanced";
   timeline: string;
+  onboardingGoal?: string;
+  onboardingTimeline?: string;
+  onboardingRisk?: string;
   onBack: () => void;
   onCustomize: (portfolio: Asset[], name: string) => void;
 }
