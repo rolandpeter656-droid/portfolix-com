@@ -34,6 +34,9 @@ const Index = () => {
   const [timeline, setTimeline] = useState<string>("");
   const [generatedPortfolio, setGeneratedPortfolio] = useState<PortfolioAsset[]>([]);
   const [portfolioName, setPortfolioName] = useState<string>("");
+  const [onboardingGoal, setOnboardingGoal] = useState<string>("");
+  const [onboardingTimeline, setOnboardingTimeline] = useState<string>("");
+  const [onboardingRisk, setOnboardingRisk] = useState<string>("");
   const { user } = useAuth();
 
   // Track returning users on mount
