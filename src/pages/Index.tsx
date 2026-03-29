@@ -33,7 +33,7 @@ const Index = () => {
   const [experienceLevel, setExperienceLevel] = useState<"beginner" | "intermediate" | "advanced">("intermediate");
   const [timeline, setTimeline] = useState<string>("");
   const [generatedPortfolio, setGeneratedPortfolio] = useState<PortfolioAsset[]>([]);
-  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [portfolioName, setPortfolioName] = useState<string>("");
   const { user } = useAuth();
 
   // Track returning users on mount
