@@ -80,19 +80,7 @@ const Index = () => {
       setRiskScore(portfolioData.riskScore);
       setExperienceLevel(portfolioData.experienceLevel);
       setTimeline(portfolioData.timeline);
-      
-      // Check portfolio limit
-      if (!canGenerate) {
-        setShowUpgradeModal(true);
-        return;
-      }
-      
-      const success = await checkAndIncrementLimit();
-      if (success) {
-        setCurrentStep("summary");
-      } else {
-        setShowUpgradeModal(true);
-      }
+      setCurrentStep("summary");
     } catch (error) {
       console.error("Error generating portfolio:", error);
     }

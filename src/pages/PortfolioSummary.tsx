@@ -360,12 +360,6 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onBack, onCust
 
   const exportToPDF = () => {
     const isFreeUser = subscriptionPlan === "free";
-    const canSave = isFreeUser ? portfolioCount < 1 : true;
-    
-    if (isFreeUser && !canSave) {
-      setShowUpgradeModal(true);
-      return;
-    }
     
     const doc = new jsPDF();
     const today = new Date().toLocaleDateString();
