@@ -12,8 +12,6 @@ import { PortfolioWorkspace } from "@/components/PortfolioWorkspace";
 import PortfolioSummary from "@/pages/PortfolioSummary";
 import { AuthGuard } from "@/components/AuthGuard";
 import { useAuth } from "@/hooks/useAuth";
-import { UpgradeModal } from "@/components/UpgradeModal";
-import { usePortfolioLimit } from "@/hooks/usePortfolioLimit";
 import { analytics } from "@/lib/analytics/index";
 
 type Step = "landing" | "onboarding" | "summary" | "workspace";

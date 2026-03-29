@@ -226,7 +226,7 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onBack, onCust
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [adjustedRiskScore, setAdjustedRiskScore] = useState<number>(riskScore);
   const { toast } = useToast();
-  const { subscriptionPlan, portfolioCount } = usePortfolioLimit();
+  const { subscriptionPlan } = usePortfolioLimit();
   const { sendPortfolioNotification } = useWelcomeEmail();
   const { user } = useAuth();
 
