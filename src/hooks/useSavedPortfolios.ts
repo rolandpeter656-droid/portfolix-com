@@ -129,7 +129,7 @@ export const useSavedPortfolios = () => {
           updated_at: data.updated_at,
         };
 
-        setPortfolios((prev) => [savedPortfolio, ...prev].slice(0, FREE_PORTFOLIO_LIMIT));
+        setPortfolios((prev) => [savedPortfolio, ...prev]);
 
         toast({
           title: "Portfolio saved!",
