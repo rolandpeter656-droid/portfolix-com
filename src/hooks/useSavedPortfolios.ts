@@ -83,22 +83,6 @@ export const useSavedPortfolios = () => {
 
   const getPortfolioCount = useCallback(() => portfolios.length, [portfolios]);
 
-  const canCreatePortfolio = useCallback(
-    (subscriptionPlan: string) => {
-      if (subscriptionPlan === "pro") return true;
-      return portfolios.length < FREE_PORTFOLIO_LIMIT;
-    },
-    [portfolios]
-  );
-
-  const getRemainingPortfolios = useCallback(
-    (subscriptionPlan: string) => {
-      if (subscriptionPlan === "pro") return Infinity;
-      return Math.max(0, FREE_PORTFOLIO_LIMIT - portfolios.length);
-    },
-    [portfolios]
-  );
-
   const savePortfolio = useCallback(
     async (portfolio: {
       portfolio_name: string;
