@@ -224,12 +224,9 @@ export const useSavedPortfolios = () => {
     loading,
     saving,
     getPortfolioCount,
-    canCreatePortfolio,
-    getRemainingPortfolios,
     savePortfolio,
     updatePortfolioAmount,
     deletePortfolio,
     refreshPortfolios: fetchPortfolios,
-    FREE_PORTFOLIO_LIMIT,
   };
 };
