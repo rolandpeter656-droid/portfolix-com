@@ -321,7 +321,7 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onBack, onCust
           assetCount: portfolio.length,
           userPlan: subscriptionPlan || "free",
           userCreatedAt: user.created_at || "N/A",
-          totalPortfolios: (portfolioCount || 0) + 1,
+          totalPortfolios: 0,
         });
       }
     };
