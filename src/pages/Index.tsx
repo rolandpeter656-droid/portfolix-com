@@ -12,8 +12,6 @@ import { PortfolioWorkspace } from "@/components/PortfolioWorkspace";
 import PortfolioSummary from "@/pages/PortfolioSummary";
 import { AuthGuard } from "@/components/AuthGuard";
 import { useAuth } from "@/hooks/useAuth";
-import { UpgradeModal } from "@/components/UpgradeModal";
-import { usePortfolioLimit } from "@/hooks/usePortfolioLimit";
 import { analytics } from "@/lib/analytics/index";
 
 type Step = "landing" | "onboarding" | "summary" | "workspace";
@@ -36,9 +34,7 @@ const Index = () => {
   const [timeline, setTimeline] = useState<string>("");
   const [generatedPortfolio, setGeneratedPortfolio] = useState<PortfolioAsset[]>([]);
   const [portfolioName, setPortfolioName] = useState<string>("");
-  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const { user } = useAuth();
-  const { canGenerate, checkAndIncrementLimit } = usePortfolioLimit();
 
   // Track returning users on mount
   useEffect(() => {
@@ -84,19 +80,7 @@ const Index = () => {
       setRiskScore(portfolioData.riskScore);
       setExperienceLevel(portfolioData.experienceLevel);
       setTimeline(portfolioData.timeline);
-      
-      // Check portfolio limit
-      if (!canGenerate) {
-        setShowUpgradeModal(true);
-        return;
-      }
-      
-      const success = await checkAndIncrementLimit();
-      if (success) {
-        setCurrentStep("summary");
-      } else {
-        setShowUpgradeModal(true);
-      }
+      setCurrentStep("summary");
     } catch (error) {
       console.error("Error generating portfolio:", error);
     }
@@ -176,7 +160,7 @@ const Index = () => {
         <TeamSection />
         <Footer />
       </div>
-      <UpgradeModal open={showUpgradeModal} onClose={() => setShowUpgradeModal(false)} />
+      
     </>
   );
 };

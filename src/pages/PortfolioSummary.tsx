@@ -226,7 +226,7 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onBack, onCust
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [adjustedRiskScore, setAdjustedRiskScore] = useState<number>(riskScore);
   const { toast } = useToast();
-  const { subscriptionPlan, portfolioCount } = usePortfolioLimit();
+  const { subscriptionPlan } = usePortfolioLimit();
   const { sendPortfolioNotification } = useWelcomeEmail();
   const { user } = useAuth();
 
@@ -321,7 +321,7 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onBack, onCust
           assetCount: portfolio.length,
           userPlan: subscriptionPlan || "free",
           userCreatedAt: user.created_at || "N/A",
-          totalPortfolios: (portfolioCount || 0) + 1,
+          totalPortfolios: 0,
         });
       }
     };
@@ -360,12 +360,6 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onBack, onCust
 
   const exportToPDF = () => {
     const isFreeUser = subscriptionPlan === "free";
-    const canSave = isFreeUser ? portfolioCount < 1 : true;
-    
-    if (isFreeUser && !canSave) {
-      setShowUpgradeModal(true);
-      return;
-    }
     
     const doc = new jsPDF();
     const today = new Date().toLocaleDateString();

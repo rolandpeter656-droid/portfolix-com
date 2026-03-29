@@ -25,7 +25,7 @@ export interface SavedPortfolio {
   updated_at: string;
 }
 
-const FREE_PORTFOLIO_LIMIT = 5;
+
 
 export const useSavedPortfolios = () => {
   const { user } = useAuth();
@@ -47,8 +47,7 @@ export const useSavedPortfolios = () => {
         .from("user_portfolios")
         .select("*")
         .eq("user_id", user.id)
-        .order("created_at", { ascending: false })
-        .limit(FREE_PORTFOLIO_LIMIT);
+        .order("created_at", { ascending: false });
 
       if (error) throw error;
 
@@ -83,22 +82,6 @@ export const useSavedPortfolios = () => {
   }, [fetchPortfolios]);
 
   const getPortfolioCount = useCallback(() => portfolios.length, [portfolios]);
-
-  const canCreatePortfolio = useCallback(
-    (subscriptionPlan: string) => {
-      if (subscriptionPlan === "pro") return true;
-      return portfolios.length < FREE_PORTFOLIO_LIMIT;
-    },
-    [portfolios]
-  );
-
-  const getRemainingPortfolios = useCallback(
-    (subscriptionPlan: string) => {
-      if (subscriptionPlan === "pro") return Infinity;
-      return Math.max(0, FREE_PORTFOLIO_LIMIT - portfolios.length);
-    },
-    [portfolios]
-  );
 
   const savePortfolio = useCallback(
     async (portfolio: {
@@ -146,7 +129,7 @@ export const useSavedPortfolios = () => {
           updated_at: data.updated_at,
         };
 
-        setPortfolios((prev) => [savedPortfolio, ...prev].slice(0, FREE_PORTFOLIO_LIMIT));
+        setPortfolios((prev) => [savedPortfolio, ...prev]);
 
         toast({
           title: "Portfolio saved!",
@@ -241,12 +224,9 @@ export const useSavedPortfolios = () => {
     loading,
     saving,
     getPortfolioCount,
-    canCreatePortfolio,
-    getRemainingPortfolios,
     savePortfolio,
     updatePortfolioAmount,
     deletePortfolio,
     refreshPortfolios: fetchPortfolios,
-    FREE_PORTFOLIO_LIMIT,
   };
 };
