@@ -129,6 +129,9 @@ const Index = () => {
           riskScore={riskScore}
           experienceLevel={experienceLevel}
           timeline={timeline}
+          onboardingGoal={onboardingGoal}
+          onboardingTimeline={onboardingTimeline}
+          onboardingRisk={onboardingRisk}
           onBack={handleBackToOnboarding}
           onCustomize={handleStartWorkspace}
         />
