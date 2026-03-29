@@ -27,6 +27,7 @@ const Documentation = lazy(() => import("./pages/Documentation"));
 const PortfolioBuilderChoice = lazy(() => import("./pages/PortfolioBuilderChoice"));
 const ExpertBuilderPlaceholder = lazy(() => import("./pages/ExpertBuilderPlaceholder"));
 const Analytics = lazy(() => import("./pages/Analytics"));
+const PortfolioManagement = lazy(() => import("./pages/PortfolioManagement"));
 
 const Terms = lazy(() => import("./pages/Terms"));
 const Privacy = lazy(() => import("./pages/Privacy"));
