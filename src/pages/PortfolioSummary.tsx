@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { ArrowLeft, Download, Settings, Crown, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { mapAnswersToArchetype, fetchArchetype } from "@/hooks/usePortfolioArchetype";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
