@@ -34,6 +34,9 @@ const Index = () => {
   const [timeline, setTimeline] = useState<string>("");
   const [generatedPortfolio, setGeneratedPortfolio] = useState<PortfolioAsset[]>([]);
   const [portfolioName, setPortfolioName] = useState<string>("");
+  const [onboardingGoal, setOnboardingGoal] = useState<string>("");
+  const [onboardingTimeline, setOnboardingTimeline] = useState<string>("");
+  const [onboardingRisk, setOnboardingRisk] = useState<string>("");
   const { user } = useAuth();
 
   // Track returning users on mount
@@ -80,6 +83,9 @@ const Index = () => {
       setRiskScore(portfolioData.riskScore);
       setExperienceLevel(portfolioData.experienceLevel);
       setTimeline(portfolioData.timeline);
+      setOnboardingGoal(answers.goal?.value || "");
+      setOnboardingTimeline(answers.timeline?.value || "");
+      setOnboardingRisk(answers.volatility?.value || "");
       setCurrentStep("summary");
     } catch (error) {
       console.error("Error generating portfolio:", error);
@@ -123,6 +129,9 @@ const Index = () => {
           riskScore={riskScore}
           experienceLevel={experienceLevel}
           timeline={timeline}
+          onboardingGoal={onboardingGoal}
+          onboardingTimeline={onboardingTimeline}
+          onboardingRisk={onboardingRisk}
           onBack={handleBackToOnboarding}
           onCustomize={handleStartWorkspace}
         />

@@ -83,6 +83,99 @@ export type Database = {
         }
         Relationships: []
       }
+      portfolio_archetype_history: {
+        Row: {
+          archetype_code: string
+          change_reason: string | null
+          changed_at: string
+          changed_by: string
+          id: string
+          new_allocations: Json
+          previous_allocations: Json | null
+        }
+        Insert: {
+          archetype_code: string
+          change_reason?: string | null
+          changed_at?: string
+          changed_by?: string
+          id?: string
+          new_allocations: Json
+          previous_allocations?: Json | null
+        }
+        Update: {
+          archetype_code?: string
+          change_reason?: string | null
+          changed_at?: string
+          changed_by?: string
+          id?: string
+          new_allocations?: Json
+          previous_allocations?: Json | null
+        }
+        Relationships: []
+      }
+      portfolio_archetypes: {
+        Row: {
+          allocations: Json
+          archetype_code: string
+          created_at: string
+          expense_ratio_weighted: number | null
+          goal: string
+          id: string
+          is_active: boolean
+          last_reviewed_at: string | null
+          max_drawdown: number | null
+          risk_flag: boolean
+          risk_flag_message: string | null
+          risk_tolerance: string
+          sharpe_ratio_target: number | null
+          target_return_max: number | null
+          target_return_min: number | null
+          timeline: string
+          updated_by: string | null
+          version: number
+        }
+        Insert: {
+          allocations?: Json
+          archetype_code: string
+          created_at?: string
+          expense_ratio_weighted?: number | null
+          goal: string
+          id?: string
+          is_active?: boolean
+          last_reviewed_at?: string | null
+          max_drawdown?: number | null
+          risk_flag?: boolean
+          risk_flag_message?: string | null
+          risk_tolerance: string
+          sharpe_ratio_target?: number | null
+          target_return_max?: number | null
+          target_return_min?: number | null
+          timeline: string
+          updated_by?: string | null
+          version?: number
+        }
+        Update: {
+          allocations?: Json
+          archetype_code?: string
+          created_at?: string
+          expense_ratio_weighted?: number | null
+          goal?: string
+          id?: string
+          is_active?: boolean
+          last_reviewed_at?: string | null
+          max_drawdown?: number | null
+          risk_flag?: boolean
+          risk_flag_message?: string | null
+          risk_tolerance?: string
+          sharpe_ratio_target?: number | null
+          target_return_max?: number | null
+          target_return_min?: number | null
+          timeline?: string
+          updated_by?: string | null
+          version?: number
+        }
+        Relationships: []
+      }
       portfolio_holdings: {
         Row: {
           asset_class: string
