@@ -25,7 +25,7 @@ export interface SavedPortfolio {
   updated_at: string;
 }
 
-const FREE_PORTFOLIO_LIMIT = 5;
+
 
 export const useSavedPortfolios = () => {
   const { user } = useAuth();
