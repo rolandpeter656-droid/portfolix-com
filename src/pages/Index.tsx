@@ -83,6 +83,9 @@ const Index = () => {
       setRiskScore(portfolioData.riskScore);
       setExperienceLevel(portfolioData.experienceLevel);
       setTimeline(portfolioData.timeline);
+      setOnboardingGoal(answers.goal?.value || "");
+      setOnboardingTimeline(answers.timeline?.value || "");
+      setOnboardingRisk(answers.volatility?.value || "");
       setCurrentStep("summary");
     } catch (error) {
       console.error("Error generating portfolio:", error);
