@@ -72,6 +72,7 @@ const App = () => (
             <Route path="/app/builder" element={<PortfolioBuilderChoice />} />
             <Route path="/app/builder/expert" element={<ExpertBuilderPlaceholder />} />
             <Route path="/analytics" element={<Analytics />} />
+            <Route path="/portfolio-management" element={<PortfolioManagement />} />
             
             <Route path="/terms" element={<Terms />} />
             <Route path="/privacy" element={<Privacy />} />
