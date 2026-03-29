@@ -222,17 +222,47 @@ const selectPortfolioStrategy = (riskScore: number, experienceLevel: string, tim
   return { portfolio: strategy.assets, name: strategy.name };
 };
 
-const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onBack, onCustomize }: PortfolioSummaryProps) => {
+const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onboardingGoal, onboardingTimeline, onboardingRisk, onBack, onCustomize }: PortfolioSummaryProps) => {
   const [investmentAmount, setInvestmentAmount] = useState<number>(1000);
   const [isInputMode, setIsInputMode] = useState(false);
   const [portfolioName, setPortfolioName] = useState<string>("");
   const [showSuccessAnimation, setShowSuccessAnimation] = useState(true);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [adjustedRiskScore, setAdjustedRiskScore] = useState<number>(riskScore);
+  const [archetypePortfolio, setArchetypePortfolio] = useState<Asset[] | null>(null);
+  const [archetypeName, setArchetypeName] = useState<string | null>(null);
   const { toast } = useToast();
   const { subscriptionPlan } = usePortfolioLimit();
   const { sendPortfolioNotification } = useWelcomeEmail();
   const { user } = useAuth();
+
+  // Fetch archetype from database on mount
+  useEffect(() => {
+    const loadArchetype = async () => {
+      if (!onboardingGoal || !onboardingTimeline || !onboardingRisk) return;
+      
+      const mapped = mapAnswersToArchetype(onboardingGoal, onboardingTimeline, onboardingRisk);
+      const archetype = await fetchArchetype(mapped.goal, mapped.timeline, mapped.risk_tolerance);
+      
+      if (archetype && Array.isArray(archetype.allocations) && archetype.allocations.length > 0) {
+        const colors = ["#10B981", "#8B5CF6", "#06B6D4", "#F59E0B", "#EF4444", "#EC4899", "#6366F1"];
+        const assets: Asset[] = archetype.allocations.map((a: any, i: number) => ({
+          symbol: a.ticker,
+          name: a.name,
+          allocation: a.percentage,
+          rationale: a.rationale || "",
+          assetClass: a.name,
+          color: colors[i % colors.length],
+        }));
+        setArchetypePortfolio(assets);
+        setArchetypeName(`${mapped.goal.replace(/_/g, " ")} — ${mapped.risk_tolerance} (${archetype.archetype_code})`);
+        console.log(`Loaded archetype ${archetype.archetype_code} v${archetype.version} from database`);
+      } else {
+        console.log("Archetype allocations empty, using hardcoded fallback");
+      }
+    };
+    loadArchetype();
+  }, [onboardingGoal, onboardingTimeline, onboardingRisk]);
 
   // Get suggested amounts based on experience
   const getSuggestedAmount = () => {
@@ -257,8 +287,10 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onBack, onCust
     setInvestmentAmount(getSuggestedAmount());
   }, [experienceLevel]);
 
-  // Generate portfolio using simplified 12-strategy system with adjusted risk score
-  const { portfolio, name } = selectPortfolioStrategy(adjustedRiskScore, experienceLevel, timeline);
+  // Use archetype portfolio if available, otherwise fall back to hardcoded strategy
+  const fallback = selectPortfolioStrategy(adjustedRiskScore, experienceLevel, timeline);
+  const portfolio = archetypePortfolio || fallback.portfolio;
+  const name = archetypeName || fallback.name;
   const { savePortfolio } = useSavedPortfolios();
 
   // Calculate stock/bond allocation for strategy explanation
