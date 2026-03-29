@@ -74,7 +74,7 @@ export const fetchArchetype = async (
     return null;
   }
 
-  return data as PortfolioArchetype | null;
+  return data as unknown as PortfolioArchetype | null;
 };
 
 export const fetchArchetypeByCode = async (
@@ -92,5 +92,5 @@ export const fetchArchetypeByCode = async (
     return null;
   }
 
-  return data as PortfolioArchetype | null;
+  return data as unknown as PortfolioArchetype | null;
 };
