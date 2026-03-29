@@ -33,10 +33,8 @@ const Index = () => {
   const [experienceLevel, setExperienceLevel] = useState<"beginner" | "intermediate" | "advanced">("intermediate");
   const [timeline, setTimeline] = useState<string>("");
   const [generatedPortfolio, setGeneratedPortfolio] = useState<PortfolioAsset[]>([]);
-  const [portfolioName, setPortfolioName] = useState<string>("");
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const { user } = useAuth();
-  const { canGenerate, checkAndIncrementLimit } = usePortfolioLimit();
 
   // Track returning users on mount
   useEffect(() => {
