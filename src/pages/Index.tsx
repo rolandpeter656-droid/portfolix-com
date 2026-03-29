@@ -160,7 +160,7 @@ const Index = () => {
         <TeamSection />
         <Footer />
       </div>
-      <UpgradeModal open={showUpgradeModal} onClose={() => setShowUpgradeModal(false)} />
+      
     </>
   );
 };
