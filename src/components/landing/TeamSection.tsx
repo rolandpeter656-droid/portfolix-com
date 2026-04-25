@@ -2,6 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Linkedin, Award, Lightbulb, Heart } from "lucide-react";
+import rolandPeterPhoto from "@/assets/roland-peter.jpg";
 
 const XIcon = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
@@ -54,9 +55,9 @@ export const TeamSection = () => {
           <div className="rounded-xl border border-border bg-card overflow-hidden w-full max-w-sm hover:border-primary/30 transition-all duration-300 hover-lift group">
             <div className="relative overflow-hidden">
               <img
-                src="/lovable-uploads/7695f634-65fb-45d3-801d-359be5d4a29b.png"
+                src={rolandPeterPhoto}
                 alt="Roland Peter — CEO & Founder, PortfoliX"
-                className="w-full h-56 sm:h-64 object-cover transition-transform duration-500 group-hover:scale-105"
+                className="w-full h-56 sm:h-64 object-cover object-top transition-transform duration-500 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-card to-transparent opacity-60" />
 
