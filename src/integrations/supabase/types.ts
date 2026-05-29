@@ -306,6 +306,33 @@ export type Database = {
           },
         ]
       }
+      referrals: {
+        Row: {
+          created_at: string | null
+          id: string
+          referred_session_id: string | null
+          referred_user_id: string | null
+          referrer_user_id: string | null
+          source: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          referred_session_id?: string | null
+          referred_user_id?: string | null
+          referrer_user_id?: string | null
+          source?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          referred_session_id?: string | null
+          referred_user_id?: string | null
+          referrer_user_id?: string | null
+          source?: string | null
+        }
+        Relationships: []
+      }
       user_portfolios: {
         Row: {
           assets: Json
