@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { signUpSchema, validateForm } from "@/lib/validationSchemas";
+import { attachReferralToSignup } from "@/hooks/useReferralCapture";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -88,6 +89,7 @@ const SignUp = () => {
           variant: "destructive",
         });
       } else if (data.user) {
+        await attachReferralToSignup(data.user.id);
         toast({
           title: "Account created successfully!",
           description: "Please check your email to verify your account, then sign in.",

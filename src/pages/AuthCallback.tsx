@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useWelcomeEmail } from "@/hooks/useWelcomeEmail";
+import { attachReferralToSignup } from "@/hooks/useReferralCapture";
 
 export default function AuthCallback() {
   const navigate = useNavigate();
@@ -76,6 +77,7 @@ export default function AuthCallback() {
           if (isNewUser) {
             const firstName = user.user_metadata?.full_name?.split(" ")[0] || user.user_metadata?.first_name;
             sendWelcomeEmail(firstName);
+            await attachReferralToSignup(user.id);
           }
 
           toast({

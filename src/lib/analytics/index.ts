@@ -10,7 +10,12 @@ export type AnalyticsEvent =
   | "portfolio_saved"
   | "user_returned"
   | "upgrade_initiated"
-  | "upgrade_completed";
+  | "upgrade_completed"
+  | "money_map_viewed"
+  | "money_map_card_generated"
+  | "money_map_shared"
+  | "referral_link_clicked"
+  | "referral_signup";
 
 interface EventProperties {
   [key: string]: string | number | boolean | undefined;
@@ -69,6 +74,23 @@ export const analytics = {
 
   upgradeCompleted: (plan: string, amount: number) =>
     trackEvent("upgrade_completed", { plan, amount, currency: "USD" }),
+
+  moneyMapViewed: (archetype: string) =>
+    trackEvent("money_map_viewed", { archetype }),
+
+  moneyMapCardGenerated: (archetype: string) =>
+    trackEvent("money_map_card_generated", { archetype }),
+
+  moneyMapShared: (
+    source: "whatsapp" | "x" | "copy" | "download",
+    archetype: string
+  ) => trackEvent("money_map_shared", { source, archetype }),
+
+  referralLinkClicked: (referrerId: string) =>
+    trackEvent("referral_link_clicked", { referrer_id: referrerId }),
+
+  referralSignup: (referrerId: string) =>
+    trackEvent("referral_signup", { referrer_id: referrerId }),
 };
 
 export default analytics;

@@ -24,6 +24,7 @@ import { useWelcomeEmail } from "@/hooks/useWelcomeEmail";
 import { useAuth } from "@/hooks/useAuth";
 import { ProSuggestionsPanel, RiskScoreCard, RebalancingAlerts, PortfolioHealthCheck } from "@/components/pro";
 import { analytics } from "@/lib/analytics/index";
+import { MoneyMapSection } from "@/components/MoneyMapSection";
 import jsPDF from 'jspdf';
 import { Link } from "react-router-dom";
 
@@ -489,6 +490,14 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onboardingGoal
       </div>
 
       <div className="container mx-auto px-4 py-8 space-y-8">
+        {/* Your Money Map — shareable identity card */}
+        <MoneyMapSection
+          onboardingGoal={onboardingGoal}
+          onboardingTimeline={onboardingTimeline}
+          onboardingRisk={onboardingRisk}
+          portfolio={portfolio}
+        />
+
         {/* Strategy Explanation - Why This Portfolio Works */}
         <StrategyExplanation
           portfolioName={portfolioName}
