@@ -83,6 +83,90 @@ export type Database = {
         }
         Relationships: []
       }
+      ng_allocation_config: {
+        Row: {
+          etf_core_pct_of_sleeve: number
+          local_sleeve_pct: number
+          max_per_name_pct_of_portfolio: number
+          max_sector_pct_of_sleeve: number
+          max_single_names: number
+          risk_profile: string
+        }
+        Insert: {
+          etf_core_pct_of_sleeve: number
+          local_sleeve_pct: number
+          max_per_name_pct_of_portfolio?: number
+          max_sector_pct_of_sleeve?: number
+          max_single_names: number
+          risk_profile: string
+        }
+        Update: {
+          etf_core_pct_of_sleeve?: number
+          local_sleeve_pct?: number
+          max_per_name_pct_of_portfolio?: number
+          max_sector_pct_of_sleeve?: number
+          max_single_names?: number
+          risk_profile?: string
+        }
+        Relationships: []
+      }
+      ng_whitelist: {
+        Row: {
+          avg_daily_value_ngn: number | null
+          board: string | null
+          bucket: string
+          eligible_aggressive: boolean | null
+          eligible_balanced: boolean | null
+          eligible_conservative: boolean | null
+          id: string
+          is_dividend_payer: boolean | null
+          last_reviewed: string | null
+          market_cap_ngn: number | null
+          name: string
+          notes: string | null
+          sector: string
+          security_type: string
+          status: string
+          ticker: string
+        }
+        Insert: {
+          avg_daily_value_ngn?: number | null
+          board?: string | null
+          bucket: string
+          eligible_aggressive?: boolean | null
+          eligible_balanced?: boolean | null
+          eligible_conservative?: boolean | null
+          id?: string
+          is_dividend_payer?: boolean | null
+          last_reviewed?: string | null
+          market_cap_ngn?: number | null
+          name: string
+          notes?: string | null
+          sector: string
+          security_type: string
+          status?: string
+          ticker: string
+        }
+        Update: {
+          avg_daily_value_ngn?: number | null
+          board?: string | null
+          bucket?: string
+          eligible_aggressive?: boolean | null
+          eligible_balanced?: boolean | null
+          eligible_conservative?: boolean | null
+          id?: string
+          is_dividend_payer?: boolean | null
+          last_reviewed?: string | null
+          market_cap_ngn?: number | null
+          name?: string
+          notes?: string | null
+          sector?: string
+          security_type?: string
+          status?: string
+          ticker?: string
+        }
+        Relationships: []
+      }
       portfolio_archetype_history: {
         Row: {
           archetype_code: string
