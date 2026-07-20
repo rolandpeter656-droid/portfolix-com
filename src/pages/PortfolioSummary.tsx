@@ -44,6 +44,7 @@ interface PortfolioSummaryProps {
   onboardingGoal?: string;
   onboardingTimeline?: string;
   onboardingRisk?: string;
+  onboardingCountry?: string;
   onBack: () => void;
   onCustomize: (portfolio: Asset[], name: string) => void;
 }
