@@ -111,21 +111,22 @@ function calculateMetrics(events: AnalyticsEvent[]): Metrics {
 }
 
 const AnalyticsDashboard = () => {
-  const [metrics, setMetrics] = useState<Metrics | null>(null);
+  const [events, setEvents] = useState<AnalyticsEvent[]>([]);
   const [loading, setLoading] = useState(true);
+  const [countryFilter, setCountryFilter] = useState<string>("all");
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchAnalytics = async () => {
       try {
-        const { data: events, error } = await supabase
+        const { data, error } = await supabase
           .from("analytics_events")
           .select("*")
           .order("created_at", { ascending: false })
           .limit(1000);
 
         if (error) throw error;
-        if (events) setMetrics(calculateMetrics(events as unknown as AnalyticsEvent[]));
+        if (data) setEvents(data as unknown as AnalyticsEvent[]);
       } catch (error) {
         console.error("Failed to fetch analytics:", error);
       } finally {
@@ -134,6 +135,52 @@ const AnalyticsDashboard = () => {
     };
     fetchAnalytics();
   }, []);
+
+  const countries = useMemo(() => {
+    const s = new Set<string>();
+    for (const e of events) {
+      if (e.event_name === "country_selected") {
+        const c = (e.properties as any)?.country;
+        if (typeof c === "string" && c) s.add(c);
+      }
+    }
+    return Array.from(s).sort();
+  }, [events]);
+
+  const cohortUserIds = useMemo(() => {
+    if (countryFilter === "all") return null;
+    const set = new Set<string>();
+    for (const e of events) {
+      if (e.event_name !== "country_selected" || !e.user_id) continue;
+      if ((e.properties as any)?.country === countryFilter) set.add(e.user_id);
+    }
+    return set;
+  }, [events, countryFilter]);
+
+  const filteredEvents = useMemo(() => {
+    if (countryFilter === "all") return events;
+    return events.filter((e) => {
+      const propCountry = (e.properties as any)?.country;
+      if (typeof propCountry === "string" && propCountry) {
+        return propCountry === countryFilter;
+      }
+      return e.user_id ? cohortUserIds?.has(e.user_id) ?? false : false;
+    });
+  }, [events, countryFilter, cohortUserIds]);
+
+  const metrics = useMemo(
+    () => (filteredEvents.length ? calculateMetrics(filteredEvents) : null),
+    [filteredEvents]
+  );
+
+  const nigeriaStats = useMemo(
+    () => buildCohortStats(events, (c) => c === "Nigeria", "Nigeria"),
+    [events]
+  );
+  const otherStats = useMemo(
+    () => buildCohortStats(events, (c) => !!c && c !== "Nigeria", "Other countries"),
+    [events]
+  );
 
   if (loading) {
     return (
@@ -145,7 +192,7 @@ const AnalyticsDashboard = () => {
     );
   }
 
-  if (!metrics) {
+  if (!events.length) {
     return (
       <AdminGuard>
         <div className="min-h-screen flex items-center justify-center bg-background">
