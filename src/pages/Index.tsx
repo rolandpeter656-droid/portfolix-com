@@ -37,6 +37,7 @@ const Index = () => {
   const [onboardingGoal, setOnboardingGoal] = useState<string>("");
   const [onboardingTimeline, setOnboardingTimeline] = useState<string>("");
   const [onboardingRisk, setOnboardingRisk] = useState<string>("");
+  const [onboardingCountry, setOnboardingCountry] = useState<string>("");
   const { user } = useAuth();
 
   // Track returning users on mount
@@ -86,6 +87,21 @@ const Index = () => {
       setOnboardingGoal(answers.goal?.value || "");
       setOnboardingTimeline(answers.timeline?.value || "");
       setOnboardingRisk(answers.volatility?.value || "");
+      const country = answers.country?.value || "";
+      setOnboardingCountry(country);
+
+      // Persist country to the user's profile (best-effort, non-blocking).
+      if (user && country) {
+        try {
+          const { supabase } = await import("@/integrations/supabase/client");
+          await (supabase.from("users") as any)
+            .update({ country })
+            .eq("user_id", user.id);
+        } catch (err) {
+          console.error("Failed to save country to profile:", err);
+        }
+      }
+
       setCurrentStep("summary");
     } catch (error) {
       console.error("Error generating portfolio:", error);
@@ -132,6 +148,7 @@ const Index = () => {
           onboardingGoal={onboardingGoal}
           onboardingTimeline={onboardingTimeline}
           onboardingRisk={onboardingRisk}
+          onboardingCountry={onboardingCountry}
           onBack={handleBackToOnboarding}
           onCustomize={handleStartWorkspace}
         />
