@@ -16,7 +16,8 @@ export type AnalyticsEvent =
   | "money_map_card_generated"
   | "money_map_shared"
   | "referral_link_clicked"
-  | "referral_signup";
+  | "referral_signup"
+  | "ng_brokerage_link_clicked";
 
 interface EventProperties {
   [key: string]: string | number | boolean | undefined;
@@ -95,6 +96,9 @@ export const analytics = {
 
   referralSignup: (referrerId: string) =>
     trackEvent("referral_signup", { referrer_id: referrerId }),
+
+  ngBrokerageLinkClicked: (broker: string, ticker: string) =>
+    trackEvent("ng_brokerage_link_clicked", { broker, ticker }),
 };
 
 export default analytics;
