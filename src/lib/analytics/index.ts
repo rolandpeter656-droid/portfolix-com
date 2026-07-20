@@ -17,7 +17,8 @@ export type AnalyticsEvent =
   | "money_map_shared"
   | "referral_link_clicked"
   | "referral_signup"
-  | "ng_brokerage_link_clicked";
+  | "ng_brokerage_link_clicked"
+  | "ng_local_sleeve_generated";
 
 interface EventProperties {
   [key: string]: string | number | boolean | undefined;
@@ -68,11 +69,18 @@ export const analytics = {
   portfolioGenerated: (portfolioType: string) =>
     trackEvent("portfolio_generated", { portfolio_type: portfolioType }),
 
-  portfolioSaved: (portfolioId: string, portfolioType: string) =>
-    trackEvent("portfolio_saved", { portfolio_id: portfolioId, portfolio_type: portfolioType }),
+  portfolioSaved: (portfolioId: string, portfolioType: string, country?: string) =>
+    trackEvent("portfolio_saved", {
+      portfolio_id: portfolioId,
+      portfolio_type: portfolioType,
+      ...(country ? { country } : {}),
+    }),
 
-  userReturned: (daysSinceLastVisit: number) =>
-    trackEvent("user_returned", { days_since_last_visit: daysSinceLastVisit }),
+  userReturned: (daysSinceLastVisit: number, country?: string) =>
+    trackEvent("user_returned", {
+      days_since_last_visit: daysSinceLastVisit,
+      ...(country ? { country } : {}),
+    }),
 
   upgradeInitiated: (plan: string) =>
     trackEvent("upgrade_initiated", { plan }),
@@ -99,6 +107,18 @@ export const analytics = {
 
   ngBrokerageLinkClicked: (broker: string, ticker: string) =>
     trackEvent("ng_brokerage_link_clicked", { broker, ticker }),
+
+  ngLocalSleeveGenerated: (
+    riskProfile: string,
+    holdingsCount: number,
+    localSleevePct: number
+  ) =>
+    trackEvent("ng_local_sleeve_generated", {
+      country: "Nigeria",
+      risk_profile: riskProfile,
+      holdings_count: holdingsCount,
+      local_sleeve_pct: localSleevePct,
+    }),
 };
 
 export default analytics;
