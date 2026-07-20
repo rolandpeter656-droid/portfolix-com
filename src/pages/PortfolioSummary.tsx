@@ -44,6 +44,7 @@ interface PortfolioSummaryProps {
   onboardingGoal?: string;
   onboardingTimeline?: string;
   onboardingRisk?: string;
+  onboardingCountry?: string;
   onBack: () => void;
   onCustomize: (portfolio: Asset[], name: string) => void;
 }
@@ -223,7 +224,7 @@ const selectPortfolioStrategy = (riskScore: number, experienceLevel: string, tim
   return { portfolio: strategy.assets, name: strategy.name };
 };
 
-const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onboardingGoal, onboardingTimeline, onboardingRisk, onBack, onCustomize }: PortfolioSummaryProps) => {
+const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onboardingGoal, onboardingTimeline, onboardingRisk, onboardingCountry, onBack, onCustomize }: PortfolioSummaryProps) => {
   const [investmentAmount, setInvestmentAmount] = useState<number>(1000);
   const [isInputMode, setIsInputMode] = useState(false);
   const [portfolioName, setPortfolioName] = useState<string>("");
@@ -334,6 +335,7 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onboardingGoal
         experience_level: experienceLevel,
         timeline: timeline,
         investment_amount: investmentAmount,
+        country: onboardingCountry,
         assets: portfolio.map(asset => ({
           symbol: asset.symbol,
           name: asset.name,

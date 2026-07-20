@@ -92,6 +92,7 @@ export const useSavedPortfolios = () => {
       investment_amount: number;
       assets: SavedPortfolioAsset[];
       rationale?: string;
+      country?: string;
     }) => {
       if (!user) {
         return null;
@@ -110,7 +111,8 @@ export const useSavedPortfolios = () => {
             investment_amount: portfolio.investment_amount,
             assets: JSON.parse(JSON.stringify(portfolio.assets)),
             rationale: portfolio.rationale || null,
-          })
+            ...(portfolio.country ? { country: portfolio.country } : {}),
+          } as any)
           .select()
           .single();
 
