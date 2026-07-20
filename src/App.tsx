@@ -8,6 +8,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 // Critical path - loaded immediately
 import Index from "./pages/Index";
 import { useReferralCapture } from "@/hooks/useReferralCapture";
+import AnalyticsDebugPanel from "@/components/AnalyticsDebugPanel";
 
 // Lazy loaded pages - reduces initial bundle size
 const Pricing = lazy(() => import("./pages/Pricing"));
@@ -53,6 +54,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <ReferralCaptureMount />
+        <AnalyticsDebugPanel />
         <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/" element={<Index />} />
