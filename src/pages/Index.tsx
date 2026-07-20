@@ -50,7 +50,19 @@ const Index = () => {
         if (lastVisit) {
           const daysSince = Math.floor((Date.now() - parseInt(lastVisit)) / (1000 * 60 * 60 * 24));
           if (daysSince >= 1) {
-            analytics.userReturned(daysSince);
+            // Best-effort country lookup for cohort analysis
+            let country: string | undefined;
+            try {
+              const { supabase } = await import("@/integrations/supabase/client");
+              const { data } = await (supabase.from("users") as any)
+                .select("country")
+                .eq("user_id", authUser.id)
+                .maybeSingle();
+              country = data?.country || undefined;
+            } catch {
+              // ignore
+            }
+            analytics.userReturned(daysSince, country);
           }
         }
         localStorage.setItem(lastVisitKey, Date.now().toString());
