@@ -27,6 +27,7 @@ import { analytics } from "@/lib/analytics/index";
 import { MoneyMapSection } from "@/components/MoneyMapSection";
 import jsPDF from 'jspdf';
 import { Link } from "react-router-dom";
+import { NigeriaSleeveSection } from "@/components/NigeriaSleeveSection";
 
 interface Asset {
   symbol: string;
@@ -660,6 +661,19 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onboardingGoal
         </div>
 
         {/* Holdings Table */}
+        {onboardingCountry === "Nigeria" ? (
+          <NigeriaSleeveSection
+            onboardingRisk={onboardingRisk}
+            globalHoldings={portfolio.map((a) => ({
+              symbol: a.symbol,
+              name: a.name,
+              allocation: a.allocation,
+              assetClass: a.assetClass,
+              rationale: a.rationale,
+              color: a.color,
+            }))}
+          />
+        ) : (
         <Card className="shadow-card">
           <CardHeader>
             <CardTitle>Portfolio Holdings</CardTitle>
@@ -697,6 +711,7 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onboardingGoal
             </Table>
           </CardContent>
         </Card>
+        )}
 
         {/* Expected Outcomes */}
         <ExpectedOutcomes
