@@ -76,11 +76,12 @@ export async function buildNgSleeve(
       ? "eligible_balanced"
       : "eligible_aggressive";
 
-  const { data: rows, error: wlErr } = await supabase
+  const query: any = supabase
     .from("ng_whitelist")
     .select("ticker, name, security_type, sector, bucket, is_dividend_payer")
-    .eq("status", "active")
-    .eq(eligibleCol as any, true)
+    .eq("status", "active");
+  const { data: rows, error: wlErr } = await query
+    .eq(eligibleCol, true)
     .order("ticker", { ascending: true });
 
   if (wlErr || !rows) {
