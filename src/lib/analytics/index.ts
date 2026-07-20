@@ -44,6 +44,29 @@ export async function trackEvent(
     if (error) {
       console.error("[Analytics] tracking error:", error);
     }
+
+    // Dev-mode debug: broadcast to in-browser panel
+    if (typeof window !== "undefined") {
+      const country =
+        (properties as any)?.country ??
+        (typeof localStorage !== "undefined"
+          ? localStorage.getItem("px_user_country") || undefined
+          : undefined);
+      const detail = {
+        eventName,
+        properties: properties || {},
+        country,
+        userId: user?.id || null,
+        sessionId,
+        timestamp: new Date().toISOString(),
+        insertError: error?.message,
+      };
+      window.dispatchEvent(new CustomEvent("px:analytics", { detail }));
+      if (localStorage.getItem("px_analytics_debug") === "1") {
+        // eslint-disable-next-line no-console
+        console.log("[Analytics]", eventName, detail);
+      }
+    }
   } catch (error) {
     console.error("[Analytics] failed to track:", error);
     // Analytics failures should never break the app
