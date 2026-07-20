@@ -43,6 +43,13 @@ export const NigeriaSleeveSection = ({ onboardingRisk, globalHoldings }: Props) 
       if (!cancelled) {
         setSleeve(result);
         setLoading(false);
+        if (result) {
+          analytics.ngLocalSleeveGenerated(
+            result.risk_profile,
+            result.holdings.length,
+            result.local_sleeve_pct
+          );
+        }
       }
     })();
     return () => {

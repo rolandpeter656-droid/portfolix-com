@@ -347,8 +347,8 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onboardingGoal
         })),
       });
       
-      // Track portfolio saved
-      analytics.portfolioSaved(name, name);
+      // Track portfolio saved (include country for cohort analysis)
+      analytics.portfolioSaved(name, name, onboardingCountry || undefined);
       
       // Send internal notification email
       if (user?.email) {

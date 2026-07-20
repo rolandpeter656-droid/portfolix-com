@@ -1,9 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { AdminGuard } from "@/components/AdminGuard";
 import { supabase } from "@/integrations/supabase/client";
-import { ArrowLeft, BarChart3, TrendingUp, Users, Activity } from "lucide-react";
+import { ArrowLeft, BarChart3, TrendingUp, Users, Activity, MapPin } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface AnalyticsEvent {
@@ -103,22 +110,82 @@ function calculateMetrics(events: AnalyticsEvent[]): Metrics {
   };
 }
 
+// Cohort = unique users who selected a given country (from country_selected).
+// Save rate = share of that cohort that fired portfolio_saved.
+// 7-day return rate = share of cohort that fired user_returned in the last 7 days.
+interface CohortStats {
+  label: string;
+  cohortSize: number;
+  savedUsers: number;
+  saveRate: string;
+  returned7dUsers: number;
+  return7dRate: string;
+  localSleevesGenerated: number;
+}
+
+function buildCohortStats(
+  events: AnalyticsEvent[],
+  matcher: (country: string | undefined) => boolean,
+  label: string
+): CohortStats {
+  const cohort = new Set<string>();
+  for (const e of events) {
+    if (e.event_name !== "country_selected" || !e.user_id) continue;
+    const c = (e.properties as any)?.country as string | undefined;
+    if (matcher(c)) cohort.add(e.user_id);
+  }
+
+  const now = Date.now();
+  const sevenDaysMs = 7 * 24 * 60 * 60 * 1000;
+
+  const saved = new Set<string>();
+  const returned7d = new Set<string>();
+  let localSleeves = 0;
+  for (const e of events) {
+    if (e.event_name === "portfolio_saved" && e.user_id && cohort.has(e.user_id)) {
+      saved.add(e.user_id);
+    } else if (
+      e.event_name === "user_returned" &&
+      e.user_id &&
+      cohort.has(e.user_id) &&
+      now - new Date(e.created_at).getTime() <= sevenDaysMs
+    ) {
+      returned7d.add(e.user_id);
+    } else if (e.event_name === "ng_local_sleeve_generated") {
+      const c = (e.properties as any)?.country as string | undefined;
+      if (matcher(c)) localSleeves += 1;
+    }
+  }
+
+  const rate = (n: number, d: number) => (d > 0 ? ((n / d) * 100).toFixed(1) : "0");
+  return {
+    label,
+    cohortSize: cohort.size,
+    savedUsers: saved.size,
+    saveRate: rate(saved.size, cohort.size),
+    returned7dUsers: returned7d.size,
+    return7dRate: rate(returned7d.size, cohort.size),
+    localSleevesGenerated: localSleeves,
+  };
+}
+
 const AnalyticsDashboard = () => {
-  const [metrics, setMetrics] = useState<Metrics | null>(null);
+  const [events, setEvents] = useState<AnalyticsEvent[]>([]);
   const [loading, setLoading] = useState(true);
+  const [countryFilter, setCountryFilter] = useState<string>("all");
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchAnalytics = async () => {
       try {
-        const { data: events, error } = await supabase
+        const { data, error } = await supabase
           .from("analytics_events")
           .select("*")
           .order("created_at", { ascending: false })
           .limit(1000);
 
         if (error) throw error;
-        if (events) setMetrics(calculateMetrics(events as unknown as AnalyticsEvent[]));
+        if (data) setEvents(data as unknown as AnalyticsEvent[]);
       } catch (error) {
         console.error("Failed to fetch analytics:", error);
       } finally {
@@ -127,6 +194,52 @@ const AnalyticsDashboard = () => {
     };
     fetchAnalytics();
   }, []);
+
+  const countries = useMemo(() => {
+    const s = new Set<string>();
+    for (const e of events) {
+      if (e.event_name === "country_selected") {
+        const c = (e.properties as any)?.country;
+        if (typeof c === "string" && c) s.add(c);
+      }
+    }
+    return Array.from(s).sort();
+  }, [events]);
+
+  const cohortUserIds = useMemo(() => {
+    if (countryFilter === "all") return null;
+    const set = new Set<string>();
+    for (const e of events) {
+      if (e.event_name !== "country_selected" || !e.user_id) continue;
+      if ((e.properties as any)?.country === countryFilter) set.add(e.user_id);
+    }
+    return set;
+  }, [events, countryFilter]);
+
+  const filteredEvents = useMemo(() => {
+    if (countryFilter === "all") return events;
+    return events.filter((e) => {
+      const propCountry = (e.properties as any)?.country;
+      if (typeof propCountry === "string" && propCountry) {
+        return propCountry === countryFilter;
+      }
+      return e.user_id ? cohortUserIds?.has(e.user_id) ?? false : false;
+    });
+  }, [events, countryFilter, cohortUserIds]);
+
+  const metrics = useMemo(
+    () => (filteredEvents.length ? calculateMetrics(filteredEvents) : null),
+    [filteredEvents]
+  );
+
+  const nigeriaStats = useMemo(
+    () => buildCohortStats(events, (c) => c === "Nigeria", "Nigeria"),
+    [events]
+  );
+  const otherStats = useMemo(
+    () => buildCohortStats(events, (c) => !!c && c !== "Nigeria", "Other countries"),
+    [events]
+  );
 
   if (loading) {
     return (
@@ -138,7 +251,7 @@ const AnalyticsDashboard = () => {
     );
   }
 
-  if (!metrics) {
+  if (!events.length) {
     return (
       <AdminGuard>
         <div className="min-h-screen flex items-center justify-center bg-background">
@@ -152,17 +265,97 @@ const AnalyticsDashboard = () => {
     <AdminGuard>
       <div className="min-h-screen bg-background">
         <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
-          <div className="flex items-center gap-4 mb-8">
+          <div className="flex flex-wrap items-center gap-4 mb-8">
             <Button variant="ghost" size="sm" onClick={() => navigate("/")}>
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back
             </Button>
-            <div>
+            <div className="flex-1 min-w-0">
               <h1 className="text-2xl sm:text-3xl font-bold text-foreground">PortfoliX Analytics</h1>
               <p className="text-sm text-muted-foreground">Product metrics & conversion funnel</p>
             </div>
+            <div className="flex items-center gap-2">
+              <MapPin className="h-4 w-4 text-muted-foreground" />
+              <Select value={countryFilter} onValueChange={setCountryFilter}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Filter by country" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All countries</SelectItem>
+                  {countries.map((c) => (
+                    <SelectItem key={c} value={c}>
+                      {c}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
+          {/* Nigeria vs Other cohort comparison */}
+          <Card className="mb-8">
+            <CardHeader>
+              <CardTitle className="text-lg sm:text-xl">
+                Cohort comparison — Nigeria vs Other
+              </CardTitle>
+              <p className="text-xs text-muted-foreground mt-1">
+                Cohorts from <code>country_selected</code>. Save rate = users who
+                fired <code>portfolio_saved</code> ÷ cohort. 7-day return rate =
+                users with <code>user_returned</code> in the last 7 days ÷ cohort.
+              </p>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {[nigeriaStats, otherStats].map((s) => (
+                  <div
+                    key={s.label}
+                    className="rounded-lg border border-border p-4 bg-muted/30"
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="font-semibold text-foreground">{s.label}</h3>
+                      <span className="text-xs text-muted-foreground">
+                        Cohort: {s.cohortSize}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <div className="text-xs text-muted-foreground">Save rate</div>
+                        <div className="text-2xl font-bold text-foreground">{s.saveRate}%</div>
+                        <div className="text-xs text-muted-foreground">
+                          {s.savedUsers}/{s.cohortSize} users
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-xs text-muted-foreground">
+                          7-day return rate
+                        </div>
+                        <div className="text-2xl font-bold text-foreground">
+                          {s.return7dRate}%
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          {s.returned7dUsers}/{s.cohortSize} users
+                        </div>
+                      </div>
+                    </div>
+                    {s.label === "Nigeria" && (
+                      <div className="mt-3 pt-3 border-t border-border text-xs text-muted-foreground">
+                        Local sleeves generated: {s.localSleevesGenerated}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {!metrics && (
+            <p className="text-sm text-muted-foreground mb-8">
+              No events for {countryFilter}.
+            </p>
+          )}
+
+          {metrics && (
+          <>
           {/* Overview */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             <Card>
@@ -256,6 +449,8 @@ const AnalyticsDashboard = () => {
               </CardContent>
             </Card>
           </div>
+          </>
+          )}
         </div>
       </div>
     </AdminGuard>
