@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, Target, TrendingUp, DollarSign, Shield, Zap, Clock, Rocket, HelpCircle, Scale } from "lucide-react";
+import { ArrowLeft, Target, TrendingUp, DollarSign, Shield, Zap, Clock, Rocket, HelpCircle, Scale, Globe } from "lucide-react";
 import { analytics } from "@/lib/analytics/index";
 
 interface OnboardingOption {
@@ -25,8 +25,22 @@ interface OnboardingQuestion {
 
 const ONBOARDING_QUESTIONS: OnboardingQuestion[] = [
   {
-    id: "goal",
+    id: "country",
     step: 1,
+    question: "Which country are you investing from?",
+    helpText: "This helps us tailor broker options and compliance rules to your region.",
+    options: [
+      { value: "Nigeria", label: "🇳🇬 Nigeria", icon: <Globe className="h-6 w-6" />, preview: "Localized broker options for Nigerian investors" },
+      { value: "United States", label: "🇺🇸 United States", icon: <Globe className="h-6 w-6" />, preview: "US brokerages and tax-aware strategies" },
+      { value: "United Kingdom", label: "🇬🇧 United Kingdom", icon: <Globe className="h-6 w-6" />, preview: "UK-friendly global brokerage options" },
+      { value: "Canada", label: "🇨🇦 Canada", icon: <Globe className="h-6 w-6" />, preview: "Global brokerage options for Canadian investors" },
+      { value: "India", label: "🇮🇳 India", icon: <Globe className="h-6 w-6" />, preview: "Global brokerage options for Indian investors" },
+      { value: "Other", label: "🌍 Other", icon: <Globe className="h-6 w-6" />, preview: "Default global strategy" },
+    ],
+  },
+  {
+    id: "goal",
+    step: 2,
     question: "What's your primary investment goal?",
     helpText: "This helps us recommend the right mix of investments for your situation.",
     options: [
@@ -58,7 +72,7 @@ const ONBOARDING_QUESTIONS: OnboardingQuestion[] = [
   },
   {
     id: "timeline",
-    step: 2,
+    step: 3,
     question: "When will you need this money?",
     helpText: "Longer timelines allow for more growth-focused investments.",
     options: [
@@ -94,7 +108,7 @@ const ONBOARDING_QUESTIONS: OnboardingQuestion[] = [
   },
   {
     id: "volatility",
-    step: 3,
+    step: 4,
     question: "How do you feel about market ups and downs?",
     helpText: "There's no wrong answer. This helps us match your comfort level.",
     options: [
@@ -130,6 +144,7 @@ const ONBOARDING_QUESTIONS: OnboardingQuestion[] = [
 ];
 
 interface OnboardingAnswers {
+  country?: OnboardingOption;
   goal?: OnboardingOption;
   timeline?: OnboardingOption;
   volatility?: OnboardingOption;
@@ -155,9 +170,10 @@ export const SimplifiedOnboarding = ({ onComplete, onBack }: SimplifiedOnboardin
     setAnswers(newAnswers);
 
     // Track onboarding step completion
-    if (currentStep === 0) analytics.onboardingStep1Completed(option.value);
-    else if (currentStep === 1) analytics.onboardingStep2Completed(option.value);
-    else if (currentStep === 2) analytics.onboardingStep3Completed(option.value);
+    if (questionId === "country") analytics.countrySelected(option.value);
+    else if (questionId === "goal") analytics.onboardingStep1Completed(option.value);
+    else if (questionId === "timeline") analytics.onboardingStep2Completed(option.value);
+    else if (questionId === "volatility") analytics.onboardingStep3Completed(option.value);
 
     // Auto-advance to next question after brief delay
     setTimeout(() => {
