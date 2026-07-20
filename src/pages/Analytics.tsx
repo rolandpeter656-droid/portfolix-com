@@ -449,6 +449,8 @@ const AnalyticsDashboard = () => {
               </CardContent>
             </Card>
           </div>
+          </>
+          )}
         </div>
       </div>
     </AdminGuard>
