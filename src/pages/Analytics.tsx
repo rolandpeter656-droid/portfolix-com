@@ -110,6 +110,65 @@ function calculateMetrics(events: AnalyticsEvent[]): Metrics {
   };
 }
 
+// Cohort = unique users who selected a given country (from country_selected).
+// Save rate = share of that cohort that fired portfolio_saved.
+// 7-day return rate = share of cohort that fired user_returned in the last 7 days.
+interface CohortStats {
+  label: string;
+  cohortSize: number;
+  savedUsers: number;
+  saveRate: string;
+  returned7dUsers: number;
+  return7dRate: string;
+  localSleevesGenerated: number;
+}
+
+function buildCohortStats(
+  events: AnalyticsEvent[],
+  matcher: (country: string | undefined) => boolean,
+  label: string
+): CohortStats {
+  const cohort = new Set<string>();
+  for (const e of events) {
+    if (e.event_name !== "country_selected" || !e.user_id) continue;
+    const c = (e.properties as any)?.country as string | undefined;
+    if (matcher(c)) cohort.add(e.user_id);
+  }
+
+  const now = Date.now();
+  const sevenDaysMs = 7 * 24 * 60 * 60 * 1000;
+
+  const saved = new Set<string>();
+  const returned7d = new Set<string>();
+  let localSleeves = 0;
+  for (const e of events) {
+    if (e.event_name === "portfolio_saved" && e.user_id && cohort.has(e.user_id)) {
+      saved.add(e.user_id);
+    } else if (
+      e.event_name === "user_returned" &&
+      e.user_id &&
+      cohort.has(e.user_id) &&
+      now - new Date(e.created_at).getTime() <= sevenDaysMs
+    ) {
+      returned7d.add(e.user_id);
+    } else if (e.event_name === "ng_local_sleeve_generated") {
+      const c = (e.properties as any)?.country as string | undefined;
+      if (matcher(c)) localSleeves += 1;
+    }
+  }
+
+  const rate = (n: number, d: number) => (d > 0 ? ((n / d) * 100).toFixed(1) : "0");
+  return {
+    label,
+    cohortSize: cohort.size,
+    savedUsers: saved.size,
+    saveRate: rate(saved.size, cohort.size),
+    returned7dUsers: returned7d.size,
+    return7dRate: rate(returned7d.size, cohort.size),
+    localSleevesGenerated: localSleeves,
+  };
+}
+
 const AnalyticsDashboard = () => {
   const [events, setEvents] = useState<AnalyticsEvent[]>([]);
   const [loading, setLoading] = useState(true);
