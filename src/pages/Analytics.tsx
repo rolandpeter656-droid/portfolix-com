@@ -1,9 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { AdminGuard } from "@/components/AdminGuard";
 import { supabase } from "@/integrations/supabase/client";
-import { ArrowLeft, BarChart3, TrendingUp, Users, Activity } from "lucide-react";
+import { ArrowLeft, BarChart3, TrendingUp, Users, Activity, MapPin } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface AnalyticsEvent {
