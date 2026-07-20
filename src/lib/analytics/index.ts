@@ -3,6 +3,7 @@ import { getOrCreateSessionId } from "./session";
 
 export type AnalyticsEvent =
   | "signup_started"
+  | "country_selected"
   | "onboarding_step1_completed"
   | "onboarding_step2_completed"
   | "onboarding_step3_completed"
@@ -50,6 +51,9 @@ export async function trackEvent(
 export const analytics = {
   signupStarted: () =>
     trackEvent("signup_started"),
+
+  countrySelected: (country: string) =>
+    trackEvent("country_selected", { country }),
 
   onboardingStep1Completed: (goal: string) =>
     trackEvent("onboarding_step1_completed", { goal }),

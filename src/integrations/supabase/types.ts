@@ -420,6 +420,7 @@ export type Database = {
       user_portfolios: {
         Row: {
           assets: Json
+          country: string | null
           created_at: string
           experience_level: string
           id: string
@@ -433,6 +434,7 @@ export type Database = {
         }
         Insert: {
           assets: Json
+          country?: string | null
           created_at?: string
           experience_level: string
           id?: string
@@ -446,6 +448,7 @@ export type Database = {
         }
         Update: {
           assets?: Json
+          country?: string | null
           created_at?: string
           experience_level?: string
           id?: string
@@ -485,6 +488,7 @@ export type Database = {
       }
       users: {
         Row: {
+          country: string | null
           created_at: string
           first_name: string | null
           id: number
@@ -499,6 +503,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          country?: string | null
           created_at?: string
           first_name?: string | null
           id?: number
@@ -513,6 +518,7 @@ export type Database = {
           user_id?: string
         }
         Update: {
+          country?: string | null
           created_at?: string
           first_name?: string | null
           id?: number
