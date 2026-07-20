@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -31,6 +32,8 @@ const BRAND_GREEN = "#22C55E";
 export const NigeriaSleeveSection = ({ onboardingRisk, globalHoldings }: Props) => {
   const [sleeve, setSleeve] = useState<NgSleeveResult | null>(null);
   const [loading, setLoading] = useState(true);
+  // Dedupe rapid duplicate fires (double-click, click + auxclick on same activation).
+  const lastFiredRef = useRef<Map<string, number>>(new Map());
 
   useEffect(() => {
     let cancelled = false;
@@ -47,7 +50,18 @@ export const NigeriaSleeveSection = ({ onboardingRisk, globalHoldings }: Props) 
     };
   }, [onboardingRisk]);
 
-  const handleBrokerClick = (broker: string, ticker: string) => {
+  const handleBrokerClick = (
+    broker: string,
+    ticker: string,
+    e?: React.MouseEvent<HTMLAnchorElement>
+  ) => {
+    // Only count primary-button or middle-click activations (ignore right-click context menu).
+    if (e && e.type === "auxclick" && e.button !== 1) return;
+    const key = `${broker}::${ticker}`;
+    const now = Date.now();
+    const last = lastFiredRef.current.get(key) ?? 0;
+    if (now - last < 800) return; // dedupe within 800ms
+    lastFiredRef.current.set(key, now);
     analytics.ngBrokerageLinkClicked(broker, ticker);
   };
 
@@ -207,7 +221,11 @@ export const NigeriaSleeveSection = ({ onboardingRisk, globalHoldings }: Props) 
                         href={b.urlFor(h.ticker)}
                         target="_blank"
                         rel="noopener noreferrer"
-                        onClick={() => handleBrokerClick(b.name, h.ticker)}
+                        data-analytics="ng_brokerage_link"
+                        data-broker={b.name}
+                        data-ticker={h.ticker}
+                        onClick={(e) => handleBrokerClick(b.name, h.ticker, e)}
+                        onAuxClick={(e) => handleBrokerClick(b.name, h.ticker, e)}
                         className="inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-xs font-medium transition-colors hover:bg-accent"
                         style={{ borderColor: `${BRAND_GREEN}55`, color: BRAND_GREEN }}
                       >
