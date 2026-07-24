@@ -34,7 +34,7 @@ export const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
 
             {/* Social proof */}
             <p className="text-sm sm:text-base text-primary/70 mb-8 font-medium animate-fade-in-up-delay-3">
-              Join 2,000+ investors who stopped overthinking and started building wealth.
+              Join 42+ investors who stopped overthinking and started building wealth.
             </p>
 
             {/* CTAs */}
@@ -136,7 +136,7 @@ export const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
         <div className="grid grid-cols-3 gap-4 sm:gap-8 max-w-lg mx-auto lg:max-w-xl mt-16 lg:mt-20 animate-fade-in-up-delay-3">
           {[
             { value: "500+", label: "Portfolios Created", color: "text-primary" },
-            { value: "2,000+", label: "Active Investors", color: "text-success" },
+            { value: "42+", label: "Active Investors", color: "text-success" },
             { value: "3 min", label: "To Portfolio", color: "text-warning" },
           ].map((stat) => (
             <div key={stat.label} className="text-center">
