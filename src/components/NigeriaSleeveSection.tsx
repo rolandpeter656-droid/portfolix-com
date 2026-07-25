@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AlertTriangle, ExternalLink, Globe2, MapPin } from "lucide-react";
 import { buildNgSleeve, NgSleeveResult } from "@/lib/ngSleeve";
-import { analytics } from "@/lib/analytics/index";
+import { analytics, brokerageLinkClicked } from "@/lib/analytics/index";
 
 interface Props {
   onboardingRisk?: string;
@@ -70,6 +70,7 @@ export const NigeriaSleeveSection = ({ onboardingRisk, globalHoldings }: Props) 
     if (now - last < 800) return; // dedupe within 800ms
     lastFiredRef.current.set(key, now);
     analytics.ngBrokerageLinkClicked(broker, ticker);
+    brokerageLinkClicked(broker, { ticker, source: "nigeria_sleeve" });
   };
 
   return (
