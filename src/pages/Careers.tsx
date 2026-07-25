@@ -5,7 +5,6 @@ import { ArrowRight, Mail } from "lucide-react";
 
 const stats = [
   { value: "500+", label: "Portfolios Created" },
-  { value: "42+", label: "Active Investors" },
   { value: "2", label: "Open Positions" },
   { value: "🌍", label: "Global Team" },
 ];
