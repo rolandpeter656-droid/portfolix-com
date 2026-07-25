@@ -23,7 +23,12 @@ import { useSavedPortfolios } from "@/hooks/useSavedPortfolios";
 import { useWelcomeEmail } from "@/hooks/useWelcomeEmail";
 import { useAuth } from "@/hooks/useAuth";
 import { ProSuggestionsPanel, RiskScoreCard, RebalancingAlerts, PortfolioHealthCheck } from "@/components/pro";
-import { analytics } from "@/lib/analytics/index";
+import {
+  analytics,
+  recommendationViewed,
+  pdfDownloaded,
+  buildAnotherClicked,
+} from "@/lib/analytics/index";
 import { MoneyMapSection } from "@/components/MoneyMapSection";
 import jsPDF from 'jspdf';
 import { Link } from "react-router-dom";
@@ -239,6 +244,17 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onboardingGoal
   const { sendPortfolioNotification } = useWelcomeEmail();
   const { user } = useAuth();
 
+  // Fire recommendation_viewed once on mount
+  useEffect(() => {
+    recommendationViewed({
+      ...(onboardingGoal ? { goal: onboardingGoal } : {}),
+      ...(onboardingTimeline ? { timeline: onboardingTimeline } : {}),
+      ...(onboardingRisk ? { risk: onboardingRisk } : {}),
+      ...(onboardingCountry ? { country: onboardingCountry } : {}),
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Fetch archetype from database on mount
   useEffect(() => {
     const loadArchetype = async () => {
@@ -451,7 +467,13 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onboardingGoal
     doc.text('Disclaimer: This is not financial advice. All investments involve risk.', 20, 280, { maxWidth: 170 });
     
     doc.save(`PortfoliX_${portfolioName.replace(/\s+/g, '_')}_${today.replace(/\//g, '-')}.pdf`);
-    
+
+    pdfDownloaded({
+      portfolio_name: portfolioName,
+      investment_amount: investmentAmount,
+      is_free_user: isFreeUser,
+    });
+
     toast({
       title: "Portfolio Exported",
       description: "Your portfolio PDF has been downloaded.",

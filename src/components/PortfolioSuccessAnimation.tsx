@@ -3,6 +3,7 @@ import confetti from "canvas-confetti";
 import { Check } from "lucide-react";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
+import { buildAnotherClicked } from "@/lib/analytics/index";
 
 interface PortfolioSuccessAnimationProps {
   onViewPortfolio: () => void;
@@ -122,7 +123,10 @@ export const PortfolioSuccessAnimation = ({
             View Portfolio Details
           </Button>
           <Button
-            onClick={onGenerateAnother}
+            onClick={() => {
+              buildAnotherClicked({ source: "success_animation" });
+              onGenerateAnother();
+            }}
             variant="outline"
             size="lg"
             className="transition-all duration-300"
