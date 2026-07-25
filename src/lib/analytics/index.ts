@@ -18,7 +18,13 @@ export type AnalyticsEvent =
   | "referral_link_clicked"
   | "referral_signup"
   | "ng_brokerage_link_clicked"
-  | "ng_local_sleeve_generated";
+  | "ng_local_sleeve_generated"
+  | "recommendation_viewed"
+  | "brokerage_link_clicked"
+  | "pdf_downloaded"
+  | "build_another_clicked"
+  | "upgrade_prompt_viewed"
+  | "upgrade_prompt_clicked";
 
 interface EventProperties {
   [key: string]: string | number | boolean | undefined;
@@ -143,5 +149,23 @@ export const analytics = {
       local_sleeve_pct: localSleevePct,
     }),
 };
+
+export const recommendationViewed = (properties?: EventProperties) =>
+  trackEvent("recommendation_viewed", properties);
+
+export const brokerageLinkClicked = (brokerage: string, extra?: EventProperties) =>
+  trackEvent("brokerage_link_clicked", { brokerage, ...(extra || {}) });
+
+export const pdfDownloaded = (properties?: EventProperties) =>
+  trackEvent("pdf_downloaded", properties);
+
+export const buildAnotherClicked = (properties?: EventProperties) =>
+  trackEvent("build_another_clicked", properties);
+
+export const upgradePromptViewed = (source: string) =>
+  trackEvent("upgrade_prompt_viewed", { source });
+
+export const upgradePromptClicked = (source: string) =>
+  trackEvent("upgrade_prompt_clicked", { source });
 
 export default analytics;
