@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { brokerageLinkClicked } from "@/lib/analytics/index";
 
 interface Asset {
   symbol: string;
@@ -97,6 +98,9 @@ export const ImplementationGuide = ({
                 href={broker.url}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() =>
+                  brokerageLinkClicked(broker.name, { region: broker.region, source: "implementation_guide" })
+                }
                 className="flex items-start gap-3 p-3 rounded-lg border border-border/50 hover:border-primary/50 hover:bg-primary/5 transition-all group"
               >
                 <span className="text-lg leading-none mt-0.5">{broker.region}</span>
