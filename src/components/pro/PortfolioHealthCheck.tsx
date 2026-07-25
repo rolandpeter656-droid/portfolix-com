@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { upgradePromptViewed, upgradePromptClicked } from "@/lib/analytics/index";
 
 interface DriftItem {
   asset: string;
@@ -48,6 +49,13 @@ export const PortfolioHealthCheck = ({
       fetchData();
     }
   }, [isPro, user]);
+
+  // Fire upgrade_prompt_viewed once when the locked (non-Pro) prompt renders
+  useEffect(() => {
+    if (!isPro) {
+      upgradePromptViewed("portfolio_health_check");
+    }
+  }, [isPro]);
 
   const fetchData = async () => {
     if (!user) return;
@@ -101,7 +109,15 @@ export const PortfolioHealthCheck = ({
             </Badge>
           </div>
           {onUpgrade && (
-            <Button variant="ghost" size="sm" onClick={onUpgrade} className="text-xs text-primary">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                upgradePromptClicked("portfolio_health_check");
+                onUpgrade();
+              }}
+              className="text-xs text-primary"
+            >
               Upgrade
             </Button>
           )}
