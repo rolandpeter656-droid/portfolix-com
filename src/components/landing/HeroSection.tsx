@@ -21,13 +21,13 @@ export const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
           <div className="text-center lg:text-left max-w-2xl mx-auto lg:mx-0">
             {/* Headline */}
             <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-foreground mb-6 leading-[1.08] animate-fade-in-up-delay-1">
-              Build Portfolios{" "}
+              Build Stock Portfolios{" "}
               <span className="text-gradient">in Minutes</span>
             </h1>
 
             {/* Subheadline */}
             <p className="text-lg sm:text-xl text-muted-foreground mb-4 leading-relaxed animate-fade-in-up-delay-2">
-              Get a personalized investment portfolio in 3 minutes.{" "}
+              Get personalized US & Nigerian stocks & ETFs in 3 minutes.{" "}
               <br className="hidden sm:block" />
               No finance degree required.
             </p>
