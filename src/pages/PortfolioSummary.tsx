@@ -488,6 +488,8 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onboardingGoal
           onGenerateAnother={handleGenerateAnother}
         />
       )}
+
+      <ScrollToPortfolioCue />
       
       {/* Header */}
       <div className="border-b border-border bg-card">
@@ -594,7 +596,11 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onboardingGoal
           </CardContent>
         </Card>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div
+          id="portfolio-allocations"
+          style={{ scrollMarginTop: "80px" }}
+          className="grid grid-cols-1 lg:grid-cols-2 gap-8"
+        >
           {/* Metrics */}
           <Card className="shadow-card">
             <CardHeader>
