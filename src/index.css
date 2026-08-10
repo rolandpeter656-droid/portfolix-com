@@ -497,3 +497,8 @@
     @apply w-2.5 h-2.5 rounded-full;
   }
 }
+
+@keyframes px-cue-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
