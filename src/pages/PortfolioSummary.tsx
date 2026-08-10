@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { PortfolioPieChart } from "@/components/PortfolioPieChart";
+import { ScrollToPortfolioCue } from "@/components/ScrollToPortfolioCue";
 import { PortfolioSuccessAnimation } from "@/components/PortfolioSuccessAnimation";
 import { UpgradeModal } from "@/components/UpgradeModal";
 import { ImplementationGuide } from "@/components/ImplementationGuide";
