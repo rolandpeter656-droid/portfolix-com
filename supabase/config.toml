@@ -17,3 +17,9 @@ verify_jwt = false
 
 [functions.validate-coupon]
 verify_jwt = false
+
+[functions.send-trade-nudges]
+verify_jwt = false
+
+[functions.trade-nudge-response]
+verify_jwt = false

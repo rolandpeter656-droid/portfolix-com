@@ -26,7 +26,9 @@ export type AnalyticsEvent =
   | "upgrade_prompt_viewed"
   | "upgrade_prompt_clicked"
   | "trade_confirmation_prompt_shown"
-  | "trade_self_reported";
+  | "trade_self_reported"
+  | "nudge_email_sent"
+  | "nudge_email_clicked";
 
 interface EventProperties {
   [key: string]: string | number | boolean | undefined;
@@ -155,12 +157,19 @@ export const analytics = {
 export const recommendationViewed = (properties?: EventProperties) =>
   trackEvent("recommendation_viewed", properties);
 
-export const brokerageLinkClicked = (brokerage: string, extra?: EventProperties) =>
-  trackEvent("brokerage_link_clicked", {
+export const brokerageLinkClicked = (brokerage: string, extra?: EventProperties) => {
+  // Let the in-app trade-confirmation prompt know a CTA was tapped.
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(
+      new CustomEvent("px:brokerage-clicked", { detail: { broker: brokerage } })
+    );
+  }
+  return trackEvent("brokerage_link_clicked", {
     brokerage,
     broker: brokerage,
     ...(extra || {}),
   });
+};
 
 export const pdfDownloaded = (properties?: EventProperties) =>
   trackEvent("pdf_downloaded", properties);

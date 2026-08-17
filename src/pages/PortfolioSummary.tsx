@@ -34,6 +34,7 @@ import jsPDF from 'jspdf';
 import { Link } from "react-router-dom";
 import { NigeriaSleeveSection } from "@/components/NigeriaSleeveSection";
 import { ActionFirstAllocations } from "@/components/ActionFirstAllocations";
+import { TradeConfirmationModal } from "@/components/TradeConfirmationModal";
 
 interface Asset {
   symbol: string;
@@ -240,6 +241,7 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onboardingGoal
   const [adjustedRiskScore, setAdjustedRiskScore] = useState<number>(riskScore);
   const [archetypePortfolio, setArchetypePortfolio] = useState<Asset[] | null>(null);
   const [archetypeName, setArchetypeName] = useState<string | null>(null);
+  const [savedPortfolioId, setSavedPortfolioId] = useState<string | null>(null);
   const { toast } = useToast();
   const { subscriptionPlan } = usePortfolioLimit();
   const { sendPortfolioNotification } = useWelcomeEmail();
@@ -350,7 +352,7 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onboardingGoal
       // Track portfolio generation
       analytics.portfolioGenerated(name);
       
-      await savePortfolio({
+      const saved = await savePortfolio({
         portfolio_name: name,
         risk_score: riskScore,
         experience_level: experienceLevel,
@@ -366,6 +368,7 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onboardingGoal
           color: asset.color,
         })),
       });
+      if (saved?.id) setSavedPortfolioId(saved.id);
       
       // Track portfolio saved (include country for cohort analysis)
       analytics.portfolioSaved(name, name, onboardingCountry || undefined);
@@ -529,6 +532,9 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onboardingGoal
             allocation: a.allocation,
           }))}
         />
+
+        {/* Activation loop: "did you place your trade?" (once per session) */}
+        <TradeConfirmationModal portfolioId={savedPortfolioId} />
 
         {/* Your Money Map — shareable identity card */}
         <MoneyMapSection

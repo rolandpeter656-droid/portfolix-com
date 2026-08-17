@@ -417,6 +417,36 @@ export type Database = {
         }
         Relationships: []
       }
+      trade_nudges: {
+        Row: {
+          email: string
+          id: string
+          portfolio_id: string
+          responded_at: string | null
+          sent_at: string
+          token: string
+          user_id: string
+        }
+        Insert: {
+          email: string
+          id?: string
+          portfolio_id: string
+          responded_at?: string | null
+          sent_at?: string
+          token?: string
+          user_id: string
+        }
+        Update: {
+          email?: string
+          id?: string
+          portfolio_id?: string
+          responded_at?: string | null
+          sent_at?: string
+          token?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       trade_self_reports: {
         Row: {
           broker: string | null
