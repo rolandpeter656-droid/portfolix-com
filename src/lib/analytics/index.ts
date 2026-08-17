@@ -24,7 +24,9 @@ export type AnalyticsEvent =
   | "pdf_downloaded"
   | "build_another_clicked"
   | "upgrade_prompt_viewed"
-  | "upgrade_prompt_clicked";
+  | "upgrade_prompt_clicked"
+  | "trade_confirmation_prompt_shown"
+  | "trade_self_reported";
 
 interface EventProperties {
   [key: string]: string | number | boolean | undefined;
@@ -154,7 +156,11 @@ export const recommendationViewed = (properties?: EventProperties) =>
   trackEvent("recommendation_viewed", properties);
 
 export const brokerageLinkClicked = (brokerage: string, extra?: EventProperties) =>
-  trackEvent("brokerage_link_clicked", { brokerage, ...(extra || {}) });
+  trackEvent("brokerage_link_clicked", {
+    brokerage,
+    broker: brokerage,
+    ...(extra || {}),
+  });
 
 export const pdfDownloaded = (properties?: EventProperties) =>
   trackEvent("pdf_downloaded", properties);
@@ -167,5 +173,47 @@ export const upgradePromptViewed = (source: string) =>
 
 export const upgradePromptClicked = (source: string) =>
   trackEvent("upgrade_prompt_clicked", { source });
+
+export type TradeReportSurface = "in_app" | "email";
+
+/** Fired when the "did you place this trade?" prompt is rendered. */
+export const tradeConfirmationPromptShown = (surface: TradeReportSurface) =>
+  trackEvent("trade_confirmation_prompt_shown", { surface });
+
+/**
+ * Self-reported trade outcome (proxy — we cannot confirm real trades).
+ * Writes the analytics event AND a row in `trade_self_reports` for clean querying.
+ */
+export async function tradeSelfReported(input: {
+  placed: boolean;
+  surface: TradeReportSurface;
+  broker?: string;
+  portfolioId?: string;
+}): Promise<void> {
+  const { placed, surface, broker, portfolioId } = input;
+
+  await trackEvent("trade_self_reported", {
+    placed,
+    surface,
+    ...(broker ? { broker } : {}),
+    ...(portfolioId ? { portfolio_id: portfolioId } : {}),
+  });
+
+  try {
+    const sessionId = getOrCreateSessionId();
+    const { data: { user } } = await supabase.auth.getUser();
+    const { error } = await supabase.from("trade_self_reports").insert({
+      user_id: user?.id ?? null,
+      session_id: sessionId,
+      placed,
+      broker: broker ?? null,
+      surface,
+      portfolio_id: portfolioId ?? null,
+    });
+    if (error) console.error("[Analytics] trade_self_reports insert error:", error);
+  } catch (e) {
+    console.error("[Analytics] trade self report failed:", e);
+  }
+}
 
 export default analytics;
