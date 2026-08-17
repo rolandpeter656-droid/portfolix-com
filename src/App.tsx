@@ -37,6 +37,7 @@ const Disclaimers = lazy(() => import("./pages/legal/Disclaimers"));
 const RiskDisclosurePage = lazy(() => import("./pages/legal/RiskDisclosure"));
 const Learn = lazy(() => import("./pages/Learn"));
 const NotFound = lazy(() => import("./pages/NotFound"));
+const RecPreview = lazy(() => import("./pages/__RecPreview"));
 
 const queryClient = new QueryClient();
 
@@ -84,6 +85,7 @@ const App = () => (
             <Route path="/legal/risk-disclosure" element={<RiskDisclosurePage />} />
             <Route path="/learn" element={<Learn />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="/__rec-preview" element={<RecPreview />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
