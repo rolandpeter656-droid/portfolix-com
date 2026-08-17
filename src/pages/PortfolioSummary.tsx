@@ -533,6 +533,9 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onboardingGoal
           }))}
         />
 
+        {/* Activation loop: "did you place your trade?" (once per session) */}
+        <TradeConfirmationModal portfolioId={savedPortfolioId} />
+
         {/* Your Money Map — shareable identity card */}
         <MoneyMapSection
           onboardingGoal={onboardingGoal}
