@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/select";
 import { AdminGuard } from "@/components/AdminGuard";
 import { supabase } from "@/integrations/supabase/client";
-import { ArrowLeft, BarChart3, TrendingUp, Users, Activity, MapPin } from "lucide-react";
+import { ArrowLeft, BarChart3, TrendingUp, Users, Activity, MapPin, Rocket, CalendarRange } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface AnalyticsEvent {
@@ -169,10 +169,73 @@ function buildCohortStats(
   };
 }
 
+// ---- Activation funnel: generated -> CTA tapped -> self-reported placed ----
+// Counted on unique "actors": user_id when signed in, otherwise session_id, so
+// anonymous pre-auth visitors are not undercounted.
+const RANGE_OPTIONS = [
+  { value: "7", label: "Last 7 days" },
+  { value: "30", label: "Last 30 days" },
+  { value: "90", label: "Last 90 days" },
+  { value: "all", label: "All time" },
+];
+
+interface ActivationFunnel {
+  generated: number;
+  ctaTapped: number;
+  placed: number;
+  generatedToCta: string;
+  ctaToPlaced: string;
+}
+
+function actorKey(e: AnalyticsEvent): string | null {
+  return e.user_id || e.session_id || null;
+}
+
+function buildActivationFunnel(
+  events: AnalyticsEvent[],
+  rangeDays: string
+): ActivationFunnel {
+  const cutoff =
+    rangeDays === "all"
+      ? 0
+      : Date.now() - parseInt(rangeDays, 10) * 24 * 60 * 60 * 1000;
+
+  const generated = new Set<string>();
+  const ctaTapped = new Set<string>();
+  const placed = new Set<string>();
+
+  for (const e of events) {
+    if (new Date(e.created_at).getTime() < cutoff) continue;
+    const key = actorKey(e);
+    if (!key) continue;
+    if (e.event_name === "portfolio_generated") generated.add(key);
+    else if (
+      e.event_name === "brokerage_link_clicked" ||
+      e.event_name === "ng_brokerage_link_clicked"
+    )
+      ctaTapped.add(key);
+    else if (
+      e.event_name === "trade_self_reported" &&
+      (e.properties as any)?.placed === true
+    )
+      placed.add(key);
+  }
+
+  const rate = (n: number, d: number) => (d > 0 ? ((n / d) * 100).toFixed(1) : "0");
+  return {
+    generated: generated.size,
+    ctaTapped: ctaTapped.size,
+    placed: placed.size,
+    generatedToCta: rate(ctaTapped.size, generated.size),
+    ctaToPlaced: rate(placed.size, ctaTapped.size),
+  };
+}
+
 const AnalyticsDashboard = () => {
   const [events, setEvents] = useState<AnalyticsEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [countryFilter, setCountryFilter] = useState<string>("all");
+  const [activationRange, setActivationRange] = useState<string>("30");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -230,6 +293,11 @@ const AnalyticsDashboard = () => {
   const metrics = useMemo(
     () => (filteredEvents.length ? calculateMetrics(filteredEvents) : null),
     [filteredEvents]
+  );
+
+  const activation = useMemo(
+    () => buildActivationFunnel(filteredEvents, activationRange),
+    [filteredEvents, activationRange]
   );
 
   const nigeriaStats = useMemo(
@@ -291,6 +359,69 @@ const AnalyticsDashboard = () => {
               </Select>
             </div>
           </div>
+
+          {/* Activation funnel */}
+          <Card className="mb-8">
+            <CardHeader>
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <CardTitle className="text-lg sm:text-xl flex items-center gap-2">
+                    <Rocket className="h-5 w-5 text-primary" />
+                    Activation funnel
+                  </CardTitle>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Unique actors (user, or session when anonymous). "Placed" is
+                    self-reported — we do not hold assets and cannot confirm trades.
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CalendarRange className="h-4 w-4 text-muted-foreground" />
+                  <Select value={activationRange} onValueChange={setActivationRange}>
+                    <SelectTrigger className="w-[160px]">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {RANGE_OPTIONS.map((r) => (
+                        <SelectItem key={r.value} value={r.value}>
+                          {r.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                {[
+                  { label: "Portfolios generated", value: activation.generated },
+                  { label: "Brokerage CTA tapped", value: activation.ctaTapped },
+                  { label: "Self-reported placed", value: activation.placed },
+                ].map((m) => (
+                  <div key={m.label} className="rounded-lg border border-border p-4 bg-muted/30">
+                    <div className="text-xs text-muted-foreground">{m.label}</div>
+                    <div className="text-2xl sm:text-3xl font-bold text-foreground">{m.value}</div>
+                  </div>
+                ))}
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="rounded-lg border border-border p-4">
+                  <div className="text-xs text-muted-foreground">Generated → CTA tapped</div>
+                  <div className="text-2xl font-bold text-primary">{activation.generatedToCta}%</div>
+                  <div className="text-xs text-muted-foreground">
+                    {activation.ctaTapped}/{activation.generated}
+                  </div>
+                </div>
+                <div className="rounded-lg border border-border p-4">
+                  <div className="text-xs text-muted-foreground">CTA tapped → placed (self-reported)</div>
+                  <div className="text-2xl font-bold text-primary">{activation.ctaToPlaced}%</div>
+                  <div className="text-xs text-muted-foreground">
+                    {activation.placed}/{activation.ctaTapped}
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
           {/* Nigeria vs Other cohort comparison */}
           <Card className="mb-8">
