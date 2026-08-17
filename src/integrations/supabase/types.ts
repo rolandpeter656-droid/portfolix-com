@@ -417,6 +417,39 @@ export type Database = {
         }
         Relationships: []
       }
+      trade_self_reports: {
+        Row: {
+          broker: string | null
+          created_at: string
+          id: string
+          placed: boolean
+          portfolio_id: string | null
+          session_id: string
+          surface: string
+          user_id: string | null
+        }
+        Insert: {
+          broker?: string | null
+          created_at?: string
+          id?: string
+          placed: boolean
+          portfolio_id?: string | null
+          session_id: string
+          surface?: string
+          user_id?: string | null
+        }
+        Update: {
+          broker?: string | null
+          created_at?: string
+          id?: string
+          placed?: boolean
+          portfolio_id?: string | null
+          session_id?: string
+          surface?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       user_portfolios: {
         Row: {
           assets: Json
