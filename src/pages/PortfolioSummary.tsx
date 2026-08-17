@@ -9,7 +9,6 @@ import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { PortfolioPieChart } from "@/components/PortfolioPieChart";
-import { ScrollToPortfolioCue } from "@/components/ScrollToPortfolioCue";
 import { PortfolioSuccessAnimation } from "@/components/PortfolioSuccessAnimation";
 import { UpgradeModal } from "@/components/UpgradeModal";
 import { ImplementationGuide } from "@/components/ImplementationGuide";
@@ -34,6 +33,7 @@ import { MoneyMapSection } from "@/components/MoneyMapSection";
 import jsPDF from 'jspdf';
 import { Link } from "react-router-dom";
 import { NigeriaSleeveSection } from "@/components/NigeriaSleeveSection";
+import { ActionFirstAllocations } from "@/components/ActionFirstAllocations";
 
 interface Asset {
   symbol: string;
@@ -320,6 +320,9 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onboardingGoal
   }, 0);
   const bondAllocation = 100 - stockAllocation;
 
+  // One-line strategy summary shown at the very top of the results page.
+  const actionSummary = `${name} · ${portfolio.length} holdings · built for a ${timeline} horizon.`;
+
   // Handler for alternative portfolio selection
   const handleSelectAlternative = (direction: "conservative" | "aggressive") => {
     if (direction === "conservative") {
@@ -490,12 +493,10 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onboardingGoal
         />
       )}
 
-      <ScrollToPortfolioCue />
-      
       {/* Header */}
       <div className="border-b border-border bg-card">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center gap-4">
+        <div className="container mx-auto px-4 py-2 sm:py-4">
+          <div className="flex items-center gap-2 sm:gap-4">
             <Button 
               variant="ghost" 
               size="icon" 
@@ -506,10 +507,10 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onboardingGoal
               <ArrowLeft className="h-5 w-5" />
             </Button>
             <div>
-              <h1 className="text-2xl font-bold text-foreground">
+              <h1 className="text-lg sm:text-2xl font-bold text-foreground">
                 {portfolioName || "Your Portfolio"}
               </h1>
-              <p className="text-muted-foreground">
+              <p className="text-xs sm:text-base text-muted-foreground">
                 {experienceLevel.charAt(0).toUpperCase() + experienceLevel.slice(1)} • {timeline}
               </p>
             </div>
@@ -517,13 +518,25 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onboardingGoal
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8 space-y-8">
+      <div className="container mx-auto px-4 py-4 sm:py-8 space-y-6 sm:space-y-8 pb-32 md:pb-8">
+        {/* Action-first: strategy summary → allocations → brokerage CTA */}
+        <ActionFirstAllocations
+          summary={actionSummary}
+          currency={onboardingCountry === "Nigeria" ? "NGN" : "USD"}
+          holdings={portfolio.map((a) => ({
+            symbol: a.symbol,
+            name: a.name,
+            allocation: a.allocation,
+          }))}
+        />
+
         {/* Your Money Map — shareable identity card */}
         <MoneyMapSection
           onboardingGoal={onboardingGoal}
           onboardingTimeline={onboardingTimeline}
           onboardingRisk={onboardingRisk}
           portfolio={portfolio}
+          currency={onboardingCountry === "Nigeria" ? "NGN" : "USD"}
         />
 
         {/* Strategy Explanation - Why This Portfolio Works */}
@@ -598,7 +611,6 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onboardingGoal
         </Card>
 
         <div
-          id="portfolio-allocations"
           style={{ scrollMarginTop: "80px" }}
           className="grid grid-cols-1 lg:grid-cols-2 gap-8"
         >
