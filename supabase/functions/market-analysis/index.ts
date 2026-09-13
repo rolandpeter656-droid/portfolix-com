@@ -23,15 +23,8 @@ const VETTED_BROKERS: Record<string, string[]> = {
   "Asia-Pacific": ["Tiger Brokers"],
 };
 
-// Wording we never allow in generated copy.
-const BANNED = [
-  /\brisk-?free\b/gi,
-  /\bguarantee(d|s)?\b/gi,
-  /\bassured\b/gi,
-  /\bno risk\b/gi,
-  /\bsafe(st|r)?\b/gi,
-  /\bsecure returns\b/gi,
-];
+// Wording we never allow in generated copy — scrubbed below.
+
 
 function scrub(text: string): string {
   let out = String(text ?? "");
