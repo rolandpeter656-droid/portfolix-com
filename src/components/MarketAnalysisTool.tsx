@@ -117,6 +117,10 @@ export const MarketAnalysisTool = ({ isOpen, onClose }: MarketAnalysisToolProps)
       if ((data as any)?.error) throw new Error((data as any).error);
 
       setResult(data as AnalysisResult);
+      if (!quota.isPro) {
+        await marketAnalysisUsed(region);
+        quota.markUsed();
+      }
       toast({
         title: "Analysis Complete",
         description: `Your ${region} market analysis is ready.`,
