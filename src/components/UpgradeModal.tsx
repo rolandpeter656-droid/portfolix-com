@@ -1,17 +1,25 @@
+import { useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle, Crown, TrendingUp, Bell, LineChart, Zap } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
+import { upgradePromptViewed, upgradePromptClicked } from "@/lib/analytics/index";
 
 interface UpgradeModalProps {
   open: boolean;
   onClose: () => void;
-  context?: "portfolio_save" | "feature_gate" | "optimization" | "default";
+  context?: "portfolio_save" | "feature_gate" | "optimization" | "market_analysis" | "default";
+  /** When set, fires upgrade_prompt_viewed / upgrade_prompt_clicked with this source. */
+  source?: string;
 }
 
 const contextMessages = {
+  market_analysis: {
+    title: "You've used your free Market Analysis",
+    description: "Pro gives you unlimited market analysis, rebalancing alerts, and portfolio health checks."
+  },
   portfolio_save: {
     title: "Keep Your Portfolio Optimized",
     description: "You've saved your portfolio! Want ongoing market insights and rebalancing guidance to maximize its performance?"
