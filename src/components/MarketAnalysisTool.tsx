@@ -77,6 +77,12 @@ export const MarketAnalysisTool = ({ isOpen, onClose }: MarketAnalysisToolProps)
       return;
     }
 
+    // Free tier: one analysis only. Pro/Elite unlimited.
+    if (quota.isLocked) {
+      setShowUpgrade(true);
+      return;
+    }
+
     setIsAnalyzing(true);
     setResult(null);
     setNgHoldings([]);
