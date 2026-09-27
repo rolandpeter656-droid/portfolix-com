@@ -33,6 +33,7 @@ import { MoneyMapSection } from "@/components/MoneyMapSection";
 import jsPDF from 'jspdf';
 import { Link } from "react-router-dom";
 import { NigeriaSleeveSection } from "@/components/NigeriaSleeveSection";
+import { buildNgSleeve, type NgSleeveResult } from "@/lib/ngSleeve";
 import { ActionFirstAllocations } from "@/components/ActionFirstAllocations";
 import { TradeConfirmationModal } from "@/components/TradeConfirmationModal";
 
@@ -233,6 +234,13 @@ const selectPortfolioStrategy = (riskScore: number, experienceLevel: string, tim
 };
 
 const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onboardingGoal, onboardingTimeline, onboardingRisk, onboardingCountry, onBack, onCustomize }: PortfolioSummaryProps) => {
+  const [ngSleeve, setNgSleeve] = useState<NgSleeveResult | null>(null);
+  useEffect(() => {
+    if (onboardingCountry !== "Nigeria") { setNgSleeve(null); return; }
+    let cancelled = false;
+    buildNgSleeve(onboardingRisk).then((r) => { if (!cancelled) setNgSleeve(r); });
+    return () => { cancelled = true; };
+  }, [onboardingCountry, onboardingRisk]);
   const [investmentAmount, setInvestmentAmount] = useState<number>(1000);
   const [isInputMode, setIsInputMode] = useState(false);
   const [portfolioName, setPortfolioName] = useState<string>("");
@@ -531,6 +539,18 @@ const PortfolioSummary = ({ riskScore, experienceLevel, timeline, onboardingGoal
             name: a.name,
             allocation: a.allocation,
           }))}
+          nigerian={
+            onboardingCountry === "Nigeria" && ngSleeve
+              ? {
+                  sleevePct: ngSleeve.local_sleeve_pct,
+                  holdings: ngSleeve.holdings.map((h) => ({
+                    symbol: h.ticker,
+                    name: h.name,
+                    allocation: h.percentage,
+                  })),
+                }
+              : null
+          }
         />
 
         {/* Activation loop: "did you place your trade?" (once per session) */}
