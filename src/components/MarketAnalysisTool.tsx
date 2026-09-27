@@ -13,6 +13,9 @@ import { PortfolioPieChart } from "@/components/PortfolioPieChart";
 import { AllocationCards } from "@/components/market/AllocationCards";
 import { InvestmentDisclaimer } from "@/components/compliance";
 import { buildNgSleeve, type NgHolding } from "@/lib/ngSleeve";
+import { UpgradeModal } from "@/components/UpgradeModal";
+import { useMarketAnalysisQuota } from "@/hooks/useMarketAnalysisQuota";
+import { marketAnalysisUsed } from "@/lib/analytics/index";
 import {
   MARKET_REGIONS,
   REGION_BROKERS,
@@ -47,9 +50,11 @@ export const MarketAnalysisTool = ({ isOpen, onClose }: MarketAnalysisToolProps)
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [ngHoldings, setNgHoldings] = useState<NgHolding[]>([]);
+  const [showUpgrade, setShowUpgrade] = useState(false);
 
   const { user } = useAuth();
   const { toast } = useToast();
+  const quota = useMarketAnalysisQuota();
 
   const currency = region ? regionCurrency(region as MarketRegion) : { symbol: "$", code: "USD" };
 
@@ -69,6 +74,12 @@ export const MarketAnalysisTool = ({ isOpen, onClose }: MarketAnalysisToolProps)
         description: "Market Analysis is available once you're signed in to your PortfoliX account.",
         variant: "destructive",
       });
+      return;
+    }
+
+    // Free tier: one analysis only. Pro/Elite unlimited.
+    if (quota.isLocked) {
+      setShowUpgrade(true);
       return;
     }
 
@@ -106,6 +117,10 @@ export const MarketAnalysisTool = ({ isOpen, onClose }: MarketAnalysisToolProps)
       if ((data as any)?.error) throw new Error((data as any).error);
 
       setResult(data as AnalysisResult);
+      if (!quota.isPro) {
+        await marketAnalysisUsed(region);
+        quota.markUsed();
+      }
       toast({
         title: "Analysis Complete",
         description: `Your ${region} market analysis is ready.`,
@@ -370,6 +385,12 @@ export const MarketAnalysisTool = ({ isOpen, onClose }: MarketAnalysisToolProps)
           </div>
         </div>
       </DialogContent>
+      <UpgradeModal
+        open={showUpgrade}
+        onClose={() => setShowUpgrade(false)}
+        context="market_analysis"
+        source="market_analysis"
+      />
     </Dialog>
   );
 };
