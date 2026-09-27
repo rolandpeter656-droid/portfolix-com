@@ -38,11 +38,16 @@ const contextMessages = {
   }
 };
 
-export const UpgradeModal = ({ open, onClose, context = "default" }: UpgradeModalProps) => {
+export const UpgradeModal = ({ open, onClose, context = "default", source }: UpgradeModalProps) => {
   const navigate = useNavigate();
   const { title, description } = contextMessages[context];
 
+  useEffect(() => {
+    if (open && source) upgradePromptViewed(source);
+  }, [open, source]);
+
   const handleUpgrade = () => {
+    if (source) upgradePromptClicked(source);
     navigate("/payment-method?plan=pro&billing=monthly");
   };
 
