@@ -50,9 +50,11 @@ export const MarketAnalysisTool = ({ isOpen, onClose }: MarketAnalysisToolProps)
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [ngHoldings, setNgHoldings] = useState<NgHolding[]>([]);
+  const [showUpgrade, setShowUpgrade] = useState(false);
 
   const { user } = useAuth();
   const { toast } = useToast();
+  const quota = useMarketAnalysisQuota();
 
   const currency = region ? regionCurrency(region as MarketRegion) : { symbol: "$", code: "USD" };
 
