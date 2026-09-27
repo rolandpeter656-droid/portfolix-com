@@ -385,6 +385,12 @@ export const MarketAnalysisTool = ({ isOpen, onClose }: MarketAnalysisToolProps)
           </div>
         </div>
       </DialogContent>
+      <UpgradeModal
+        open={showUpgrade}
+        onClose={() => setShowUpgrade(false)}
+        context="market_analysis"
+        source="market_analysis"
+      />
     </Dialog>
   );
 };
