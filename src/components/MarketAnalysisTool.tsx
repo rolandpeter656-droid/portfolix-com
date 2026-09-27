@@ -13,6 +13,9 @@ import { PortfolioPieChart } from "@/components/PortfolioPieChart";
 import { AllocationCards } from "@/components/market/AllocationCards";
 import { InvestmentDisclaimer } from "@/components/compliance";
 import { buildNgSleeve, type NgHolding } from "@/lib/ngSleeve";
+import { UpgradeModal } from "@/components/UpgradeModal";
+import { useMarketAnalysisQuota } from "@/hooks/useMarketAnalysisQuota";
+import { marketAnalysisUsed } from "@/lib/analytics/index";
 import {
   MARKET_REGIONS,
   REGION_BROKERS,
