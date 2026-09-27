@@ -28,7 +28,8 @@ export type AnalyticsEvent =
   | "trade_confirmation_prompt_shown"
   | "trade_self_reported"
   | "nudge_email_sent"
-  | "nudge_email_clicked";
+  | "nudge_email_clicked"
+  | "market_analysis_used";
 
 interface EventProperties {
   [key: string]: string | number | boolean | undefined;
