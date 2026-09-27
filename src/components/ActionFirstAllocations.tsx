@@ -23,11 +23,37 @@ interface Props {
   summary: string;
   holdings: ActionHolding[];
   currency: "USD" | "NGN";
+  /** Present only when the recommendation has a Nigerian allocation. */
+  nigerian?: { sleevePct: number; holdings: ActionHolding[] } | null;
 }
 
 const SYMBOLS: Record<Props["currency"], string> = { USD: "$", NGN: "₦" };
 
-export const ActionFirstAllocations = ({ summary, holdings, currency }: Props) => {
+export const ActionFirstAllocations = ({ summary, holdings: rawHoldings, currency, nigerian }: Props) => {
+  const hasNg = !!nigerian && nigerian.holdings.length > 0;
+  const sleevePct = hasNg ? nigerian!.sleevePct : 0;
+  // US rows become share-of-total (scaled to the non-Nigerian portion) only when NG exists.
+  const holdings = useMemo<ActionHolding[]>(
+    () =>
+      hasNg
+        ? rawHoldings.map((h) => ({ ...h, allocation: (h.allocation * (100 - sleevePct)) / 100 }))
+        : rawHoldings,
+    [rawHoldings, hasNg, sleevePct]
+  );
+  const ngHoldings = useMemo<ActionHolding[]>(() => {
+    if (!hasNg) return [];
+    const list = nigerian!.holdings;
+    const sum = list.reduce((a, h) => a + h.allocation, 0);
+    // Sanity check: if engine returned share-of-sleeve (~100), convert to share-of-total.
+    const factor = Math.abs(sum - 100) < 1 && sleevePct < 100 ? sleevePct / 100 : 1;
+    return list.map((h) => ({ ...h, allocation: h.allocation * factor }));
+  }, [hasNg, nigerian, sleevePct]);
+  const fmtPct = (v: number) => {
+    const r = Math.round(v * 10) / 10;
+    return r % 1 ? r.toFixed(1) : r.toFixed(0);
+  };
+  const sleeveLabel = fmtPct(sleevePct);
+
   const { toast } = useToast();
   const [amountInput, setAmountInput] = useState("");
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
@@ -58,7 +84,7 @@ export const ActionFirstAllocations = ({ summary, holdings, currency }: Props) =
 
   const lineFor = (h: ActionHolding) => {
     const detail = amountFor(h);
-    return `${h.symbol} — ${h.allocation.toFixed(h.allocation % 1 ? 1 : 0)}%${detail ? ` — ${detail}` : ""}`;
+    return `${h.symbol} — ${fmtPct(h.allocation)}%${detail ? ` — ${detail}` : ""}`;
   };
 
   const copy = async (text: string, key: string, label: string) => {
@@ -76,7 +102,11 @@ export const ActionFirstAllocations = ({ summary, holdings, currency }: Props) =
     const header = amount
       ? `My order — ${fmtMoney(amount)} total`
       : "My order — target allocations";
-    const body = holdings.map((h) => `[ ] ${lineFor(h)}`).join("\n");
+    let body = holdings.map((h) => `[ ] ${lineFor(h)}`).join("\n");
+    if (hasNg) {
+      body += `\n-- Nigerian Portfolio (${sleeveLabel}%) --\n`;
+      body += ngHoldings.map((h) => `[ ] ${lineFor(h)}`).join("\n");
+    }
     copy(`${header}\n${body}`, "__all", "Full order copied");
   };
 
@@ -87,6 +117,42 @@ export const ActionFirstAllocations = ({ summary, holdings, currency }: Props) =
     if (now - last < 800) return;
     lastFiredRef.current.set(broker.id, now);
     brokerageLinkClicked(broker.name, { broker: broker.name, source: "recommendation_page" });
+  };
+
+  const renderRow = (h: ActionHolding) => {
+                const detail = amountFor(h);
+                return (
+                  <li
+                    key={h.symbol}
+                    className="flex items-center gap-2 px-3 py-2"
+                  >
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-baseline gap-2">
+                        <span className="font-mono font-semibold text-sm">{h.symbol}</span>
+                        <span className="truncate text-xs text-muted-foreground">{h.name}</span>
+                      </div>
+                      {detail && (
+                        <div className="text-xs text-primary font-medium">{detail}</div>
+                      )}
+                    </div>
+                    <Badge variant="secondary" className="tabular-nums">
+                      {fmtPct(h.allocation)}%
+                    </Badge>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 shrink-0"
+                      aria-label={`Copy ${h.symbol} order`}
+                      onClick={() => copy(lineFor(h), h.symbol, `${h.symbol} copied`)}
+                    >
+                      {copiedKey === h.symbol ? (
+                        <Check className="h-4 w-4 text-primary" />
+                      ) : (
+                        <Copy className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </li>
+                );
   };
 
   const ctaBlock = (
@@ -158,41 +224,13 @@ export const ActionFirstAllocations = ({ summary, holdings, currency }: Props) =
 
             {/* 2. Allocation list */}
             <ul className="divide-y divide-border rounded-md border border-border">
-              {holdings.map((h) => {
-                const detail = amountFor(h);
-                return (
-                  <li
-                    key={h.symbol}
-                    className="flex items-center gap-2 px-3 py-2"
-                  >
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-baseline gap-2">
-                        <span className="font-mono font-semibold text-sm">{h.symbol}</span>
-                        <span className="truncate text-xs text-muted-foreground">{h.name}</span>
-                      </div>
-                      {detail && (
-                        <div className="text-xs text-primary font-medium">{detail}</div>
-                      )}
-                    </div>
-                    <Badge variant="secondary" className="tabular-nums">
-                      {h.allocation.toFixed(h.allocation % 1 ? 1 : 0)}%
-                    </Badge>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 shrink-0"
-                      aria-label={`Copy ${h.symbol} order`}
-                      onClick={() => copy(lineFor(h), h.symbol, `${h.symbol} copied`)}
-                    >
-                      {copiedKey === h.symbol ? (
-                        <Check className="h-4 w-4 text-primary" />
-                      ) : (
-                        <Copy className="h-4 w-4" />
-                      )}
-                    </Button>
-                  </li>
-                );
-              })}
+              {holdings.map(renderRow)}
+              {hasNg && (
+                <li className="px-3 py-2 bg-muted/40 text-xs font-semibold text-foreground">
+                  🇳🇬 Nigerian Portfolio — {sleeveLabel}% of your portfolio
+                </li>
+              )}
+              {ngHoldings.map(renderRow)}
             </ul>
 
             {/* Desktop / tablet CTA stays inline */}
