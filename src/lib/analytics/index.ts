@@ -227,3 +227,7 @@ export async function tradeSelfReported(input: {
 }
 
 export default analytics;
+
+/** Fired when a user successfully completes an AI Market Analysis run. */
+export const marketAnalysisUsed = (region: string) =>
+  trackEvent("market_analysis_used", { region });
